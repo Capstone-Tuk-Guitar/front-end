@@ -1,0 +1,44 @@
+.container {
+  height: 100vh; /* 화면 전체를 채움 */
+  width: 100vw;  /* 가로도 전체를 채움 */
+  background-color: #1a1a1a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* 불필요한 스크롤 제거 */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #444;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+}
+
+.navButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
