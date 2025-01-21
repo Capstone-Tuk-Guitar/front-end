@@ -1,0 +1,36 @@
+/* 헤더 컨테이너 */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    height: 60px;
+  }
+  
+  /* 로고 스타일 */
+  .logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* 메뉴 스타일 */
+  .menu {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .menuItem {
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .menuItem:hover {
+    color: #000;
+  }
+  

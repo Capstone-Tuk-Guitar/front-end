@@ -1,44 +1,33 @@
-import React from 'react';
-import MainCard from '../components/Card';
-import styles from '../styles/MainPage.module.css';
+import React from "react";
+import Header from "../components/Header";
+import Card from "../components/Card";
+import styles from "../styles/MainPage.module.css";
 
-import musicIcon from '../assets/music-icon.png';
-import guitarIcon from '../assets/guitar-icon.png';
-import statsIcon from '../assets/stats-icon.png';
+import guitarImage from "../assets/guitar.png"; // 이미지 가져오기
 
-function MainPage() {
+const MainPage = () => {
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logo}>로고 (생략가능)</div>
-        <div className={styles.nav}>
-          <button className={styles.navButton}>👤</button>
-          <button className={styles.navButton}>📱</button>
-          <button className={styles.navButton}>⚙️</button>
+      <Header />
+
+      <div className={styles.slider}>
+        <div className={styles.slide}>
+          <button className={styles.arrowButton}>❮</button>
+          <Card image={guitarImage} text="연주하기" />
+          <button className={styles.arrowButton}>❯</button>
         </div>
-      </header>
-      <main className={styles.main}>
-        <MainCard
-          title="음원 목록"
-          icon={musicIcon}
-          color="orange"
-          onClick={() => console.log('음원 목록 클릭')}
-        />
-        <MainCard
-          title="연주하기"
-          icon={guitarIcon}
-          color="purple"
-          onClick={() => console.log('연주하기 클릭')}
-        />
-        <MainCard
-          title="연주 기록"
-          icon={statsIcon}
-          color="cyan"
-          onClick={() => console.log('연주 기록 클릭')}
-        />
-      </main>
+        <div className={styles.pagination}>
+          <span className={styles.dot}></span>
+          <span className={`${styles.dot} ${styles.active}`}></span>
+          <span className={styles.dot}></span>
+        </div>
+      </div>
+
+      <div className={styles.footer}>
+        기타 코드 사진 랜덤으로 보여주기
+      </div>
     </div>
   );
-}
+};
 
 export default MainPage;

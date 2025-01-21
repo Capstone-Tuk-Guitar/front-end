@@ -1,34 +1,26 @@
+/* 카드 컨테이너 */
 .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 150px;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 10px;
-    background: linear-gradient(145deg, #333, #222);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  }
-  
-  .icon {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 10px;
-  }
-  
-  .title {
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-  }
-  
+  display: flex;
+  width: 750px;
+  height: 500px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #eaeaea;
+}
+
+/* 이미지 스타일 */
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+/* 텍스트 스타일 */
+.text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}

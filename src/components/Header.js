@@ -1,18 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/Header.module.css';   // CSS 모듈 사용
+import React from "react";
+import styles from "../styles/Header.module.css";
 
-function Header() {
+const Header = () => {
   return (
-    <header>
-      <h1>React Guitar App</h1>
-      <nav>
-        <Link to="/">메인</Link>
-        <Link to="/practice">연주하기</Link>
-        <Link to="/records">연주 기록</Link>
-      </nav>
+    <header className={styles.header}>
+      <div className={styles.logo}>로고</div>
+      <div className={styles.menu}>
+        <span className={styles.menuItem}>전체 메뉴</span>
+        <span className={styles.menuItem}>로그아웃</span>
+      </div>
     </header>
   );
-}
+};
 
 export default Header;

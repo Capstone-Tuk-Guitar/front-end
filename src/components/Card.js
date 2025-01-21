@@ -1,17 +1,13 @@
-import React from 'react';
-import styles from '../styles/Card.module.css'; // CSS Module을 사용한 스타일링
+import React from "react";
+import styles from "../styles/Card.module.css";
 
-function Card({ title, icon, onClick, color }) {
+const Card = ({ image, text }) => {
   return (
-    <div
-      className={styles.card}
-      style={{ borderColor: color }}
-      onClick={onClick}
-    >
-      <img src={icon} alt={`${title} icon`} className={styles.icon} />
-      <p className={styles.title}>{title}</p>
+    <div className={styles.card}>
+      <img src={image} alt={text} className={styles.image} />
+      <p className={styles.text}>{text}</p>
     </div>
   );
-}
+};
 
 export default Card;

@@ -1,44 +1,109 @@
+/* 컨테이너 */
 .container {
-  height: 100vh; /* 화면 전체를 채움 */
-  width: 100vw;  /* 가로도 전체를 채움 */
-  background-color: #1a1a1a;
-  color: white;
+  font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* 불필요한 스크롤 제거 */
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
 }
 
+/* 헤더 스타일 */
 .header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #2a2a2a;
-  border-bottom: 1px solid #444;
+  padding: 0 20px;
+  background-color: #ffffff;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 18px;
   font-weight: bold;
 }
 
-.nav {
-  display: flex;
-  gap: 10px;
-}
-
-.navButton {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
+.menu span {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #555;
   cursor: pointer;
 }
 
-.main {
+/* 슬라이더 스타일 */
+.slider {
+  flex-grow: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 20px;
-  flex: 1;
+  justify-content: center;
+}
+
+.slide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #eaeaea;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.arrowButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #555;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.arrowButton:hover {
+  color: #000;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icon {
+  font-size: 48px;
+}
+
+.text {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* 슬라이더 하단 네비게이션 */
+.pagination {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #000;
+}
+
+/* 하단 텍스트 */
+.footer {
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-top: 1px solid #ddd;
 }
