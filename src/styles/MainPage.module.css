@@ -1,109 +1,91 @@
-/* 컨테이너 */
 .container {
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 100vh;
-}
-
-/* 헤더 스타일 */
-.header {
   width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  background-color: #ffffff;
-}
-
-.logo {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.menu span {
-  margin-left: 15px;
-  font-size: 14px;
-  color: #555;
-  cursor: pointer;
-}
-
-/* 슬라이더 스타일 */
-.slider {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.slide {
   position: relative;
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  background-color: #eaeaea;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* 슬라이더 */
+.slider {
+  display: flex;
+  position: relative;
+  width: 1600px;
+  max-width: 100%;
+  height: 600px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 슬라이드 */
+.slide {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* 화살표 버튼 */
 .arrowButton {
+  position: absolute;
+  padding: 0 10px;
+  top: 50%; /* 버튼을 수직 중앙에 위치 */
+  transform: translateY(-50%);
+  font-size: 32px;
   background: none;
   border: none;
-  font-size: 24px;
-  color: #555;
   cursor: pointer;
-  margin: 0 10px;
+  z-index: 3;
 }
 
 .arrowButton:hover {
   color: #000;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.arrowButton:first-of-type {
+  left: 20px;
 }
 
-.icon {
-  font-size: 48px;
+.arrowButton:last-of-type {
+  right: 20px;
 }
 
-.text {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-/* 슬라이더 하단 네비게이션 */
+/* 페이지 네비게이션 */
 .pagination {
-  margin-top: 10px;
   display: flex;
-  gap: 8px;
+  gap: 16px;
+  justify-content: center;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background-color: #ccc;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .dot.active {
-  background-color: #000;
+  background-color: #333;
 }
 
-/* 하단 텍스트 */
-.footer {
-  width: 100%;
-  text-align: center;
-  font-size: 16px;
-  padding: 20px;
-  background-color: #f8f8f8;
-  border-top: 1px solid #ddd;
+.fingering {
+  position: absolute;
+  bottom: 20px; /* 하단에서 20px 간격 */
+  left: 20px; /* 왼쪽에서 20px 간격 */
+  width: 560px; /* 이미지 크기 */
+  height: auto;
+  z-index: 2; /* 다른 요소 위에 표시 */
+  border: 1px solid #333;
+}
+
+.fingering img {
+  width: 180px;
+  height: 200px;
 }
