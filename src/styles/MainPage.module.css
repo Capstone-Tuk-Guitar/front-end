@@ -81,11 +81,11 @@
   left: 20px; /* 왼쪽에서 20px 간격 */
   width: 560px; /* 이미지 크기 */
   height: auto;
-  z-index: 2; /* 다른 요소 위에 표시 */
+  z-index: -2; /* 다른 요소 아래에 표시 */
   border: 1px solid #333;
 }
 
 .fingering img {
   width: 180px;
-  height: 200px;
+  height: 180px;
 }
