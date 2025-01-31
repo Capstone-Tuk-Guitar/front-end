@@ -12,7 +12,7 @@ const MainPage = () => {
   const [activeIndex, setActiveIndex] = useState(1); // 중앙 슬라이드 인덱스
 
   const slides = [
-    { id: 0, image: musicImage, text: "음악 목록" },
+    { id: 0, image: musicImage, text: "음원 목록" },
     { id: 1, image: guitarImage, text: "연주하기" },
     { id: 2, image: recordImage, text: "연주 기록" },
   ];
@@ -26,7 +26,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <Header />
 
       <div className={styles.slider}>

@@ -1,13 +1,3 @@
-.container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 /* 슬라이더 */
 .slider {
   display: flex;

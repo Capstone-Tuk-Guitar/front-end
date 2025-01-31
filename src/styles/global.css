@@ -13,8 +13,20 @@ html, body {
 
 /* 전체 페이지 컨테이너를 화면에 맞추기 */
 #root {
-display: flex;
-flex-direction: column;
-width: 100%;
-height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+/* 페이지 공통 컨테이너 */
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
