@@ -6,7 +6,7 @@ import SignupPage from '../pages/SignupPage';
 import PracticePage from '../pages/PracticePage';
 import TuningPage from '../pages/TuningPage';
 import GuidePage from '../pages/GuidePage';
-import PracticeRecordPage from '../pages/PracticeRecordPage';
+import RecordPage from '../pages/RecordPage';
 
 function AppRoutes() {
   return (
@@ -18,11 +18,10 @@ function AppRoutes() {
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/tuning" element={<TuningPage />} />
         <Route path="/guide" element={<GuidePage />} />
-        <Route path="/records" element={<PracticeRecordPage />} />
+        <Route path="/records" element={<RecordPage />} />
       </Routes>
     </Router>
   );
 }
 
 export default AppRoutes;
-    

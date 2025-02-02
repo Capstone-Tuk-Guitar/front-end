@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 48 48" viewBox="0 0 48 48" id="gramophone-record">
+  <circle cx="24" cy="24" r="19" fill="#37474f"></circle>
+  <circle cx="24" cy="24" r="18" fill="#263238"></circle>
+  <path fill="#37474f" d="M41.022 29.815L24 24l5.815 17.022C35.072 39.226 39.225 35.072 41.022 29.815zM6.978 18.185L24 24 18.185 6.978C12.928 8.775 8.775 12.928 6.978 18.185z"></path>
+  <path fill="#f44336" d="M24,17c-3.866,0-7,3.134-7,7s3.134,7,7,7s7-3.134,7-7S27.866,17,24,17z"></path>
+  <circle cx="24" cy="24" r="1"></circle>
+</svg>
