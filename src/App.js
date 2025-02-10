@@ -1,19 +1,34 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import MainPage from './pages/MainPage';
-import LoginPage from './pages/LoginPage';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import MainPage from "./pages/MainPage";
+import LoginPage from "./pages/LoginPage";
 import MusicPage from "./pages/MusicPage";
-import RecordPage from "./pages/RecordPage"
+import RecordPage from "./pages/RecordPage";
 
-function App() {
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const authStatus = localStorage.getItem("isAuthenticated");
+    setIsAuthenticated(authStatus === "true");
+    if (!authStatus) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/music" element={<MusicPage />} />
-      <Route path="/record" element={<RecordPage />} />
+      <Route path="/" element={<LoginPage />} />
+      {isAuthenticated ? (
+        <>
+          <Route path="/main" element={<MainPage />} />
+          <Route path="/music" element={<MusicPage />} />
+          <Route path="/record" element={<RecordPage />} />
+        </>
+      ) : null}
     </Routes>
   );
-}
+};
 
 export default App;
