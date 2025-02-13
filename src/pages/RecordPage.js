@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from "../components/Header";
 
 function PracticeRecordPage() {
   const records = [
@@ -7,6 +8,8 @@ function PracticeRecordPage() {
   ];
 
   return (
+    <div className="container">
+      <Header />
     <div>
       <h1>연주 기록</h1>
       <ul>
@@ -16,6 +19,7 @@ function PracticeRecordPage() {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 }
