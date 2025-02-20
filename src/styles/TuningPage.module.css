@@ -1,0 +1,125 @@
+/* 기존 스타일 유지 */
+
+.divWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  /*정사각형*/
+  .centerSquare {
+    top: 50%;
+    left: 50%;
+    transform: translate(-60%, -30%); 
+    width: 600px; 
+    height: 600px;
+    background: linear-gradient(to bottom, black, white);  /* 검정에서 흰색으로 그라데이션 */
+    display: flex;
+    font-size: 50px;
+    color: white;
+    border-radius: 10px;  
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 중앙 정렬 */
+    align-items: center; /* 중앙 정렬 */
+}
+  /*정사각형 내부 텍스트*/
+  .squareText {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 180px;
+    color: #222222;
+
+  }
+  .squarefre {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+    color: #222222;
+
+  }
+  
+  
+  .overlap {
+    height: 539px;
+    position: relative;
+    left: 50px;  
+    top: 30px;  
+  }
+  
+  /*사진쪽 그룹 레이아웃*/
+  .overlapGroup {
+    height: 600px;
+    left: 131px; 
+    position: absolute;
+    top: 200px; 
+    width: 600px;
+  
+  }
+  /*기타사진*/
+  .fender {
+    height: 600px;
+    left: 198px;
+    object-fit: cover;
+    position: absolute;
+    top: 66.4px; 
+    width: 425px;
+  }
+  /*동그라미*/
+  .ellipse1,
+  .ellipse5,
+  .ellipse2,
+  .ellipse3,
+  .ellipse4,
+  .ellipse6 {
+    border-radius: 45px / 42.5px;
+    height: 59.5px;
+    position: absolute;
+    width: 63px;
+  }
+  /*초록 #2df43b*/
+  .ellipse1 { background-color: #d9d9d9; left: 360px; top: 75px; } /*,+45*/
+  .ellipse2 { background-color: #d9d9d9; left: 315px; top: 135px; }
+  .ellipse3 { background-color: #d9d9d9; left: 270px; top: 195px; }
+  .ellipse4 { background-color: #d9d9d9; left: 230px; top: 255px; } 
+  .ellipse5 { background-color: #d9d9d9; left: 185px; top: 315px; }
+  .ellipse6 { background-color: #d9d9d9; left: 140px; top: 380px; } 
+  /*텍스트, 1과 11 한세트, 2와 21 한세트 ...*/
+  .textWrapper1,
+  .textWrapper2,
+  .textWrapper3,
+  .textWrapper4,
+  .textWrapper5,
+  .textWrapper6,
+  .textWrapper11,
+  .textWrapper21,
+  .textWrapper31,
+  .textWrapper41,
+  .textWrapper51,
+  .textWrapper61 {
+    font-family: "Inter-Regular", Helvetica;
+    font-size: 25.2px;
+    font-weight: 400;
+    position: absolute;
+    text-align: center;
+  }
+  
+  .textWrapper1 { color: #000000; left: 255px; top: 83px; width: 106.4px; } 
+  .textWrapper2 { color: #000000; left: 210px; top: 145px; width: 106.4px; } 
+  .textWrapper3 { color: #000000; left: 165px; top: 205px; width: 106.4px; } 
+  .textWrapper4 { color: #000000; left: 125px; top: 264px; width: 106.4px; } 
+  .textWrapper5 { color: #000000; left: 80px; top: 326px; width: 106.4px; } 
+  .textWrapper6 { color: #000000; left: 35px; top: 393px; width: 106.4px; } 
+  .textWrapper11 { color: #000000; font-size: 28px; left: 380px; top: 90px;} 
+  .textWrapper21 { color: #000000; font-size: 28px; left: 336px; top: 150px;} 
+  .textWrapper31 { color: #000000; font-size: 28px; left: 290px; top: 210px;} 
+  .textWrapper41 { color: #000000; font-size: 28px; left: 250px; top: 270px;} 
+  .textWrapper51 { color: #000000; font-size: 28px; left: 205px; top: 330px;} 
+  .textWrapper61 { color: #000000; font-size: 28px; left: 161px; top: 395px; } 
+
+  
+  
+  

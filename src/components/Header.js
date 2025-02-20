@@ -66,7 +66,9 @@ const Header = () => {
           }}>
           전체 메뉴
         </span>
-
+        <span className={styles.menuItem} onClick={() => handleNavigation('/tuning')}>
+          튜닝
+        </span>
         {/* 로그아웃 버튼 */}
         <span className={styles.menuItem} onClick={handleLogout}>
           로그아웃

@@ -4,6 +4,7 @@ import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import MusicPage from "./pages/MusicPage";
 import RecordPage from "./pages/RecordPage";
+import TuningPage from "./pages/TuningPage";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/main" element={<MainPage />} />
           <Route path="/music" element={<MusicPage />} />
           <Route path="/record" element={<RecordPage />} />
+          <Route path="/tuning" element={<TuningPage />} />
         </>
       ) : null}
     </Routes>
