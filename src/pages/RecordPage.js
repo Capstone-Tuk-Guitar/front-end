@@ -10,7 +10,7 @@ function PracticeRecordPage() {
   return (
     <div className="container">
       <Header />
-    <div>
+
       <h1>연주 기록</h1>
       <ul>
         {records.map((record) => (
@@ -19,7 +19,6 @@ function PracticeRecordPage() {
           </li>
         ))}
       </ul>
-    </div>
     </div>
   );
 }

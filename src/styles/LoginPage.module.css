@@ -59,8 +59,12 @@
     margin-top: 16px;
   }
   
-.forgot, .register {
+.register {
     color: #007bff;
     cursor: pointer;
     text-decoration: underline;
+}
+
+.forgot {
+  text-align: justify;
 }

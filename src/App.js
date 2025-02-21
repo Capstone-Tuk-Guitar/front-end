@@ -22,15 +22,15 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
-      {isAuthenticated ? (
-        <>
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/music" element={<MusicPage />} />
-          <Route path="/record" element={<RecordPage />} />
-          <Route path="/tuning" element={<TuningPage />} />
-          <Route path="/practice" element={<PracticePage />} />
-        </>
-      ) : null}
+      {/* {isAuthenticated ? (
+        <> */}
+      <Route path="/main" element={<MainPage />} />
+      <Route path="/music" element={<MusicPage />} />
+      <Route path="/record" element={<RecordPage />} />
+      <Route path="/tuning" element={<TuningPage />} />
+      <Route path="/practice" element={<PracticePage />} />
+        {/* </>
+      ) : null} */}
     </Routes>
   );
 };

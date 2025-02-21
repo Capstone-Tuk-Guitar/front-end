@@ -36,12 +36,14 @@ function PracticePage() {
         <div className="container">
             <Header />
             <h1>MIDI 파일끼리 비교</h1>
+            <br />
             
             <input type="file" accept=".mid" onChange={(e) => handleUpload(e, setSvgContent1)} />
             {svgContent1 && <div dangerouslySetInnerHTML={{ __html: svgContent1 }} />}
-            
+
             <input type="file" accept=".mid" onChange={(e) => handleUpload(e, setSvgContent2)} />
             {svgContent2 && <div dangerouslySetInnerHTML={{ __html: svgContent2 }} />}
+            <br />
 
             <button onClick={handleCompare}>비교하기</button>
 
