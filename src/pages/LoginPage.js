@@ -36,9 +36,12 @@ const LoginPage = () => {
         />
         <button onClick={handleLogin}>Sign In</button>
         <div className={styles.links}>
-          <span className={styles.forgot}>이메일 복사: test@example.com,  패스워드: password</span>
           <span onClick={() => navigate("/signup")} className={styles.register}>Sign up</span>
         </div>
+
+        <br />
+        <span className={styles.forgot}>테스트 이메일: test@example.com<br />
+        테스트 패스워드: password</span>
       </div>
     </div>
   );

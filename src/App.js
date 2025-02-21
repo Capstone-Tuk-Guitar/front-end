@@ -8,7 +8,7 @@ import TuningPage from "./pages/TuningPage";
 import PracticePage from "./pages/PracticePage";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,15 +22,15 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
-      {isAuthenticated ? (
-        <>
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/music" element={<MusicPage />} />
-          <Route path="/record" element={<RecordPage />} />
-          <Route path="/tuning" element={<TuningPage />} />
-          <Route path="/practice" element={<PracticePage />} />
-        </>
-      ) : null}
+      {/* {isAuthenticated ? (
+        <> */}
+      <Route path="/main" element={<MainPage />} />
+      <Route path="/music" element={<MusicPage />} />
+      <Route path="/record" element={<RecordPage />} />
+      <Route path="/tuning" element={<TuningPage />} />
+      <Route path="/practice" element={<PracticePage />} />
+        {/* </>
+      ) : null} */}
     </Routes>
   );
 };
