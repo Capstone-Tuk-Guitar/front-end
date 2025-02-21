@@ -12,8 +12,8 @@ function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/main" element={<MainPage />} />
         <Route path="/" element={<LoginPage />} />
+        <Route path="/main" element={<MainPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/tuning" element={<TuningPage />} />
