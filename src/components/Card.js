@@ -22,7 +22,7 @@ const Card = ({ image, text, isActive, position }) => {
     if (text === "음원 목록") {
       navigate("/music");   // MusicPage로 이동
     } else if (text === "연주하기") {
-
+      navigate("/practice");  // PracticePage로 이동
     } else if (text === "연주 기록") {
       navigate("/record");  // RecordPage로 이동
     }
