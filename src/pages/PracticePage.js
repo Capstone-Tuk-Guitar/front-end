@@ -3,51 +3,56 @@ import axios from "axios";
 import Header from "../components/Header";
 
 function PracticePage() {
-    const [svgContent1, setSvgContent1] = useState("");
-    const [svgContent2, setSvgContent2] = useState("");
-    const [accuracy, setAccuracy] = useState(null);
+    const [file1, setFile1] = useState(null);
+    const [file2, setFile2] = useState(null);
+    const [result, setResult] = useState(null);
 
-    const handleUpload = async (event, setSvgContent) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-            // FastAPI 백엔드로 MIDI 파일 전송
-            const response = await axios.post("http://localhost:8000/convert-midi/", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-                responseType: "text", // SVG를 텍스트로 받음
-            });
-
-            setSvgContent(response.data);
-        } catch (error) {
-            console.error("Error converting MIDI:", error);
-        }
+    const handleFileChange = (event, setFile) => {
+        setFile(event.target.files[0]);
     };
 
-    const handleCompare = () => {
-        // 백엔드에서 비교 작업을 할 예정이므로 임시로 정확도를 85%로 설정
-        setAccuracy("85%");
+    const handleCompare = async () => {
+        if (!file1 || !file2) {
+            alert("두 개의 파일을 업로드하세요.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file1", file1);
+        formData.append("file2", file2);
+
+        try {
+            const response = await axios.post("http://localhost:8000/compare/", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            setResult(response.data);
+        } catch (error) {
+            console.error("비교 실패:", error);
+            alert("비교 중 오류가 발생했습니다.");
+        }
     };
 
     return (
         <div className="container">
             <Header />
-            <h1>MIDI 파일끼리 비교</h1>
-            <br />
-            
-            <input type="file" accept=".mid" onChange={(e) => handleUpload(e, setSvgContent1)} />
-            {svgContent1 && <div dangerouslySetInnerHTML={{ __html: svgContent1 }} />}
+            <h1>MIDI 파일 비교</h1>
+            <hr />
 
-            <input type="file" accept=".mid" onChange={(e) => handleUpload(e, setSvgContent2)} />
-            {svgContent2 && <div dangerouslySetInnerHTML={{ __html: svgContent2 }} />}
+            <input type="file" accept=".midi" onChange={(e) => handleFileChange(e, setFile1)} />
+            <input type="file" accept=".midi" onChange={(e) => handleFileChange(e, setFile2)} />
             <br />
 
             <button onClick={handleCompare}>비교하기</button>
-
-            {accuracy && <p>정확도: {accuracy}</p>}
+            {result && (
+                <div>
+                    <h3>비교 결과:</h3>
+                    <p><strong>음 높이 유사도:</strong> {result.pitch_similarity * 100}%</p>
+                    <p><strong>리듬 유사도:</strong> {result.rhythm_similarity * 100}%</p>
+                    <p><strong>멜로디 간격 유사도:</strong> {result.interval_similarity * 100}%</p>
+                    <p><strong>최종 유사도:</strong> {result.final_similarity * 100}%</p>
+                </div>
+            )}
         </div>
     );
 }
