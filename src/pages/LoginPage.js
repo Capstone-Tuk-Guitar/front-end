@@ -34,13 +34,14 @@ const LoginPage = () => {
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
         />
-        <button onClick={handleLogin}>Sign In</button>
+        <button onClick={handleLogin}>Login</button>
         <div className={styles.links}>
-          <span onClick={() => navigate("/signup")} className={styles.register}>Sign up</span>
+          <p onClick={() => navigate("/")} className={styles.forgot}>Forget password?</p>
+          <p onClick={() => navigate("/signup")} className={styles.register}>Sign up</p>
         </div>
 
         <br />
-        <span className={styles.forgot}>테스트 이메일: test@example.com<br />
+        <span className={styles.test}>테스트 이메일: test@example.com<br />
         테스트 패스워드: password</span>
       </div>
     </div>

@@ -1,0 +1,33 @@
+.container {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 간격 조정 */
+    margin: 20px 0;
+    align-items: center; /* 중앙 정렬 */
+}
+
+.inputs input {
+    width: 100%;
+    max-width: 300px; /* 파일 선택 input의 최대 너비 제한 */
+}
+
+.results {
+    margin-top: 60px;
+}
+
+.results_text {
+    margin: 20px;
+}
+
+.chart_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}

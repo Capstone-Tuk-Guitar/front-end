@@ -25,6 +25,7 @@ export const TuningPage = ({ className, fender = fenderImage }) => {
   return (
     <div className="container">
       <Header />
+      
       <div className={`${styles.divWrapper} ${className}`}>
         <div className={styles.overlap}>
           <div className={styles.overlapGroup}>

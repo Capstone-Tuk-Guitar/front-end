@@ -83,6 +83,7 @@ const MusicPage = () => {
   return (
     <div className="container">
       <Header />
+      
       <div className={styles.container}>
         {/* 왼쪽: 컨트롤 패널 */}
         <ControlPanel selectedSong={selectedSong} />

@@ -11,14 +11,16 @@ function PracticeRecordPage() {
     <div className="container">
       <Header />
 
-      <h1>연주 기록</h1>
-      <ul>
-        {records.map((record) => (
-          <li key={record.id}>
-            {record.title} - {record.duration} ({record.date})
-          </li>
-        ))}
-      </ul>
+      <div>
+        <h1>연주 기록</h1>
+        <ul>
+          {records.map((record) => (
+            <li key={record.id}>
+              {record.title} - {record.duration} ({record.date})
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
