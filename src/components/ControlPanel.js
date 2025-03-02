@@ -1,17 +1,24 @@
 import React from "react";
 import styles from "../styles/ControlPanel.module.css";
 
-const ControlPanel = ({ selectedSong }) => {
+const ControlPanel = ({ selectedSong, audioRef }) => {
   const handlePlay = () => {
-    alert("재생");
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
   };
 
   const handlePause = () => {
-    alert("일시 정지");
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
   };
 
   const handleReset = () => {
-    alert("정지");
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
   };
 
   return (
