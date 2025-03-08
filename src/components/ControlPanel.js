@@ -35,9 +35,9 @@ const ControlPanel = ({ selectedSong, audioRef }) => {
             <h3 className={styles.songTitle}>{selectedSong.title}</h3>
             <p className={styles.songArtist}>{selectedSong.artist}</p>
             <div className={styles.buttons}>
-              <img src={playImage} onClick={handlePlay} className={styles.button}/>
-              <img src={pauseImage} onClick={handlePause} className={styles.button}/>
-              <img src={stopImage} onClick={handleReset} className={styles.button}/>
+              <img src={playImage} onClick={handlePlay} className={styles.button} alt="재생" />
+              <img src={pauseImage} onClick={handlePause} className={styles.button} alt="일시정지" />
+              <img src={stopImage} onClick={handleReset} className={styles.button} alt="정지" />
               
             </div>
           </>

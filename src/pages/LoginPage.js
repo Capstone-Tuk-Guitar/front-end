@@ -36,13 +36,15 @@ const LoginPage = () => {
         />
         <button onClick={handleLogin}>Login</button>
         <div className={styles.links}>
-          <p onClick={() => navigate("/")} className={styles.forgot}>Forget password?</p>
-          <p onClick={() => navigate("/signup")} className={styles.register}>Sign up</p>
+          <p onClick={() => navigate("/login")} className={styles.forgot}>Forget password?</p>
+          <p onClick={() => {console.log("회원가입 버튼"); navigate("/signup");}} className={styles.register}>Sign up</p>
         </div>
 
         <br />
-        <span className={styles.test}>테스트 이메일: test@example.com<br />
-        테스트 패스워드: password</span>
+        <span className={styles.test}>
+          테스트 이메일: test@example.com<br />
+          테스트 패스워드: password
+        </span>
       </div>
     </div>
   );

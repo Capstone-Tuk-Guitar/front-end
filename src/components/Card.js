@@ -24,7 +24,7 @@ const Card = ({ image, text, isActive, position }) => {
     } else if (text === "연주하기") {
       navigate("/practice");  // PracticePage로 이동
     } else if (text === "연주 기록") {
-      navigate("/record");  // RecordPage로 이동
+      navigate("/records");  // RecordPage로 이동
     }
   }
 

@@ -23,10 +23,7 @@ const Header = () => {
 
   return (
     <header className={`${styles.header} ${isHeaderExpanded ? styles.expanded : ""}`}>
-      {/* <div className={styles.home} onClick={() => handleNavigation('/main')}>
-        홈
-      </div> */}
-      <img className={styles.home} src={homeImage} onClick={() => handleNavigation('/main')} />
+      <img className={styles.home} src={homeImage} onClick={() => handleNavigation('/main')} alt="홈 화면" />
 
       <div className={`${styles.menu} ${isMenuOpen ? styles.menuExpanded : ""}`}>
         {/* 추가 메뉴 - 전체 메뉴 왼쪽에 표시 */}
