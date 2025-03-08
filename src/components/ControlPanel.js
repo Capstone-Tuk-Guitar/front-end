@@ -1,6 +1,11 @@
 import React from "react";
 import styles from "../styles/ControlPanel.module.css";
 
+import panelImage from "../assets/record.svg";
+import playImage from "../assets/play.svg";
+import pauseImage from "../assets/pause.svg";
+import stopImage from "../assets/stop.svg";
+
 const ControlPanel = ({ selectedSong, audioRef }) => {
   const handlePlay = () => {
     if (audioRef.current) {
@@ -23,25 +28,21 @@ const ControlPanel = ({ selectedSong, audioRef }) => {
 
   return (
     <div className={styles.panel}>
-      {selectedSong ? (
-        <>
-          <h3 className={styles.songTitle}>{selectedSong.title}</h3>
-          <p className={styles.songArtist}>{selectedSong.artist}</p>
-          <div className={styles.buttons}>
-            <button onClick={handlePlay} className={styles.button}>
-              재생
-            </button>
-            <button onClick={handlePause} className={styles.button}>
-              일시 정지
-            </button>
-            <button onClick={handleReset} className={styles.button}>
-              정지
-            </button>
-          </div>
-        </>
-      ) : (
-        <p className={styles.placeholder}>곡을 선택하세요</p>
-      )}
+      <img src={panelImage} alt="controlpanel" className={styles.panelImage} />
+      <p className={styles.placeholder}>
+        {selectedSong ? (
+          <>
+            <h3 className={styles.songTitle}>{selectedSong.title}</h3>
+            <p className={styles.songArtist}>{selectedSong.artist}</p>
+            <div className={styles.buttons}>
+              <img src={playImage} onClick={handlePlay} className={styles.button}/>
+              <img src={pauseImage} onClick={handlePause} className={styles.button}/>
+              <img src={stopImage} onClick={handleReset} className={styles.button}/>
+              
+            </div>
+          </>
+        ) : "곡을 선택하세요" }
+      </p>
     </div>
   );
 };

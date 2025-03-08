@@ -28,29 +28,27 @@ export const TuningPage = ({ className, fender = fenderImage }) => {
       
       <div className={`${styles.divWrapper} ${className}`}>
         <div className={styles.overlap}>
-          <div className={styles.overlapGroup}>
-            <img className={styles.fender} alt="Fender" src={fender} />  
-            {/* 줄에 표시된 텍스트 및 그림*/}
-            <div className={styles.ellipse1} />
-            <div className={styles.ellipse2} />
-            <div className={styles.ellipse3} />
-            <div className={styles.ellipse4} />
-            <div className={styles.ellipse5} />
-            <div className={styles.ellipse6} />
-            
-            <div className={styles.textWrapper1}>1번 줄</div>
-            <div className={styles.textWrapper2}>2번 줄</div>
-            <div className={styles.textWrapper3}>3번 줄</div>
-            <div className={styles.textWrapper4}>4번 줄</div>
-            <div className={styles.textWrapper5}>5번 줄</div>
-            <div className={styles.textWrapper6}>6번 줄</div>
-            <div className={styles.textWrapper11}>E</div>
-            <div className={styles.textWrapper21}>B</div>
-            <div className={styles.textWrapper31}>G</div>
-            <div className={styles.textWrapper41}>D</div>
-            <div className={styles.textWrapper51}>A</div>
-            <div className={styles.textWrapper61}>E</div>
-          </div>
+          <img className={styles.fender} alt="Fender" src={fender} />  
+          {/* 줄에 표시된 텍스트 및 그림*/}
+          <div className={styles.ellipse1} />
+          <div className={styles.ellipse2} />
+          <div className={styles.ellipse3} />
+          <div className={styles.ellipse4} />
+          <div className={styles.ellipse5} />
+          <div className={styles.ellipse6} />
+          
+          <div className={styles.textWrapper1}>1번 줄</div>
+          <div className={styles.textWrapper2}>2번 줄</div>
+          <div className={styles.textWrapper3}>3번 줄</div>
+          <div className={styles.textWrapper4}>4번 줄</div>
+          <div className={styles.textWrapper5}>5번 줄</div>
+          <div className={styles.textWrapper6}>6번 줄</div>
+          <div className={styles.textWrapper11}>E</div>
+          <div className={styles.textWrapper21}>B</div>
+          <div className={styles.textWrapper31}>G</div>
+          <div className={styles.textWrapper41}>D</div>
+          <div className={styles.textWrapper51}>A</div>
+          <div className={styles.textWrapper61}>E</div>
         </div>
 
         {/*정사각형 음 화면*/}

@@ -61,13 +61,13 @@ const MainPage = () => {
             ></span>
           ))}
         </div>
+      </div>
 
-        <div className={styles.fingering}>
-          <img src={fingeringImage} alt="Fingering" />
-          <img src={fingeringImage} alt="Fingering" />
-          <img src={fingeringImage} alt="Fingering" />
-          {/* 기타 코드(운지법) 랜덤으로 보여주기 */}
-        </div>
+      <div className={styles.fingering}>
+        <img src={fingeringImage} alt="Fingering" />
+        <img src={fingeringImage} alt="Fingering" />
+        <img src={fingeringImage} alt="Fingering" />
+        {/* 기타 코드(운지법) 랜덤으로 보여주기 */}
       </div>
     </div>
   );

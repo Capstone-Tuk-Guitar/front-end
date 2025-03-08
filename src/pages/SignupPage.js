@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.logo}>로고</div>
+      <div className={styles.logo}>Capstone-Tuk-Guitar</div>
       <div className={styles.loginBox}>
         <label>Email</label>
         <input 

@@ -1,73 +1,12 @@
 .songListContainer {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  max-height: 50vh;
-}
-
-.songCard {
-  background-color: rgba(0, 0, 0, 0.5);
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  display: flex; /* Flexbox 사용 */
-  justify-content: space-between; /* 요소들을 좌우로 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-}
-
-.songCard:hover {
-  transform: scale(1.05);
-}
-.songInfo {
-  flex: 1; /* 가운데 정렬을 위한 가변 크기 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-}
-
-.songCard h3 {
-  margin: 8px;
-  font-size: 20px;
-}
-
-.songCard p {
-  margin: 5px 0;
-  font-size: 16px;
-}
-.songCard .infoContainer {
   display: flex;
+  padding: 15px;
+  width: 60vw;
+  height: 50vh;
+  background-color: rgba(255, 255, 255, 0.1);
+  flex-direction: column;
   align-items: center;
-  gap: 5px; /* difficulty와 버튼 사이 간격 */
-}
-
-.songCard span {
-  font-size: 12px;
-  color: gray;
-}
-
-.deleteButton {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.deleteButton:hover {
-  background-color: darkred;
-}
-
-.sheetButton {
-  background-color: orange;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.sheetButton:hover {
-  background-color: darkorange;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: visible;
 }

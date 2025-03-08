@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { FaUpload } from "react-icons/fa";
 import ControlPanel from "../components/ControlPanel";
 import SongList from "../components/SongList";
-import styles from "../styles/MusicPage.module.css";
-import { FaUpload } from "react-icons/fa";
 import Header from "../components/Header";
+import Button from "../components/Button";
+import styles from "../styles/MusicPage.module.css";
 
 const MusicPage = () => {
   //음악재생 및 음원목록
@@ -12,7 +13,7 @@ const MusicPage = () => {
   const audioRef = useRef(new Audio());
 
   //악보 다운
-  const [selectedSongTitle, setSelectedSongTitle] = useState(null);
+  const [, setSelectedSongTitle] = useState(null);
   const [jobId, setJobId] = useState(null);
   const [outputType] = useState("pdf");
 
@@ -158,18 +159,18 @@ const MusicPage = () => {
   return (
     <div className="container">
       <Header />
-    <div className="container">
+      
       <div className={styles.container}>
-        <ControlPanel selectedSong={selectedSong} audioRef={audioRef} />
-        <SongList songs={songs} onSongSelect={handleSongSelect} onDelete={handleDelete} 
-         onSheetUpload={handleSheetUpload} onSheetDownload={handleSheetDownload}/>
+          <ControlPanel selectedSong={selectedSong} audioRef={audioRef} />
+          <SongList songs={songs} onSongSelect={handleSongSelect} onDelete={handleDelete} 
+          onSheetUpload={handleSheetUpload} onSheetDownload={handleSheetDownload}/>
       </div>
 
-      <button className={styles.uploadButton} onClick={handleFileUpload}>
-        <FaUpload className={styles.icon} /> 음원 추가
-      </button>
+      <Button className={styles.uploadButton} onClick={handleFileUpload} icon={FaUpload}>
+        음원 추가
+      </Button>
+      
       <audio ref={audioRef} />
-    </div>
     </div>
   );
 };

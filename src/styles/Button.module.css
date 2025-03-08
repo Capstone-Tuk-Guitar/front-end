@@ -1,0 +1,25 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3a6ea5; /* 부드러운 보라색 배경 */
+    color: white;
+    border: none;
+    border-radius: 15px; /* 둥근 모서리 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+  
+  .button:hover {
+    background-color: #5c90c7;
+  }
+  
+  .button:active {
+    transform: scale(0.98);
+  }
+  
+  .icon {
+    margin-right: 8px; /* 아이콘과 텍스트 사이의 간격 */
+  }
+  

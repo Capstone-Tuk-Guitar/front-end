@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" id="stop" width="96" height="96" x="0" y="0" version="1.1" viewBox="0 0 96 96">
+  <switch>
+    <foreignObject width="1" height="1" x="0" y="0" requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/"></foreignObject>
+    <g>
+      <path d="M72 12H24c-6.63 0-12 5.37-12 12v48c0 6.63 5.37 12 12 12h48c6.63 0 12-5.37 12-12V24c0-6.63-5.37-12-12-12zm4 60c0 2.21-1.79 4-4 4H24c-2.21 0-4-1.79-4-4V24c0-2.21 1.79-4 4-4h48c2.21 0 4 1.79 4 4v48z"></path>
+    </g>
+  </switch>
+</svg>

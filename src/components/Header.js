@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
+import homeImage from "../assets/home.svg";
 import styles from "../styles/Header.module.css";
 
 const Header = () => {
@@ -22,9 +23,10 @@ const Header = () => {
 
   return (
     <header className={`${styles.header} ${isHeaderExpanded ? styles.expanded : ""}`}>
-      <div className={styles.logo} onClick={() => handleNavigation('/main')}>
-        로고
-      </div>
+      {/* <div className={styles.home} onClick={() => handleNavigation('/main')}>
+        홈
+      </div> */}
+      <img className={styles.home} src={homeImage} onClick={() => handleNavigation('/main')} />
 
       <div className={`${styles.menu} ${isMenuOpen ? styles.menuExpanded : ""}`}>
         {/* 추가 메뉴 - 전체 메뉴 왼쪽에 표시 */}

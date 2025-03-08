@@ -1,11 +1,13 @@
 .container {
-  width: 90%;
+  width: 80%;
+  margin-top: -120px;
 }
 
 /* 슬라이더 */
 .slider {
   display: flex;
   position: relative;
+  max-width: 1600px;
   width: 100%;
   height: 600px;
   align-items: center;
