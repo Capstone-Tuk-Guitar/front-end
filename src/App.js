@@ -9,7 +9,7 @@ const App = () => {
   useEffect(() => {
     const authStatus = localStorage.getItem("isAuthenticated");
     setIsAuthenticated(authStatus === "true");
-    if (!authStatus) {
+    if (!authStatus && window.location.pathname !== "/signup") {
       navigate("/login");
     }
   }, [navigate]);

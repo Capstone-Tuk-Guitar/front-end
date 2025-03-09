@@ -51,10 +51,10 @@ const Header = () => {
               )}
             </div>
 
-            <span className={styles.menuItem} onClick={() => handleNavigation('/record')}>
+            <span className={styles.menuItem} onClick={() => handleNavigation('/records')}>
               연주 기록
             </span>
-            <span className={styles.menuItem}>사전 가이드</span>
+            <span className={styles.menuItem} onClick={() => handleNavigation('/guide')}>사전 가이드</span>
             <span className={styles.menuItem}>설정</span>
           </>
         )}

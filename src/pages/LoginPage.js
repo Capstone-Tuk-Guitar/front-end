@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
 import styles from "../styles/LoginPage.module.css";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [ID, setID] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // 간단한 로그인 로직 (실제 프로젝트에서는 인증 API 사용)
-    if (email === "test@example.com" && password === "password") {
+    if (ID === "test" && password === "password") {
       localStorage.setItem("isAuthenticated", "true");
       navigate("/main");
     } else {
@@ -18,35 +18,29 @@ const LoginPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.logo}>Capstone-Tuk-Guitar</div>
-      <div className={styles.loginBox}>
-        <label>Email</label>
-        <input 
-          type="email" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-        />
-        <br/>
-        <label>Password</label>
-        <input 
-          type="password" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-        />
-        <button onClick={handleLogin}>Login</button>
-        <div className={styles.links}>
-          <p onClick={() => navigate("/login")} className={styles.forgot}>Forget password?</p>
-          <p onClick={() => {console.log("회원가입 버튼"); navigate("/signup");}} className={styles.register}>Sign up</p>
+    <LoginForm
+      title="Login"
+      fields={[
+        { label: "ID", type: "text", value: ID, onChange: (e) => setID(e.target.value) },
+        { label: "Password", type: "password", value: password, onChange: (e) => setPassword(e.target.value) },
+      ]}
+      buttonText="Login"
+      onSubmit={handleLogin}
+      footer={
+        <div>
+          <div className={styles.links}>
+            <p onClick={() => navigate("/login")} className={styles.forgot}>Forget password?</p>
+            <p onClick={() => navigate("/signup")} className={styles.register}>Sign up</p>
+          </div>
+          
+          <br />
+          <span className={styles.test}>
+            테스트 아이디: test<br />
+            테스트 패스워드: password
+          </span>
         </div>
-
-        <br />
-        <span className={styles.test}>
-          테스트 이메일: test@example.com<br />
-          테스트 패스워드: password
-        </span>
-      </div>
-    </div>
+      }
+    />
   );
 };
 
