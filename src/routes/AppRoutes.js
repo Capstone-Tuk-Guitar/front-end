@@ -13,7 +13,7 @@ import TuningPage from '../pages/TuningPage';
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/main" element={<MainPage />} />
       <Route path="/music" element={<MusicPage />} />
