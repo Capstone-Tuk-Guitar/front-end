@@ -18,7 +18,7 @@ const Header = () => {
   // 로그아웃 처리 함수
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated"); // 인증 상태 삭제
-    navigate("/login"); // 로그인 페이지로 이동
+    navigate("/"); // 로그인 페이지로 이동
   };
 
   return (

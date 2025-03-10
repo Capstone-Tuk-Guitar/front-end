@@ -10,7 +10,7 @@ const App = () => {
     const authStatus = localStorage.getItem("isAuthenticated");
     setIsAuthenticated(authStatus === "true");
     if (!authStatus && window.location.pathname !== "/signup") {
-      navigate("/login");
+      navigate("/");
     }
   }, [navigate]);
 
