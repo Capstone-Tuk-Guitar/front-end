@@ -18,12 +18,12 @@ const SignUpPage = () => {
     //   } else {
     //     alert("잘못된 이메일 또는 비밀번호입니다.");
     //   }
-        navigate("/login");
+        navigate("/");
     };
   
     return (
       <LoginForm
-        title="Login"
+        title="SignUp"
         fields={[
           { label: "Email", type: "text", value: email, onChange: (e) => setEmail(e.target.value) },
           { label: "ID", type: "text", value: ID, onChange: (e) => setID(e.target.value) },
