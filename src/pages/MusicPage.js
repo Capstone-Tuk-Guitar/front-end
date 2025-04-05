@@ -107,7 +107,7 @@ const MusicPage = () => {
       formData.append("composer", "Unknown");
       formData.append("outputs", "pdf,midi");
   
-      const uploadResponse = await fetch("http://127.0.0.1:8000/transcription/", {
+      const uploadResponse = await fetch("http://127.0.0.1:8000/convert/transcription/", {
         method: "POST",
         body: formData,
       });
@@ -134,7 +134,7 @@ const MusicPage = () => {
     }
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/download/${jobId}/${outputType}`);
+      const response = await fetch(`http://127.0.0.1:8000/convert/download/${jobId}/${outputType}`);
 
       if (!response.ok) {
         throw new Error("파일 다운로드 실패");
