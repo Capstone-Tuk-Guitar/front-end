@@ -55,6 +55,7 @@ const Header = () => {
               연주 기록
             </span>
             <span className={styles.menuItem} onClick={() => handleNavigation('/guide')}>사전 가이드</span>
+            <span className={styles.menuItem} onClick={() => handleNavigation('/chord')}>음 연습</span>
             <span className={styles.menuItem}>설정</span>
           </>
         )}

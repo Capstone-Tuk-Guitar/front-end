@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Card from "../components/Card";
 import styles from "../styles/MainPage.module.css";
+import DetailChord from "../components/DetailChord";
 
 import musicImage from "../assets/music.svg";
 import guitarImage from "../assets/guitar.svg";
@@ -10,6 +11,7 @@ import fingeringImage from "../assets/music.svg";
 
 const MainPage = () => {
   const [activeIndex, setActiveIndex] = useState(1); // 중앙 슬라이드 인덱스
+  const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
 
   const slides = [
     { id: 0, image: musicImage, text: "음원 목록" },
@@ -63,12 +65,20 @@ const MainPage = () => {
         </div>
       </div>
 
+      {/* 기타 코드(운지법) 클릭 시 ChordPage 표시 */}
       <div className={styles.fingering}>
-        <img src={fingeringImage} alt="Fingering" />
-        <img src={fingeringImage} alt="Fingering" />
-        <img src={fingeringImage} alt="Fingering" />
-        {/* 기타 코드(운지법) 랜덤으로 보여주기 */}
+        {[1, 2, 3].map((_, index) => (
+          <img
+            key={index}
+            src={fingeringImage}
+            alt="Fingering"
+            className={styles.fingeringImage}
+            onClick={() => setSelectedChord(fingeringImage)}
+          />
+        ))}
       </div>
+
+      {selectedChord && <DetailChord chordImage={selectedChord} onClose={() => setSelectedChord(null)} />}
     </div>
   );
 };
