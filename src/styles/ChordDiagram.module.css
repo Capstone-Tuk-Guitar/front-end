@@ -1,0 +1,26 @@
+.diagramContainer {
+    text-align: center;
+    padding: 0.5rem;
+    /*border: 1px solid #ffffff;
+    border-radius: 0.5rem;*/
+    /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;*/
+  }
+  
+  .chordImage {
+    margin-top: 1rem;
+    width: 100%;                /* 부모 요소(.diagramContainer)에 맞게 너비 100% */
+    max-width: 600px;           /* 최대 700px로 제한 (ChordPage와 일치) */
+    height: auto;               /* 비율 유지하면서 세로는 자동 */
+    object-fit: contain;        /* 이미지 왜곡 없이 컨테이너에 맞춤 */
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .errorText {
+    margin-top: 1rem;
+    color: #ef4444;
+    font-size: 1rem;
+  }
+  
