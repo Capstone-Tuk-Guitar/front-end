@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Card from "../components/Card";
 import styles from "../styles/MainPage.module.css";
@@ -7,17 +7,29 @@ import DetailChord from "../components/DetailChord";
 import musicImage from "../assets/music.svg";
 import guitarImage from "../assets/guitar.svg";
 import recordImage from "../assets/stats.svg";
-import fingeringImage from "../assets/music.svg";
+
+// 이미지 자동 import
+const importAll = (r) => r.keys().map(r);
+const chordImages = importAll(
+  require.context("../assets/ChordPhoto", false, /\.(png)$/)
+);
 
 const MainPage = () => {
   const [activeIndex, setActiveIndex] = useState(1); // 중앙 슬라이드 인덱스
   const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
+  const [randomChords, setRandomChords] = useState([]);
 
   const slides = [
     { id: 0, image: musicImage, text: "음원 목록" },
     { id: 1, image: guitarImage, text: "연주하기" },
     { id: 2, image: recordImage, text: "연주 기록" },
   ];
+
+  useEffect(() => {
+    // 이미지 배열을 셔플해서 3개 선택
+    const shuffled = [...chordImages].sort(() => 0.5 - Math.random());
+    setRandomChords(shuffled.slice(0, 3));
+  }, []);
 
   const handleNext = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
@@ -65,15 +77,15 @@ const MainPage = () => {
         </div>
       </div>
 
-      {/* 기타 코드(운지법) 클릭 시 ChordPage 표시 */}
+      {/* 운지 이미지 랜덤 표시 */}
       <div className={styles.fingering}>
-        {[1, 2, 3].map((_, index) => (
+        {randomChords.map((img, index) => (
           <img
             key={index}
-            src={fingeringImage}
-            alt="Fingering"
+            src={img}
+            alt={`Chord ${index}`}
             className={styles.fingeringImage}
-            onClick={() => setSelectedChord(fingeringImage)}
+            onClick={() => setSelectedChord(img)}
           />
         ))}
       </div>
