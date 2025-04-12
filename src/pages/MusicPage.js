@@ -119,7 +119,6 @@ const MusicPage = () => {
       const result = await uploadResponse.json();
       console.log("Job ID:", result.job_id);
       setJobId(result.job_id);
-      alert(`파일 업로드 완료! Job ID: ${result.job_id}`);
     } catch (error) {
       console.error("Error:", error);
       alert("파일 업로드 실패!");
