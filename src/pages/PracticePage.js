@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import PracticeViewer from "../components/PracticeViewer";
-import SongList from "../components/SongList";
+import styles from "../styles/PracticePage.module.css";
 
 function PracticePage() {
   const navigate = useNavigate();
@@ -58,10 +58,10 @@ function PracticePage() {
     <div className="container">
       <Header />
 
-      <div>
+      <div className={styles.container} >
         {/* MIDI → 변환 및 렌더링 */}
         <input type="file" accept=".mid,.midi" onChange={handleMidiFileChange} />
-        <button onClick={mxlRender} style={{ marginLeft: "10px" }}>
+        <button className={styles.renderButton} onClick={mxlRender} >
           MIDI → MXL 변환 및 렌더링
         </button>
         <br />
