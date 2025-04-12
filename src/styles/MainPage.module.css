@@ -1,6 +1,7 @@
 .container {
   width: 80%;
   margin-top: -120px;
+  overflow-y: auto;
 }
 
 /* 슬라이더 */
@@ -72,18 +73,19 @@
 
 .fingering {
   position: absolute;
-  bottom: 20px; /* 하단에서 20px 간격 */
-  left: 20px; /* 왼쪽에서 20px 간격 */
-  max-width: 560px; /* 이미지 크기 */
-  width: 40%;
-  height: auto;
-  z-index: 10; /* 다른 요소 아래에 표시 */
-  border: 1px solid #333;
+  top: 550px; /* 슬라이더 height: 600px이니까 그 아래로 */
+  left: 20%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 10;
+  max-width: 560px;
+  width: auto;
 }
 
 .fingering img {
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 90px;
 }
 
 /* 화면이 1360px 이하일 때 두 개만 표시 */

@@ -9,6 +9,7 @@ import AccuracyPage from '../pages/AccuracyPage';
 import RecordPage from '../pages/RecordPage';
 import GuidePage from '../pages/GuidePage';
 import TuningPage from '../pages/TuningPage';
+import ChordPage from '../pages/ChordPage';
 
 function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ function AppRoutes() {
       <Route path="/records" element={<RecordPage />} />
       <Route path="/guide" element={<GuidePage />} />
       <Route path="/tuning" element={<TuningPage />} />
+      <Route path="/chord" element={<ChordPage />} />
     </Routes>
   );
 }

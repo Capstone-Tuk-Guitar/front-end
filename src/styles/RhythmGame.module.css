@@ -1,0 +1,104 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #1f2937;
+  }
+  
+  .canvasWrapper {
+    display: flex;
+    flex-direction: row; /* canvas 옆에 버튼 배치 */
+    align-items: center;
+  }
+  
+  .canvas {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-right: 1rem; 
+  }
+  
+  .buttonGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+  }
+  
+  .button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .start {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .start:hover {
+    background-color: #2563eb;
+  }
+  
+  .stop {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .stop:hover {
+    background-color: #dc2626;
+  }
+  
+  .noteInfo {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .noteText {
+    margin-left: 0.5rem;
+  }
+  
+  .noteMatch {
+    color: #22c55e;
+  }
+  
+  .noteMiss {
+    color: #ef4444;
+  }
+
+  .detectedNoteInBall {
+    font-size: 0.75rem;
+    font-weight: bold;
+    fill: #000;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  
+  .currentNote {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+  }
+
+  .matchColor {
+    color: #22c55e; 
+  }
+  
+  .missColor {
+    color: #ef4444;
+  }
+  
+  .neutralColor {
+    color: #94a3b8; 
+  }
+  
+  
