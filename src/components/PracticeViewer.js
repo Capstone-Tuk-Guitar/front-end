@@ -1,23 +1,22 @@
 import { useEffect, useRef } from "react";
 
-const PracticeViewer = ({ musicXmlFile }) => {
+const PracticeViewer = ({ xmlFile }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (musicXmlFile && containerRef.current) {
-      const objectUrl = URL.createObjectURL(musicXmlFile);
+    if (xmlFile && containerRef.current && window.alphaTab?.AlphaTabApi) {
       const api = new window.alphaTab.AlphaTabApi(containerRef.current, {
-        file: objectUrl,
-        layoutMode: "horizontal",       // 가로 레이아웃
-        scrollMode: "horizontal",       // 자동 스크롤 모드
-        trackDisplayMode: "ScoreTab",   // TAB + 오선 악보 모두 표시
+        file: xmlFile,
+        layoutMode: "horizontal",
+        scrollMode: "horizontal",
+        trackDisplayMode: "ScoreTab",
       });
 
       return () => {
-        URL.revokeObjectURL(objectUrl);
+        URL.revokeObjectURL(xmlFile);
       };
     }
-  }, [musicXmlFile]);
+  }, [xmlFile]);
 
   return (
     <div style={{ overflowX: "auto", border: "1px solid #ccc", marginTop: "20px" }}>

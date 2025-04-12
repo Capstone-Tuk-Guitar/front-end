@@ -52,8 +52,8 @@ function AccuracyPage() {
                 <h1>MIDI 파일 비교</h1>
 
                 <div className={styles.inputs}>
-                    <input type="file" accept=".mid" onChange={(e) => handleFileChange(e, setFile1)} />
-                    <input type="file" accept=".mid" onChange={(e) => handleFileChange(e, setFile2)} />
+                    <input type="file" accept=".mid, .midi" onChange={(e) => handleFileChange(e, setFile1)} />
+                    <input type="file" accept=".mid, .midi" onChange={(e) => handleFileChange(e, setFile2)} />
                 </div>
 
                 <button

@@ -15,7 +15,7 @@ const MusicPage = () => {
   //악보 다운
   const [, setSelectedSongTitle] = useState(null);
   const [jobId, setJobId] = useState(null);
-  const [outputType] = useState("pdf");
+  const [outputType] = useState("pdf");       // midi로 변경 시 midi 파일 다운로드
 
   //서버에서 파일 목록 가져오기
   useEffect(() => {
