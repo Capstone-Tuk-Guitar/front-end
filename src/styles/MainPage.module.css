@@ -73,8 +73,8 @@
 
 .fingering {
   position: absolute;
-  top: 550px; /* 슬라이더 height: 600px이니까 그 아래로 */
-  left: 20%;
+  bottom: 20px;
+  left: 16%;
   transform: translateX(-50%);
   display: flex;
   gap: 20px;
@@ -89,21 +89,21 @@
 }
 
 /* 화면이 1360px 이하일 때 두 개만 표시 */
-@media (max-width: 1360px) {
+@media (max-width: 1650px) {
   .fingering img:nth-child(n+3) {
     display: none;
   }
 }
 
 /* 화면이 910px 이하일 때 하나만 표시 */
-@media (max-width: 910px) {
+@media (max-width: 1250px) {
   .fingering img:nth-child(n+2) {
     display: none;
   }
 }
 
 /* 화면이 450px 이하일 때 표시 안함 */
-@media (max-width: 450px) {
+@media (max-width: 600px) {
   .fingering img:nth-child(n+1) {
     display: none;
   }
