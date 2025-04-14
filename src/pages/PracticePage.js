@@ -31,21 +31,32 @@ function PracticePage() {
 
   const mxlRender = async () => {
     if (!midiFile) return alert("MIDI 파일을 먼저 선택하세요.");
-
+  
     const formData = new FormData();
     formData.append("file", midiFile);
-
+  
     try {
+      console.log("1. 변환 요청 보냄");
+  
       const response = await fetch("http://localhost:8000/mxl-converter/", {
         method: "POST",
         body: formData,
       });
-
-      if (!response.ok) throw new Error("변환 실패");
-
+  
+      console.log("2. 응답 수신");
+  
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error("응답 실패:", errText);
+        throw new Error("변환 실패");
+      }
+  
       const blob = await response.blob();
+      console.log("3. Blob 처리 완료");
+  
       const url = window.URL.createObjectURL(blob);
-
+      console.log("4. Blob URL 생성:", url);
+  
       if (xmlFile) URL.revokeObjectURL(xmlFile); // 기존 blob 해제
       setXmlFile(url);
     } catch (error) {
@@ -53,6 +64,7 @@ function PracticePage() {
       alert("변환 중 오류가 발생했습니다.");
     }
   };
+  
 
   return (
     <div className="container">
