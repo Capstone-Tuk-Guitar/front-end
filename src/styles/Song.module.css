@@ -1,7 +1,7 @@
 .songCard {
     display: flex;
-    margin-bottom: 10px;
-    padding: 10px;
+    margin-bottom: 16px;
+    padding: 20px;
     width: 95%;
     min-width: 540px;
     max-width: 840px;
