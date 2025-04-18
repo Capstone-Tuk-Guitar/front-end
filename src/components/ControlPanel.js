@@ -38,7 +38,6 @@ const ControlPanel = ({ selectedSong, audioRef }) => {
               <img src={playImage} onClick={handlePlay} className={styles.button} alt="재생" />
               <img src={pauseImage} onClick={handlePause} className={styles.button} alt="일시정지" />
               <img src={stopImage} onClick={handleReset} className={styles.button} alt="정지" />
-              
             </div>
           </>
         ) : "곡을 선택하세요" }

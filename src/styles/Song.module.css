@@ -1,70 +1,74 @@
 .songCard {
-    display: flex;
-    margin-bottom: 16px;
-    padding: 20px;
-    width: 95%;
-    min-width: 540px;
-    max-width: 840px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
+  display: flex;
+  margin-bottom: 16px;
+  padding: 20px;
+  width: 95%;
+  min-width: 540px;
+  max-width: 840px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
   }
   
-  .songCard:hover {
-    transform: scale(1.05);
-  }
+.songCard:hover {
+  transform: scale(1.05);
+}
   
-  .songInfo {
-    flex: 1;
-    text-align: center; /* 텍스트 중앙 정렬 */
-    color: white;
-  }
+.songInfo {
+  flex: 1;
+  text-align: center; /* 텍스트 중앙 정렬 */
+  color: white;
+}
   
-  .songCard h3 {
-    margin: 8px;
-    font-size: 20px;
-  }
+.songCard h3 {
+  margin: 8px;
+  font-size: 20px;
+}
   
-  .songCard p {
-    margin: 5px 0;
-    font-size: 16px;
-  }
+.songCard p {
+  margin: 5px 0;
+  font-size: 16px;
+}
   
-  .infoContainer {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+.infoContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
   
-  .songCard span {
-    font-size: 12px;
-    color: gray;
-  }
+.songCard span {
+  font-size: 12px;
+  color: gray;
+}
   
-  .deleteButton {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+.deleteButton {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
   
-  .deleteButton:hover {
-    background-color: darkred;
-  }
+.deleteButton:hover {
+  background-color: darkred;
+}
   
-  .sheetButton {
-    background-color: orange;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+.sheetButton {
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
   
-  .sheetButton:hover {
-    background-color: darkorange;
-  }
-  
+.sheetButton:hover {
+  background-color: darkorange;
+}
+
+.sheetButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

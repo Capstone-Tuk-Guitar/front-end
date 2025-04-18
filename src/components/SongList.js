@@ -5,11 +5,10 @@ import styles from "../styles/SongList.module.css";
 const SongList = ({
   songs = [],
   onSongSelect,
+  onDownload,
   onDelete,
-  onDownloadPDF,
-  onDownloadGP5,
-  showDownloadPDF = true,
-  showDownloadGP5 = true,
+  showDelete = true,
+  loadingSongs = {},
 }) => {
   return (
     <div className={styles.songListContainer}>
@@ -21,11 +20,10 @@ const SongList = ({
             key={`${song.title}-${index}`}
             song={song}
             onSongSelect={onSongSelect}
+            onDownload={onDownload}
             onDelete={onDelete}
-            onDownloadPDF={onDownloadPDF}
-            onDownloadGP5={onDownloadGP5}
-            showDownloadPDF={showDownloadPDF}
-            showDownloadGP5={showDownloadGP5}
+            showDelete={showDelete}
+            loading={loadingSongs[song.title] || false}
           />
         ))
       )}
