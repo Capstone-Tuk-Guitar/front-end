@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import PracticeViewer from "../components/PracticeViewer";
 import styles from "../styles/PracticePage.module.css";
@@ -8,6 +8,15 @@ function PracticePage() {
   const navigate = useNavigate();
   const [midiFile, setMidiFile] = useState(null);
   const [xmlFile, setXmlFile] = useState(null);
+
+  const location = useLocation();
+  const { song, fileUrl } = location.state || {};
+
+  useEffect(() => {
+    if (fileUrl) {
+      setXmlFile(fileUrl); // 또는 setGp5File(fileUrl)
+    }
+  }, [fileUrl]);
 
   const handleClick = () => {
     navigate("/accuracy");

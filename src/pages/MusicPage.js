@@ -7,11 +7,13 @@ import Button from "../components/Button";
 import styles from "../styles/MusicPage.module.css";
 
 const MusicPage = () => {
-  const [selectedSong, setSelectedSong] = useState(null);     // 현재 선택된 곡 정보
+  const [selectedSong, setSelectedSong] = useState(null);
   const [songs, setSongs] = useState([]);                     // 업로드된 곡 목록
-  const audioRef = useRef(new Audio());                       // 오디오 재생 참조
-  const [outputType] = useState("midi");
-  const [delay] = useState(60000);                            // 기본값: 1분 (60000ms)
+  const audioRef = useRef(new Audio());
+  
+  const outputType = "midi";
+  const delay = 60000;                                        // 기본값: 1분 (60000ms)
+  const [loadingSongs, setLoadingSongs] = useState({});
   
   // MP3 파일 업로드
   const handleFileUpload = async () => {
@@ -84,6 +86,8 @@ const MusicPage = () => {
 
   //get job_id + 다운로드
   const handleDownload = async (song) => {
+    setLoadingSongs((prev) => ({ ...prev, [song.title]: true }));
+
     try {
       // MP3 파일을 fetch → File 객체 생성
       const fileRes = await fetch(`http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`);
@@ -108,10 +112,14 @@ const MusicPage = () => {
       console.log("변환 요청 완료 - job_id:", job_id);
 
       // 1분 대기 후 다운로드 시작
-      setTimeout(() => startDownloadPolling(job_id, song.title, outputType), delay);
+      setTimeout(() => {
+        startDownloadPolling(job_id, song.title, outputType);
+        setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
+      },delay);
     } catch (err) {
       console.error("다운로드 요청 실패:", err);
       alert("변환 요청에 실패했습니다.");
+      setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
     }
   };
 
@@ -156,10 +164,10 @@ const MusicPage = () => {
         <SongList
           songs={songs}
           onSongSelect={handleSongSelect}
+          onDownload={handleDownload}
           onDelete={handleDelete}
-          onDownloadPDF={(song) => handleDownload(song)}
-          showDownloadPDF={true}
-          showDownloadGP5={false}
+          showDelete={true}
+          loadingSongs={loadingSongs}
         />
       </div>
       <Button className={styles.uploadButton} onClick={handleFileUpload} icon={FaUpload}>
