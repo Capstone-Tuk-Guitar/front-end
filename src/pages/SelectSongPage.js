@@ -1,24 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import SongList from "../components/SongList";
 import Header from "../components/Header";
 import styles from "../styles/SelectSongPage.module.css";
 
 import playImage from "../assets/play.svg";
 import pauseImage from "../assets/pause.svg";
+import musicImage from "../assets/music.svg";
 
 const SelectSongPage = () => {
-    const navigate = useNavigate();
-    
     const [isPlaying, setIsPlaying] = useState(false);
-    const [, setSelectedSong] = useState(null);
+    const [, setSelectedSong] = useState(null);     // 현재 선택된 곡 정보
     const [songs, setSongs] = useState([]);                     // 업로드된 곡 목록
-    const audioRef = useRef(new Audio());
-    
-    const outputType = "gp5";
-    const delay = 60000;                                        // 기본값: 1분 (60000ms)
-    const [loadingSongs, setLoadingSongs] = useState({});
-    const [isDownloaded, setIsDownloaded] = useState(false);
+    const audioRef = useRef(new Audio());                       // 오디오 재생 참조
+    const [outputType] = useState("midi");
+    const [delay] = useState(60000);                            // 기본값: 1분 (60000ms)
 
     // 서버에 업로드된 MP3 목록
     useEffect(() => {
@@ -39,16 +34,10 @@ const SelectSongPage = () => {
     const handleSongSelect = async (song) => {
         setSelectedSong(song);
         if (audioRef.current) {
-          audioRef.current.src = `http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`;
-          audioRef.current
-            .play()
-            .then(() => setIsPlaying(true))
-            .catch((err) => {
-              console.warn("재생 실패:", err);
-              setIsPlaying(false);
-            });
+            audioRef.current.src = `http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`;
+            setIsPlaying(false);
         }
-      };
+    };
 
     const handlePlay = () => {
         if (audioRef.current && audioRef.current.src) {
@@ -70,10 +59,8 @@ const SelectSongPage = () => {
         }
     };
 
-    // get job_id + gp5 연습 페이지로 넘기기
+    //get job_id + 다운로드
     const handleDownload = async (song) => {
-        setLoadingSongs((prev) => ({ ...prev, [song.title]: true }));
-
         try {
             // MP3 파일을 fetch → File 객체 생성
             const fileRes = await fetch(`http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`);
@@ -95,26 +82,46 @@ const SelectSongPage = () => {
 
             if (!res.ok) throw new Error("Transcription failed");
             const { job_id } = await res.json();
-            console.log("변환 요청 완료 - job_id:", job_id);
-            setIsDownloaded(true);
+            console.log("job_id:", job_id);
 
             // 1분 대기 후 다운로드 시작
-            setTimeout(async () => {
-                const res = await fetch(`http://localhost:8000/convert/download/${job_id}/gp5`);
-                if (res.status === 200) {
-                    const blob = await res.blob();
-                    const fileUrl = URL.createObjectURL(blob);              // blob URL만 생성
-                    navigate("/practice", { state: { song, fileUrl } });    // PracticePage로 이동하며 전달
-                } else {
-                    alert("변환된 파일을 불러오지 못했습니다.");
-                }
-                setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
-            }, delay);
+            setTimeout(() => startDownloadPolling(job_id, song.title, outputType), delay);
         } catch (err) {
             console.error("다운로드 요청 실패:", err);
             alert("변환 요청에 실패했습니다.");
-            setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
         }
+    };
+
+    // 다운로드 요청
+    const startDownloadPolling = (jobId, title, type) => {
+        let attempts = 0;
+        const maxAttempts = 3;
+        let downloaded = false;
+
+        const poll = setInterval(async () => {
+        if (downloaded || attempts >= maxAttempts) {
+            clearInterval(poll);
+            if (!downloaded) alert("파일 다운로드에 실패했습니다. 다시 시도해주세요.");
+            return;
+        }
+
+        attempts++;
+        try {
+            const res = await fetch(`http://localhost:8000/convert/download/${jobId}/${type}`);
+            if (res.status === 200) {
+                downloaded = true;
+                const blob = await res.blob();
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `${title}.${type}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (err) {
+            console.warn(`다운로드 시도 실패 (${attempts}회):`, err);
+        }
+        }, 3000);
     };
 
     return (
@@ -125,28 +132,20 @@ const SelectSongPage = () => {
                 <SongList
                     songs={songs}
                     onSongSelect={handleSongSelect}
-                    onDownload={handleDownload}
+                    onDownloadGP5={(song) => handleDownload(song)}
+                    showDownloadPDF={false}
+                    showDownloadGP5={true}
                     showDelete={false}
-                    loadingSongs={loadingSongs}
                 />
                 <div className={styles.controlContainer}>
-                    {isPlaying ? (
-                        <img src={pauseImage} onClick={handlePause} className={styles.button} alt="일시정지" />
-                    ) : (
-                        <img src={playImage} onClick={handlePlay} className={styles.button} alt="재생" />
-                    )}
-                    <div
-                        className={styles.sheetContainer}
-                        onClick={() => {
-                            if (isDownloaded) {
-                                navigate("/practice");
-                            } else {
-                                alert("GP5 파일을 먼저 다운로드해 주세요.");
-                            }
-                        }}
-                    >
-                        <p>악보가 아직 렌더링되지 않았습니다.</p>
-                    </div>
+                {isPlaying ? (
+                    <img src={pauseImage} onClick={handlePause} className={styles.button} alt="일시정지" />
+                ) : (
+                    <img src={playImage} onClick={handlePlay} className={styles.button} alt="재생" />
+                )}
+                <div className={styles.sheetContainer}>
+                        <img src={musicImage} alt="악보 미리보기" />
+                </div>
                 </div>
             </div>
             <audio ref={audioRef} />

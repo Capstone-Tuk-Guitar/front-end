@@ -109,7 +109,7 @@ const MusicPage = () => {
 
       if (!res.ok) throw new Error("Transcription failed");
       const { job_id } = await res.json();
-      console.log("변환 요청 완료 - job_id:", job_id);
+      console.log("job_id:", job_id);
 
       // 1분 대기 후 다운로드 시작
       setTimeout(() => {
