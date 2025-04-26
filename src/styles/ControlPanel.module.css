@@ -6,10 +6,20 @@
   align-items: center;
 }
 
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .panelImage {
   width: 480px;
   height: auto;
   object-fit: contain;
+  animation: rotate 5s linear infinite;
 }
 
 .songTitle {

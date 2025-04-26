@@ -27,7 +27,7 @@ const Song = ({
           onClick={() => onDownload(song)}
           disabled={loading}
         >
-          {loading ? "변환 중..." : "♬ 악보 다운로드"}
+          {loading ? "다운로드 중..." : "♬ 악보 다운로드"}
         </button>
 
         {showDelete && (

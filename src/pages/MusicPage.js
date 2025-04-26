@@ -12,7 +12,7 @@ const MusicPage = () => {
   const audioRef = useRef(new Audio());
   
   const outputType = "midi";
-  const delay = 60000;                                        // 기본값: 1분 (60000ms)
+  const delay = 60000;                                        // klangio api 대기 시간 (1분)
   const [loadingSongs, setLoadingSongs] = useState({});
   
   // MP3 파일 업로드
