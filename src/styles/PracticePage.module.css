@@ -5,3 +5,7 @@
 .renderButton {
     margin-left: 10px;
 }
+
+Button {
+    padding: 15px 15px;
+}

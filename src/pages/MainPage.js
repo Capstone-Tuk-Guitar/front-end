@@ -7,6 +7,7 @@ import DetailChord from "../components/DetailChord";
 import musicImage from "../assets/music.svg";
 import guitarImage from "../assets/guitar.svg";
 import recordImage from "../assets/stats.svg";
+import compareImage from "../assets/compare.svg";
 
 // 이미지 자동 import
 const importAll = (r) => r.keys().map(r);
@@ -22,8 +23,8 @@ const MainPage = () => {
   const slides = [
     { id: 0, image: musicImage, text: "음원 목록" },
     { id: 1, image: guitarImage, text: "연주하기" },
-    { id: 2, image: recordImage, text: "연주 기록" },
-    { id: 3, image: musicImage, text: "비교하기(임시)"},
+    { id: 2, image: compareImage, text: "비교하기"},
+    { id: 3, image: recordImage, text: "연주 기록" },
   ];
 
   useEffect(() => {

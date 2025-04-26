@@ -7,6 +7,7 @@ import MusicPage from "../pages/MusicPage";
 import SelectSongPage from "../pages/SelectSongPage";
 import PracticePage from '../pages/PracticePage';
 import AccuracyPage from '../pages/AccuracyPage';
+import DetailDiffPage from '../pages/DetailDiffPage'
 import RecordPage from '../pages/RecordPage';
 import GuidePage from '../pages/GuidePage';
 import TuningPage from '../pages/TuningPage';
@@ -22,6 +23,7 @@ function AppRoutes() {
       <Route path='/select_song' element={<SelectSongPage />} />
       <Route path="/practice" element={<PracticePage />} />
       <Route path="/accuracy" element={<AccuracyPage />} />
+      <Route path="/detail_diff" element={<DetailDiffPage />} />
       <Route path="/records" element={<RecordPage />} />
       <Route path="/guide" element={<GuidePage />} />
       <Route path="/tuning" element={<TuningPage />} />

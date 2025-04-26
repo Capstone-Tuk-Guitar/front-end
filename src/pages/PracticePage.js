@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import Button from "../components/Button";
 import PracticeViewer from "../components/PracticeViewer";
 import styles from "../styles/PracticePage.module.css";
 
@@ -30,18 +31,39 @@ function PracticePage() {
     }
   }, [location, navigate]);
 
-  const handleClick = () => {
-    navigate("/accuracy");
+
+  // 임시
+  const fileInputRef = useRef();
+
+  const handleUploadClick = () => {
+    fileInputRef.current.click();
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setGp5File(fileUrl);
+    }
+  };
+  
   return (
     <div className="container">
       <Header />
 
       <div className={styles.container} >
+        <Button onClick={handleUploadClick}>
+          GP5 파일 직접 업로드하여 렌더링 (임시)
+        </Button>
+        <input
+          type="file"
+          accept=".gp5"
+          style={{ display: "none" }}
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
+        
         <PracticeViewer gp5File={gp5File} />
-        <br />
-        <button onClick={handleClick}>MIDI 파일 비교하기</button>
       </div>
     </div>
   );

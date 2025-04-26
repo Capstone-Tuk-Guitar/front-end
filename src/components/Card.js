@@ -20,13 +20,13 @@ const Card = ({ image, text, isActive, position }) => {
   // 카드 클릭 시 이동
   const handleClick = () => {
     if (text === "음원 목록") {
-      navigate("/music");   // MusicPage로 이동
+      navigate("/music");         // MusicPage로 이동
     } else if (text === "연주하기") {
-      navigate("/select_song");  // PracticePage로 이동
+      navigate("/select_song");   // PracticePage로 이동
+    } else if (text === "비교하기") {
+      navigate("/accuracy");      // AccuracyPage로 이동
     } else if (text === "연주 기록") {
-      navigate("/records");  // RecordPage로 이동
-    } else if (text === "비교하기(임시)") {
-      navigate("/accuracy");
+      navigate("/records");       // RecordPage로 이동
     }
   }
 
