@@ -19,9 +19,7 @@ const Song = ({
         <h3>{song.title}</h3>
       </div>
 
-      <div className={styles.infoContainer}>
-        <span>{song.difficulty}</span>
-
+      <div className={styles.buttonContainer}>
         <button
           className={styles.sheetButton}
           onClick={() => onDownload(song)}

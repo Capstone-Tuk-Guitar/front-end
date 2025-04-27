@@ -49,6 +49,7 @@
 
 .loginBox button {
     margin-top: 25px;
+    margin-bottom: 0;
     padding: 10px;
     background: #2c2c2c;
     color: white;
