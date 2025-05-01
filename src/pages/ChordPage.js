@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react'; 
 import ChordDiagram from '../components/ChordDiagram';
 import ChordSelector from '../components/ChordSelector';
 import RhythmGame from '../components/RhythmGame';
@@ -9,9 +9,10 @@ export const ChordPage = () => {
     const [selectedRoot, setSelectedRoot] = useState('C');
     const [selectedType, setSelectedType] = useState('major');
     //const [expectedNotes, setExpectedNotes] = useState([]);
-    const [detectedNote, setDetectedNote] = useState(null);
+    //const [detectedNote, setDetectedNote] = useState(null);
 
-    const currentChord = `${selectedRoot}${selectedType === 'major' ? '' : selectedType}`;
+    const currentdiagramChord = `${selectedRoot}${selectedType === 'major' ? '' : selectedType}`;
+    const currentChord = `${selectedRoot} ${selectedType}`;
     
     //useEffect(() => {
     //    fetch("http://localhost:8000/chords")
@@ -22,17 +23,17 @@ export const ChordPage = () => {
     //        .catch(error => console.error("Error loading chord data:", error));
     //}, [currentChord]);
 
-    useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8000/ws/chordprac");
-
-        ws.onmessage = (event) => {
-            setDetectedNote(event.data);
-        };
-
-        return () => {
-            ws.close();
-        };
-    }, []);
+    //useEffect(() => {
+    //    const ws = new WebSocket("ws://localhost:8000/ws/chordpc");
+//
+   //     ws.onmessage = (event) => {
+    //        setDetectedNote(event.data);
+     //   };
+//
+     //   return () => {
+     //       ws.close();
+     //   };
+  //  }, []);
 
     return (
         <div className={styles.container}>
@@ -40,7 +41,7 @@ export const ChordPage = () => {
 
             <div className={styles.content}>
                 <div className={styles.chordSection}>
-                    <ChordDiagram chord={currentChord} />
+                    <ChordDiagram chord={currentdiagramChord} />
                 </div>
 
                 <div className={styles.selectorWrapper}>
@@ -54,7 +55,7 @@ export const ChordPage = () => {
 
         <div className={styles.statusLayout}>
             <div className={styles.rhythmGameWrapper}>
-                <RhythmGame expectedChord={currentChord} detectedNote={detectedNote} />
+                <RhythmGame expectedChord={currentChord} />  
             </div>
         </div>
             </div>

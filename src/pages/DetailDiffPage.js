@@ -6,13 +6,12 @@ import styles from "../styles/DetailDiffPage.module.css";
 
 function DetailDiffPage() {
     const location = useLocation();
-    const { file1, file2 } = location.state || {};  // AccuracyPage에서 전달된 파일들
+    const { file1, file2 } = location.state || {};
     const [loading, setLoading] = useState(false);
     const [diffResult, setDiffResult] = useState(null);
 
     useEffect(() => {
         if (file1 && file2) {
-            // 파일을 비교하는 요청을 서버에 보냄
             const compareFiles = async () => {
                 setLoading(true);
                 const formData = new FormData();
@@ -38,7 +37,7 @@ function DetailDiffPage() {
     return (
         <div className="container">
             <Header />
-            
+
             <div className={styles.container}>
                 <h1>세부 비교 결과</h1>
                 {loading ? (
@@ -51,14 +50,15 @@ function DetailDiffPage() {
                                     <h2>피치 차이</h2>
                                     <div className={styles.scrollBox}>
                                         <ul>
-                                            {diffResult["음 높낮이 차이"].map((diff, index) => (
-                                                <li key={index}>
-                                                    음표 번호: {diff["차이 나는 음표 번호"]} <br />
-                                                    1번째 파일 값: {diff["1번째 파일 값"]} <br />
-                                                    2번째 파일 값: {diff["2번째 파일 값"]} <br />
-                                                    시간: {diff["시간"]}초
-                                                </li>
-                                            ))}
+                                            {Array.isArray(diffResult["음 높낮이 차이"]) &&
+                                                diffResult["음 높낮이 차이"].map((diff, index) => (
+                                                    <li key={index}>
+                                                        음표 번호: {diff["차이 나는 음표 번호"]} <br />
+                                                        1번째 파일 값: {diff["1번째 파일 값"]} <br />
+                                                        2번째 파일 값: {diff["2번째 파일 값"]} <br />
+                                                        시간: {diff["시간"]}초
+                                                    </li>
+                                                ))}
                                         </ul>
                                     </div>
                                 </div>
@@ -67,22 +67,33 @@ function DetailDiffPage() {
                                     <h2>리듬 차이</h2>
                                     <div className={styles.scrollBox}>
                                         <ul>
-                                            {diffResult["리듬 차이"].map((diff, index) => (
-                                                <li key={index}>
-                                                    음표 번호: {diff["차이 나는 음표 번호"]} <br />
-                                                    1번째 파일 값: {diff["1번째 파일 값"]} <br />
-                                                    2번째 파일 값: {diff["2번째 파일 값"]} <br />
-                                                    시간: {diff["시간"]}초
-                                                </li>
-                                            ))}
+                                            {Array.isArray(diffResult["리듬 차이"]) &&
+                                                diffResult["리듬 차이"].map((diff, index) => (
+                                                    <li key={index}>
+                                                        음표 번호: {diff["차이 나는 음표 번호"]} <br />
+                                                        1번째 파일 값: {diff["1번째 파일 값"]} <br />
+                                                        2번째 파일 값: {diff["2번째 파일 값"]} <br />
+                                                        시간: {diff["시간"]}초
+                                                    </li>
+                                                ))}
                                         </ul>
                                     </div>
                                 </div>
 
                                 <div className={styles.section}>
-                                    <h2>멜로디 간격 차이</h2>
+                                    <h2>멜로디 간격 차이 </h2>
                                     <div className={styles.scrollBox}>
-
+                                        <ul>
+                                            {Array.isArray(diffResult["멜로디 간격 차이"]) &&
+                                                diffResult["멜로디 간격 차이"].map((diff, index) => (
+                                                    <li key={index}>
+                                                        음표 번호: {diff["차이 나는 음표 번호"]} <br />
+                                                        1번째 파일 값: {diff["1번째 파일 값"]} <br />
+                                                        2번째 파일 값: {diff["2번째 파일 값"]} <br />
+                                                        시간: {diff["시간"]}초
+                                                    </li>
+                                                ))}
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
