@@ -9,20 +9,20 @@ function PracticePage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [gp5File, setGp5File] = useState(null);
+  const [xmlFile, setXmlFile] = useState(null);
   const [song, setSong] = useState();
 
   useEffect(() => {
     if (location.state?.fileUrl && location.state?.song) {
-      setGp5File(location.state.fileUrl);
+      setXmlFile(location.state.fileUrl);
       setSong(location.state.song);
-      localStorage.setItem("gp5File", location.state.fileUrl);
+      localStorage.setItem("xmlFile", location.state.fileUrl);
       localStorage.setItem("song", JSON.stringify(location.state.song));
     } else {
-      const savedFileUrl = localStorage.getItem("gp5File");
+      const savedFileUrl = localStorage.getItem("xmlFile");
       const savedSong = localStorage.getItem("song");
       if (savedFileUrl && savedSong) {
-        setGp5File(savedFileUrl);
+        setXmlFile(savedFileUrl);
         setSong(JSON.parse(savedSong));
       } else {
         alert("악보 정보가 없습니다. 다시 곡을 선택해주세요.");
@@ -43,7 +43,7 @@ function PracticePage() {
     const file = e.target.files[0];
     if (file) {
       const fileUrl = URL.createObjectURL(file);
-      setGp5File(fileUrl);
+      setXmlFile(fileUrl);
     }
   };
   
@@ -63,7 +63,7 @@ function PracticePage() {
           onChange={handleFileChange}
         />
         
-        <PracticeViewer gp5File={gp5File} />
+        <PracticeViewer xmlFile={xmlFile} />
       </div>
     </div>
   );

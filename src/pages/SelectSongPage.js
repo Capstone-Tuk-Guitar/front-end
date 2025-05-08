@@ -16,7 +16,8 @@ const SelectSongPage = () => {
     const [songs, setSongs] = useState([]);                     // 업로드된 곡 목록
     const audioRef = useRef(new Audio());                       // 오디오 재생 참조
     
-    const [outputType] = useState("gp5");
+    const outputType = "mxml";
+    const downloadType = "xml"; 
     const delay = 60000;                                        // klangio api 대기 시간 (1분)
     const [loadingSongs, setLoadingSongs] = useState({});
 
@@ -93,12 +94,12 @@ const SelectSongPage = () => {
             const { job_id } = await res.json();
             console.log("job_id:", job_id);
     
-            // 1분 대기 후 GP5 파일 다운로드
+            // 1분 대기 후 XML 파일 다운로드
             setTimeout(async () => {
                 try {
-                    const res = await fetch(`http://localhost:8000/convert/download/${job_id}/${outputType}`);
+                    const res = await fetch(`http://localhost:8000/convert/download/${job_id}/${downloadType}`);
                     if (res.status === 200) {
-                        const serverFileUrl = `http://localhost:8000/convert/download/${job_id}/${outputType}`;
+                        const serverFileUrl = `http://localhost:8000/convert/download/${job_id}/${downloadType}`;
 
                         setFileUrl(serverFileUrl);
                         setSelectedSong(song);

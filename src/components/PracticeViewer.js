@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import styles from "../styles/PracticeViewer.module.css";
 
-const PracticeViewer = ({ gp5File }) => {
+const PracticeViewer = ({ xmlFile }) => {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
 
   useEffect(() => {
-    if (gp5File && containerRef.current && window.alphaTab?.AlphaTabApi) {
+    if (xmlFile && containerRef.current && window.alphaTab?.AlphaTabApi) {
       const api = new window.alphaTab.AlphaTabApi(containerRef.current, {
-        file: gp5File,
+        file: xmlFile,
         layoutMode: "horizontal",
         scrollMode: "horizontal",
         trackDisplayMode: "ScoreTab",
@@ -20,7 +20,7 @@ const PracticeViewer = ({ gp5File }) => {
         api?.destroy();       // AlphaTab API 인스턴스 제거 (메모리 누수 방지)
       };
     }
-  }, [gp5File]);
+  }, [xmlFile]);
 
   return (
     <div className={styles.viewerContainer} >

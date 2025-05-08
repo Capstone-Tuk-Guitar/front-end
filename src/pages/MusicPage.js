@@ -11,7 +11,8 @@ const MusicPage = () => {
   const [songs, setSongs] = useState([]);                     // 업로드된 곡 목록
   const audioRef = useRef(new Audio());
   
-  const outputType = "pdf";
+  const outputType = "mxml";
+  const downloadType = "xml"; 
   const delay = 60000;                                        // klangio api 대기 시간 (1분)
   const [loadingSongs, setLoadingSongs] = useState({});
 
@@ -120,7 +121,7 @@ const MusicPage = () => {
 
       // 1분 대기 후 다운로드 시작
       setTimeout(() => {
-        startDownloadPolling(job_id, song.title, outputType);
+        startDownloadPolling(job_id, song.title, downloadType);
         setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
       },delay);
     } catch (err) {
@@ -151,7 +152,8 @@ const MusicPage = () => {
           const blob = await res.blob();
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = `${title}.${type}`;
+          const cleanTitle = title.replace(/\.mp3$/i, "");
+          link.download = `${cleanTitle}.${type}`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
