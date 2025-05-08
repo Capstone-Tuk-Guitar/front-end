@@ -15,15 +15,15 @@ const SongList = ({
       {songs.length === 0 ? (
         <p className={styles.emptyMessage}>아직 업로드한 곡이 없습니다 🎶</p>
       ) : (
-        songs.map((song, index) => (
+        songs.map((song) => (
           <Song
-            key={`${song.title}-${index}`}
+            key={song.music_id}
             song={song}
             onSongSelect={onSongSelect}
             onDownload={onDownload}
             onDelete={onDelete}
             showDelete={showDelete}
-            loading={loadingSongs[song.title] || false}
+            loading={loadingSongs[song.music_id] || false}
           />
         ))
       )}

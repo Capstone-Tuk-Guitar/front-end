@@ -17,7 +17,7 @@ const SelectSongPage = () => {
     const audioRef = useRef(new Audio());                       // 오디오 재생 참조
     
     const [outputType] = useState("gp5");
-    const [delay] = useState(60000);                            // klangio api 대기 시간 (1분)
+    const delay = 60000;                                        // klangio api 대기 시간 (1분)
     const [loadingSongs, setLoadingSongs] = useState({});
 
     const navigate = useNavigate();
@@ -26,7 +26,8 @@ const SelectSongPage = () => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await fetch("http://localhost:8000/songs/");
+                const username = localStorage.getItem("user_id");
+                const response = await fetch(`http://localhost:8000/music/${username}`);
                 if (!response.ok) throw new Error("Failed to fetch songs");
                 const data = await response.json();
                 setSongs(data);
@@ -41,14 +42,15 @@ const SelectSongPage = () => {
     const handleSongSelect = async (song) => {
         setSelectedSong(song);
         if (audioRef.current) {
-            audioRef.current.src = `http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`;
+            audioRef.current.src = `http://localhost:8000/stream-music/${song.music_id}`;
             setIsPlaying(false);
         }
     };
 
     const handlePlay = () => {
         if (audioRef.current && audioRef.current.src) {
-          audioRef.current.play()
+          audioRef.current
+            .play()
             .then(() => setIsPlaying(true))
             .catch((err) => {
               console.warn("재생 실패:", err);
@@ -68,12 +70,12 @@ const SelectSongPage = () => {
 
     //get job_id + 악보 렌더링
     const handleDownload = async (song) => {
-        setLoadingSongs((prev) => ({ ...prev, [song.title]: true }));
+        setLoadingSongs((prev) => ({ ...prev, [song.music_id]: true }));
 
         try {
-            const fileRes = await fetch(`http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`);
+            const fileRes = await fetch(`http://localhost:8000/stream-music/${song.music_id}`);
             const fileBlob = await fileRes.blob();
-            const file = new File([fileBlob], song.filename, { type: "audio/mpeg" });
+            const file = new File([fileBlob],  `${song.title}.mp3`, { type: "audio/mpeg" });
     
             const formData = new FormData();
             formData.append("file", file);
@@ -108,12 +110,12 @@ const SelectSongPage = () => {
                     console.warn("다운로드 실패:", err);
                     alert("파일 다운로드에 실패했습니다.");
                 }
-                setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
+                setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
             }, delay);
         } catch (err) {
             console.error("다운로드 요청 실패:", err);
             alert("변환 요청에 실패했습니다.");
-            setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
+            setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
         }
     };
 

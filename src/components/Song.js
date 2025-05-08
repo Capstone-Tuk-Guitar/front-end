@@ -29,7 +29,9 @@ const Song = ({
         </button>
 
         {showDelete && (
-          <button className={styles.deleteButton} onClick={() => onDelete(song.title)}>
+          <button
+            className={styles.deleteButton}
+            onClick={() => onDelete(song.music_id)}>
             삭제
           </button>
         )}

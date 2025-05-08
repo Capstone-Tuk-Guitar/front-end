@@ -11,47 +11,17 @@ const MusicPage = () => {
   const [songs, setSongs] = useState([]);                     // 업로드된 곡 목록
   const audioRef = useRef(new Audio());
   
-  const outputType = "midi";
+  const outputType = "pdf";
   const delay = 60000;                                        // klangio api 대기 시간 (1분)
   const [loadingSongs, setLoadingSongs] = useState({});
+
+  const username = localStorage.getItem("user_id");
   
-  // MP3 파일 업로드
-  const handleFileUpload = async () => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = ".mp3";
-    fileInput.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const response = await fetch("http://localhost:8000/upload/", {
-          method: "POST",
-          body: formData,
-        });
-        if (!response.ok) throw new Error("Upload failed");
-        const result = await response.json();
-        setSongs((prev) => [...prev, {
-          title: result.title,
-          artist: "Unknown",
-          difficulty: "Custom",
-          filename: result.filename,
-        }]);
-      } catch (error) {
-        console.error("Upload error:", error);
-      }
-    };
-    fileInput.click();
-  };
-
   // 서버에 업로드된 MP3 목록
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await fetch("http://localhost:8000/songs/");
+        const response = await fetch(`http://localhost:8000/music/${username}`);
         if (!response.ok) throw new Error("Failed to fetch songs");
         const data = await response.json();
         setSongs(data);
@@ -62,23 +32,60 @@ const MusicPage = () => {
     fetchSongs();
   }, []);
 
+  // MP3 파일 업로드
+  const handleFileUpload = async () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".mp3";
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("user_id", username);
+      formData.append("title", file.name);
+      formData.append("composer", "Unknown");
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("http://localhost:8000/upload-music/", {
+          method: "POST",
+          body: formData,
+        });
+        if (!response.ok) throw new Error("Upload failed");
+        const result = await response.json();
+        setSongs(
+          (prev) => [...prev, {
+            music_id: result.music_id,
+            title: result.title,
+            artist: "Unknown",
+            filename: result.filename,
+          }]
+        );
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    };
+    fileInput.click();
+  };
+
   // 곡 선택 시 재생 처리
-  const handleSongSelect = async (song) => {
+  const handleSongSelect = (song) => {
     setSelectedSong(song);
     if (audioRef.current) {
-      audioRef.current.src = `http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`;
+      audioRef.current.src = `http://localhost:8000/stream-music/${song.music_id}`;
       audioRef.current.play();
     }
   };
 
   // 곡 삭제
-  const handleDelete = async (title) => {
+  const handleDelete = async (music_id) => {
     try {
-      const response = await fetch(`http://localhost:8000/delete/?title=${encodeURIComponent(title)}`, {
+      const response = await fetch(`http://localhost:8000/delete-music/?music_id=${music_id}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete");
-      setSongs((prev) => prev.filter((song) => song.title !== title));
+      setSongs((prev) => prev.filter((song) => song.music_id !== music_id));
     } catch (error) {
       console.error("Error deleting song:", error);
     }
@@ -86,13 +93,13 @@ const MusicPage = () => {
 
   //get job_id + 다운로드
   const handleDownload = async (song) => {
-    setLoadingSongs((prev) => ({ ...prev, [song.title]: true }));
+    setLoadingSongs((prev) => ({ ...prev, [song.music_id]: true }));
 
     try {
       // MP3 파일을 fetch → File 객체 생성
-      const fileRes = await fetch(`http://localhost:8000/uploads/${encodeURIComponent(song.filename)}`);
+      const fileRes = await fetch(`http://localhost:8000/stream-music/${song.music_id}`);
       const fileBlob = await fileRes.blob();
-      const file = new File([fileBlob], song.filename, { type: "audio/mpeg" });
+      const file = new File([fileBlob], `${song.title}.mp3`, { type: "audio/mpeg" });
 
       // 변환 요청 보내기
       const formData = new FormData();
@@ -114,12 +121,12 @@ const MusicPage = () => {
       // 1분 대기 후 다운로드 시작
       setTimeout(() => {
         startDownloadPolling(job_id, song.title, outputType);
-        setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
+        setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
       },delay);
     } catch (err) {
       console.error("다운로드 요청 실패:", err);
       alert("변환 요청에 실패했습니다.");
-      setLoadingSongs((prev) => ({ ...prev, [song.title]: false }));
+      setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
     }
   };
 
