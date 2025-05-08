@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import LoginForm from "../components/LoginForm";
-import styles from "../styles/SignUpPage.module.css";
 
 const SignUpPage = () => {
     const [email, setEmail] = useState("");
@@ -55,16 +54,6 @@ const SignUpPage = () => {
         ]}
         buttonText="SignUp"
         onSubmit={handleSignUp}
-        footer={
-          <div>
-            <br />
-            <span className={styles.test}>
-              테스트 이메일: test@example.com<br />
-              테스트 아이디: test<br />
-              테스트 패스워드: password
-            </span>
-          </div>
-        }
       />
     );
 };

@@ -50,12 +50,6 @@ const LoginPage = () => {
             <p onClick={() => navigate("/login")} className={styles.forgot}>Forget password?</p>
             <p onClick={() => navigate("/signup")} className={styles.register}>Sign up</p>
           </div>
-          
-          <br />
-          <span className={styles.test}>
-            테스트 아이디: test<br />
-            테스트 패스워드: password
-          </span>
         </div>
       }
     />
