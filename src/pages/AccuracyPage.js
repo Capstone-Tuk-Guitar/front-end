@@ -23,27 +23,30 @@ function AccuracyPage() {
     };
 
     const handleCompare = async () => {
-        if (!file1 || !file2) {
-            alert("두 개의 파일을 업로드하세요.");
-            return;
-        }
+    if (!file1 || !file2) {
+        alert("두 개의 파일을 업로드하세요.");
+        return;
+    }
 
-        const formData = new FormData();
-        formData.append("file1", file1);
-        formData.append("file2", file2);
-        setLoading(true);
+    const formData = new FormData();
+    formData.append("file1", file1);
+    formData.append("file2", file2);
+    formData.append("user_id", localStorage.getItem("user_id"));  // ✅ user_id 추가!
 
-        try {
-            const response = await axios.post("http://localhost:8000/compare/", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            setResult(response.data);
-        } catch (error) {
-            console.error("비교 실패:", error);
-            alert("비교 중 오류가 발생했습니다.");
-        }
-        setLoading(false);
-    };
+    setLoading(true);
+
+    try {
+        const response = await axios.post("http://localhost:8000/compare/", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        setResult(response.data);
+    } catch (error) {
+        console.error("비교 실패:", error);
+        alert("비교 중 오류가 발생했습니다.");
+    }
+    setLoading(false);
+};
+
 
     const handleDetailView = () => {
         if (!file1 || !file2) {

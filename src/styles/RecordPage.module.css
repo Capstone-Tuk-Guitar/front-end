@@ -1,0 +1,45 @@
+.pageContainer {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.recordGroup {
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-bottom: 2px solid #4bc0c0;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.recordList {
+  list-style: none;
+  padding-left: 10px;
+}
+
+.recordItem {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.file {
+  flex: 2;
+}
+
+.accuracy {
+  flex: 1;
+  text-align: center;
+}
+
+.date {
+  flex: 1.5;
+  text-align: right;
+  color: #888;
+}
