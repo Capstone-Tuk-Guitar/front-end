@@ -175,7 +175,6 @@ const MusicPage = () => {
           onSongSelect={handleSongSelect}
           onDownload={handleDownload}
           onDelete={handleDelete}
-          showDelete={true}
           loadingSongs={loadingSongs}
         />
       </div>

@@ -6,6 +6,7 @@ const Song = ({
   onSongSelect,
   onDownload,
   onDelete,
+  showDownload = true,
   showDelete = true,
   loading = false,
 }) => {
@@ -20,13 +21,15 @@ const Song = ({
       </div>
 
       <div className={styles.buttonContainer}>
-        <button
-          className={styles.sheetButton}
-          onClick={() => onDownload(song)}
-          disabled={loading}
-        >
-          {loading ? "다운로드 중..." : "♬ 악보 다운로드"}
-        </button>
+        {showDownload && (
+          <button
+            className={styles.sheetButton}
+            onClick={() => onDownload(song)}
+            disabled={loading}
+          >
+            {loading ? "다운로드 중..." : "♬ 악보 다운로드"}
+          </button>
+        )}
 
         {showDelete && (
           <button

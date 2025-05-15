@@ -7,6 +7,7 @@ const SongList = ({
   onSongSelect,
   onDownload,
   onDelete,
+  showDownload = true,
   showDelete = true,
   loadingSongs = {},
 }) => {
@@ -22,6 +23,7 @@ const SongList = ({
             onSongSelect={onSongSelect}
             onDownload={onDownload}
             onDelete={onDelete}
+            showDownload={showDownload}
             showDelete={showDelete}
             loading={loadingSongs[song.music_id] || false}
           />

@@ -129,7 +129,7 @@ const SelectSongPage = () => {
                     songs={songs}
                     onSongSelect={handleSongSelect}
                     onDownload={handleDownload}
-                    showDelete={false}
+                    showDelete={false}  
                     loadingSongs={loadingSongs}
                 />
                 <div className={styles.controlContainer}>
@@ -144,8 +144,9 @@ const SelectSongPage = () => {
                         if (isDownloaded) {
                             navigate("/practice", {
                                 state: {
-                                    fileUrl,
-                                    song: selectedSong,
+                                    fileUrl,                // 악보
+                                    song: selectedSong,     // 곡 정보
+                                    audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`     // 음원 URL
                                 },
                             });
                         } else {

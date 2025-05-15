@@ -12,9 +12,17 @@ const PracticeViewer = ({ xmlFile }) => {
         layoutMode: "horizontal",
         scrollMode: "horizontal",
         trackDisplayMode: "ScoreTab",
+        scale: 2.5,
       });
 
       apiRef.current = api;
+
+      api.renderFinished.on(() => {
+        const canvas = containerRef.current.querySelector("div");
+        if (canvas) {
+          containerRef.current.style.width = `${canvas.scrollWidth}px`;  // 자동으로 맞춰줌
+        }
+      });
 
       return () => {
         api?.destroy();       // AlphaTab API 인스턴스 제거 (메모리 누수 방지)
