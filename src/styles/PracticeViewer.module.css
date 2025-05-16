@@ -1,12 +1,10 @@
 .viewerContainer {
   width: 100%;
-  height: 75vh;
   overflow-x: auto;
-  overflow-y: hidden;
 }
 
 .viewerCanvas {
   display: flex;
-  height: 600px;
+  overflow-y: hidden;
   align-items: center;
 }

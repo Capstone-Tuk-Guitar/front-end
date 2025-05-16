@@ -1096,11 +1096,6 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@coderline/alphatab@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@coderline/alphatab/-/alphatab-1.5.0.tgz#a8b303970332c56179b6039b380398fd6ae80bca"
-  integrity sha512-XX4O4gC/pt8OGCR48LHKeELxh9flM6piNs2Jv6KW3AjdfE5Qh6RitTmj6mHsY2cI9/RjBkNtlZreR3H4uJ5nNA==
-
 "@csstools/normalize.css@*":
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.1.1.tgz#f0ad221b7280f3fc814689786fd9ee092776ef8f"
