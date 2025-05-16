@@ -11,8 +11,8 @@ const MusicPage = () => {
   const [songs, setSongs] = useState([]);                     // 업로드된 곡 목록
   const audioRef = useRef(new Audio());
   
-  const outputType = "mxml";
-  const downloadType = "xml"; 
+  const outputType = "pdf";
+  const downloadType = "pdf"; 
   const delay = 60000;                                        // klangio api 대기 시간 (1분)
   const [loadingSongs, setLoadingSongs] = useState({});
 
