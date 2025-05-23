@@ -7,13 +7,13 @@ export const RhythmGame = ({ expectedChord }) => {
   const wsRef = useRef(null);
   const [fillColor, setFillColor] = useState("#000");
   const detectedChordRef = useRef(null); 
-  const [detectedChord, setDetectedChord] = useState(null);
+  const [detectedChord, setDetectedChord] = useState(null); // 정지 상태에서는 null
 
   const noteStartTimeRef = useRef(Date.now());
   const noteXRef = useRef(520);
   const recentNotesRef = useRef([]);
-  const lastUpdateTimeRef = useRef(0);
-  const matchOccurredRef = useRef(false); // 매치 여부 저장
+  const prevChordRef = useRef(null); // NEW
+  const matchOccurredRef = useRef(false);
 
   const BPM = 60;
   const beatInterval = 60 / BPM;
@@ -26,12 +26,12 @@ export const RhythmGame = ({ expectedChord }) => {
   };
 
   const normalizeChord = (chordStr) => {
-    if (!chordStr || typeof chordStr !== "string") return null;
-    chordStr = chordStr.trim().replace(/\s+/g, " "); // 중복 공백 제거
-    const [root, type] = chordStr.split(" ");
-    const normType = type?.toLowerCase() === "major" ? "maj" :
-                     type?.toLowerCase() === "minor" ? "min" : type;
-    return `${root} ${normType}`.trim();
+    if (!chordStr || typeof chordStr !== "string") return "";
+      chordStr = chordStr.trim().replace(/\s+/g, " ");
+      const [root, type] = chordStr.split(" ");
+      const displayType = type === "maj" ? "major" :
+                          type === "min" ? "minor" : type;
+      return `${root} ${displayType}`.trim();
   };
 
   const draw = () => {
@@ -54,23 +54,20 @@ export const RhythmGame = ({ expectedChord }) => {
     const isInsideCircle = distance < radius;
     const isMatch = normalizeChord(expectedChord) === normalizeChord(detectedChordRef.current);
    
-    // 판정 로직
     if (isInsideCircle) {
       if (isMatch && !matchOccurredRef.current) {
         matchOccurredRef.current = true;
-        setFillColor(noteColors.match); // 초록색
+        setFillColor(noteColors.match);
       } else if (!matchOccurredRef.current && fillColor !== noteColors.miss) {
-        setFillColor(noteColors.miss); // 빨간색
+        setFillColor(noteColors.miss);
       }
     } else {
-      // 원 밖일 경우 초기화
       if (fillColor !== "#000") {
         matchOccurredRef.current = false;
         setFillColor("#000");
       }
     }
 
-    // 원 그리기
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.fillStyle = fillColor;
@@ -81,7 +78,6 @@ export const RhythmGame = ({ expectedChord }) => {
     ctx.textAlign = "center";
     ctx.fillText("♪", centerX, centerY + 10);
 
-    // 바 색 결정
     let barColor = noteColors.neutral;
     if (isInsideCircle) {
       barColor = matchOccurredRef.current ? noteColors.match : noteColors.miss;
@@ -115,44 +111,65 @@ export const RhythmGame = ({ expectedChord }) => {
   };
 
   const startAnimation = () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      console.warn("WebSocket already connected.");
-      return;
-    }
+  if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    wsRef.current.send("start");
+    return;
+  }
 
-    wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
+  setDetectedChord("---");
+  prevChordRef.current = "---";
+  detectedChordRef.current = "---";
 
-    wsRef.current.onmessage = (event) => {
-      const now = Date.now();
-      if (now - lastUpdateTimeRef.current < 500) return;
-      lastUpdateTimeRef.current = now;
+  wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
 
-      const data = JSON.parse(event.data);
-      if (data.chord) {
-        let { root, type } = data.chord;
-        if (type === "maj") type = "major";
-        if (type === "min") type = "minor";
-        const chordStr = `${root} ${type}`;
-        setDetectedChord(chordStr);
-        detectedChordRef.current = chordStr; // <- 즉시 저장
-      }
-    };
-
-    noteStartTimeRef.current = Date.now();
-    animationRef.current = requestAnimationFrame(loop);
+  wsRef.current.onopen = () => {
+    wsRef.current.send("start");
   };
+
+  wsRef.current.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    if (data.top3_chords && data.top3_chords.length > 0) {
+      const normalizedExpected = normalizeChord(expectedChord);
+      const normalizedTop3 = data.top3_chords.map(normalizeChord);
+      const matchedChord = normalizedTop3.find(
+        (chord) => chord === normalizedExpected
+      );
+
+      const finalChord = matchedChord || normalizeChord(data.primary) || "---";
+
+      //중복된 코드 연속 수신 시 업데이트 생략
+      if (finalChord !== prevChordRef.current) {
+        setDetectedChord(finalChord);
+        detectedChordRef.current = finalChord;
+        prevChordRef.current = finalChord;
+      }
+    } else {
+      if (prevChordRef.current !== "---") {
+        setDetectedChord("---");
+        detectedChordRef.current = "---";
+        prevChordRef.current = "---";
+      }
+    }
+  };
+
+  noteStartTimeRef.current = Date.now();
+  animationRef.current = requestAnimationFrame(loop);
+};
 
   const stopAnimation = () => {
     cancelAnimationFrame(animationRef.current);
 
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send("stop");
       wsRef.current.close();
       wsRef.current = null;
     }
 
     recentNotesRef.current = [];
     matchOccurredRef.current = false;
-    setDetectedChord(null);
+    setDetectedChord(null); // 감춤
+    detectedChordRef.current = null;
     noteXRef.current = canvasRef.current?.width || 520;
 
     const ctx = canvasRef.current?.getContext("2d");
@@ -166,7 +183,7 @@ export const RhythmGame = ({ expectedChord }) => {
       <p className={styles.label}>
         선택한 코드: <strong>{expectedChord}</strong>
       </p>
-      {detectedChord && (
+      {detectedChord !== null && (
         <p className={styles.label}>
           인식된 코드: <strong>{detectedChord}</strong>
         </p>
