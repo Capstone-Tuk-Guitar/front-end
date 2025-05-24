@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import PracticeViewer from "../components/PracticeViewer";
+import Playing from "../components/Playing";
 import styles from "../styles/PracticePage.module.css";
 
 function PracticePage() {
@@ -11,6 +12,8 @@ function PracticePage() {
   const [xmlFile, setXmlFile] = useState(null);
   const [song, setSong] = useState();
   const [audioUrl, setAudioUrl] = useState(null);
+  const [chordTimeline, setChordTimeline] = useState([]);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (location.state?.fileUrl && location.state?.song) {
@@ -34,16 +37,34 @@ function PracticePage() {
       }
     }
   }, [location, navigate]);
-  
+
+  useEffect(() => {
+    if (!song) return;
+    const fetchChords = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/xml_info/${song.music_id}`);
+        const data = await res.json();
+        setChordTimeline(data.chords);
+      } catch (err) {
+        console.error("코드 타이밍 불러오기 실패", err);
+      }
+    };
+    fetchChords();
+  }, [song]);
+
   return (
     <div className="container">
       <Header />
-
-      <div className={styles.container} >        
+      <div className={styles.container}>
         <PracticeViewer xmlFile={xmlFile} audioUrl={audioUrl} />
+        <audio ref={audioRef} src={audioUrl} controls autoPlay />
+        {chordTimeline.length > 0 && (
+          <Playing chordTimeline={chordTimeline} audioRef={audioRef} />
+        )}
       </div>
     </div>
   );
 }
 
 export default PracticePage;
+

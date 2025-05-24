@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from "../components/Header";
-import styles from "../styles/RecordPage.module.css";  // CSS 따로 관리
+import styles from "../styles/RecordPage.module.css";  
 
 function RecordPage() {
   const [records, setRecords] = useState([]);
