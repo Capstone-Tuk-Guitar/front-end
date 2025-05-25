@@ -44,9 +44,10 @@ function PracticePage() {
       try {
         const res = await fetch(`http://localhost:8000/xml_info/${song.music_id}`);
         const data = await res.json();
-        setChordTimeline(data.chords);
+        setChordTimeline(data.chords || []); // chords 초기화
       } catch (err) {
         console.error("코드 타이밍 불러오기 실패", err);
+        setChordTimeline([]);
       }
     };
     fetchChords();

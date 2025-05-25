@@ -33,14 +33,30 @@ const Playing = ({ chordTimeline, audioRef }) => {
     };
 
     wsRef.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.top3_chords && data.top3_chords.length > 0) {
-        const matched = normalizeChord(data.top3_chords[0]);
-        setDetectedChord(matched);
-      } else {
-        setDetectedChord("---");
+  const data = JSON.parse(event.data);
+  console.log("Top-3 Chords Received:", data.top3_chords);
+
+  if (data.top3_chords && data.top3_chords.length > 0) {
+    const expectedChords = blocksRef.current.map(block => normalizeChord(block.chord));
+    const top3Chords = data.top3_chords.map(normalizeChord);
+    const primaryChord = normalizeChord(data.primary || "");
+
+    // expected와 top-3 중 일치하는 값이 있는지 확인
+    let matchedChord = null;
+
+    for (let expected of expectedChords) {
+      if (top3Chords.includes(expected)) {
+        matchedChord = expected;
+        break;
       }
-    };
+    }
+
+    const finalChord = matchedChord || primaryChord || "---";
+    setDetectedChord(finalChord);
+  } else {
+    setDetectedChord("---");
+  }
+};
   };
 
   const initializeBlocks = () => {
