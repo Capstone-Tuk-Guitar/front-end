@@ -1,5 +1,12 @@
 .container {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+}
+
+.container > * {
+    margin-bottom: 20px;
 }
 
 .renderButton {
