@@ -20,10 +20,10 @@ const Playing = ({ chordTimeline, audioRef }) => {
 
   const BLOCK_WIDTH = 50;
   const BLOCK_HEIGHT = 30;
-  const SPEED = 100; // px/sec
+  const SPEED = 100; 
   const CANVAS_WIDTH = 1000;
   const JUDGE_X = CANVAS_WIDTH / 2;
-  const TIMING_WINDOW = 0.25;
+  const TIMING_WINDOW = 0.25; // ±0.25초
 
   const connectWebSocket = () => {
     wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
@@ -33,38 +33,42 @@ const Playing = ({ chordTimeline, audioRef }) => {
     };
 
     wsRef.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.top3_chords && data.top3_chords.length > 0) {
-        const expectedChords = blocksRef.current.map(block => normalizeChord(block.chord));
-        const top3Chords = data.top3_chords.map(normalizeChord);
-        const primaryChord = normalizeChord(data.primary || "");
+  const data = JSON.parse(event.data);
+  console.log("Top-3 Chords Received:", data.top3_chords);
 
-        let matchedChord = null;
-        for (let expected of expectedChords) {
-          if (top3Chords.includes(expected)) {
-            matchedChord = expected;
-            break;
-          }
-        }
+  if (data.top3_chords && data.top3_chords.length > 0) {
+    const expectedChords = blocksRef.current.map(block => normalizeChord(block.chord));
+    const top3Chords = data.top3_chords.map(normalizeChord);
+    const primaryChord = normalizeChord(data.primary || "");
 
-        const finalChord = matchedChord || primaryChord || "---";
-        setDetectedChord(finalChord);
-      } else {
-        setDetectedChord("---");
+    // expected와 top-3 중 일치하는 값이 있는지 확인
+    let matchedChord = null;
+
+    for (let expected of expectedChords) {
+      if (top3Chords.includes(expected)) {
+        matchedChord = expected;
+        break;
       }
-    };
+    }
+
+    const finalChord = matchedChord || primaryChord || "---";
+    setDetectedChord(finalChord);
+  } else {
+    setDetectedChord("---");
+  }
+};
   };
 
-  const initializeBlocks = () => {
-    const blocks = chordTimeline.map(({ chord, time }) => ({
-      chord,
-      time,
-      x: CANVAS_WIDTH, 
-      judged: false,
-      state: "pending"
-    }));
-    blocksRef.current = blocks;
-  };
+ const initializeBlocks = () => {
+  const blocks = chordTimeline.map(({ chord, time }) => ({
+    chord,
+    time,
+    x: CANVAS_WIDTH + time * SPEED, 
+    judged: false,
+    state: "pending"
+  }));
+  blocksRef.current = blocks;
+};
 
   const draw = () => {
     const canvas = canvasRef.current;
@@ -96,7 +100,7 @@ const Playing = ({ chordTimeline, audioRef }) => {
     const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
     blocksRef.current.forEach((block) => {
-      block.x = CANVAS_WIDTH - (currentTime - block.time) * SPEED;
+      block.x = JUDGE_X + (block.time - currentTime) * SPEED - BLOCK_WIDTH / 2;
 
       const expected = normalizeChord(block.chord);
       const actual = normalizeChord(detectedChord);
@@ -139,9 +143,6 @@ const Playing = ({ chordTimeline, audioRef }) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send("stop");
       wsRef.current.close();
-    }
-    if (audioRef.current) {
-      audioRef.current.pause();
     }
   };
 
