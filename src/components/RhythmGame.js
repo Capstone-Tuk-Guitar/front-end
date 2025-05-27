@@ -128,11 +128,12 @@ export const RhythmGame = ({ expectedChord }) => {
 
   wsRef.current.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    console.log("Top-4 Chords Received:", data.top4_chords);
 
-    if (data.top3_chords && data.top3_chords.length > 0) {
+    if (data.top4_chords && data.top4_chords.length > 0) {
       const normalizedExpected = normalizeChord(expectedChord);
-      const normalizedTop3 = data.top3_chords.map(normalizeChord);
-      const matchedChord = normalizedTop3.find(
+      const normalizedTop4 = data.top4_chords.map(normalizeChord);
+      const matchedChord = normalizedTop4.find(
         (chord) => chord === normalizedExpected
       );
 
