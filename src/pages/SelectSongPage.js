@@ -12,18 +12,19 @@ const SelectSongPage = () => {
   const [fileUrl, setFileUrl] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
-  const [selectedSong, setSelectedSong] = useState(null);
-  const [songs, setSongs] = useState([]);
+  const [selectedSong, setSelectedSong] = useState(null);           // 현재 선택된 곡 정보
+  const [songs, setSongs] = useState([]);                           // 곡 목록
   const [chordTimeline, setChordTimeline] = useState([]);
-  const audioRef = useRef(new Audio());
+  const audioRef = useRef(new Audio());                             // 오디오 객체
   const [loadingSongs, setLoadingSongs] = useState({});
 
   const outputType = "mxml";
   const downloadType = "xml";
-  const delay = 60000;
+  const delay = 60000;                                              // klangio api 대기 시간 (1분)
 
   const navigate = useNavigate();
 
+  // 곡 목록 불러오기
   useEffect(() => {
     const fetchSongs = async () => {
       try {
@@ -39,6 +40,7 @@ const SelectSongPage = () => {
     fetchSongs();
   }, []);
 
+  // 곡 선택 시 재생 준비
   const handleSongSelect = async (song) => {
     setSelectedSong(song);
     if (audioRef.current) {
@@ -91,6 +93,7 @@ const SelectSongPage = () => {
     }
   };
 
+  // get job_id
   const handleDownload = async (song) => {
     setLoadingSongs((prev) => ({ ...prev, [song.music_id]: true }));
 
@@ -114,6 +117,7 @@ const SelectSongPage = () => {
       if (!res.ok) throw new Error("Transcription failed");
       const { job_id } = await res.json();
 
+      // 1분 대기 후 XML 파일 다운로드
       setTimeout(async () => {
         try {
           const res = await fetch(`http://localhost:8000/convert/download/${job_id}/${downloadType}`);
@@ -164,14 +168,14 @@ const SelectSongPage = () => {
               if (isDownloaded && chordTimeline.length > 0) {
                 navigate("/practice", {
                   state: {
-                    fileUrl,
-                    song: selectedSong,
-                    audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`,
+                    fileUrl,                      // xml 파일 url
+                    song: selectedSong,           // 곡 정보
+                    audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`,      // 곡 재생 url
                     chordTimeline,
                   },
                 });
               } else {
-                alert("악보 다운로드 및 분석 후 연습할 수 있습니다.");
+                alert("악보 다운로드 후 다시 시도해 주세요.");
               }
             }}
           >

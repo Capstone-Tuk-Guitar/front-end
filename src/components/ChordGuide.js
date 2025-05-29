@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import DetailChord from "../components/DetailChord";
 import styles from "../styles/ChordGuide.module.css";
 
 // 코드 이미지 import
@@ -22,11 +23,6 @@ const chordImages = {
   "E minor": require("../assets/ChordPhoto/Eminor.png"),
   "F minor": require("../assets/ChordPhoto/Fminor.png"),
   "B minor": require("../assets/ChordPhoto/Bminor.png"),
-  "C# major": require("../assets/ChordPhoto/C_minor.png"),
-  "D# major": require("../assets/ChordPhoto/D_minor.png"),
-  "F# major": require("../assets/ChordPhoto/F_minor.png"),
-  "G# major": require("../assets/ChordPhoto/G_minor.png"),
-  "A# major": require("../assets/ChordPhoto/A_minor.png"),
   "C 7": require("../assets/ChordPhoto/C7.png"),
   "G 7": require("../assets/ChordPhoto/G7.png"),
   "D 7": require("../assets/ChordPhoto/D7.png"),
@@ -43,6 +39,7 @@ const chordImages = {
 
 const ChordGuide = ({ chordTimeline }) => {
   const [uniqueChords, setUniqueChords] = useState([]);
+  const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
 
   useEffect(() => {
     // 중복 제거된 코드 목록 생성
@@ -61,11 +58,14 @@ const ChordGuide = ({ chordTimeline }) => {
                 src={chordImages[chord]} 
                 alt={`${chord} 운지법`} 
                 className={styles.chordImage}
+                onClick={() => setSelectedChord(chordImages[chord])}
               />
             )}
           </div>
         ))}
       </div>
+
+      {selectedChord && <DetailChord chordImage={selectedChord} onClose={() => setSelectedChord(null)} />}
     </div>
   );
 };

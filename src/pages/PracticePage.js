@@ -46,7 +46,7 @@ function PracticePage() {
     <div className="container">
       <Header />
       <div className={styles.container}>
-        <audio ref={audioRef} src={audioUrl} controls autoPlay />
+        <audio ref={audioRef} src={audioUrl} />
         <ChordGuide chordTimeline={chordTimeline} />
         <Playing chordTimeline={chordTimeline} audioRef={audioRef} />
       </div>

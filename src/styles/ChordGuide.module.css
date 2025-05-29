@@ -1,17 +1,9 @@
 .container {
   width: 100%;
-  padding: 40px;
   text-align: center;
-  background-color: #f8f9fa;
   border-radius: 8px;
   margin-bottom: 20px;
   position: relative;
-}
-
-.container h2 {
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
 }
 
 .chordGrid {
@@ -19,16 +11,9 @@
   flex-wrap: nowrap;
   gap: 30px;
   margin: 0 auto;
-  max-width: 1200px;
   padding: 20px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.chordGrid::-webkit-scrollbar {
-  display: none;
 }
 
 .chordItem {
@@ -51,11 +36,11 @@
 .chordItem h3 {
   color: #444;
   margin-bottom: 10px;
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
 .chordImage {
-  width: 150px;
+  width: 240px;
   height: auto;
   margin-top: 15px;
   border-radius: 4px;

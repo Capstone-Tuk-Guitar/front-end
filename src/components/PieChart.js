@@ -27,6 +27,9 @@ const PieChart = ({ title, value, color }) => {
                 },
             },
         },
+        animation: {
+            animateScale: true,
+        },
     };
 
     return (
