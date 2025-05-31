@@ -2,11 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SongList from "../components/SongList";
 import Header from "../components/Header";
+import SelectSongControls from "../components/SelectSongControls";
 import styles from "../styles/SelectSongPage.module.css";
-
-import playImage from "../assets/play.svg";
-import pauseImage from "../assets/pause.svg";
-import panelImage from "../assets/record.svg";
 
 const SelectSongPage = () => {
   const [fileUrl, setFileUrl] = useState(null);
@@ -145,9 +142,25 @@ const SelectSongPage = () => {
     }
   };
 
+  const handlePractice = () => {
+    if (isDownloaded && chordTimeline.length > 0) {
+      navigate("/practice", {
+        state: {
+          fileUrl,                      // xml 파일 url
+          song: selectedSong,           // 곡 정보
+          audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`,      // 곡 재생 url
+          chordTimeline,
+        },
+      });
+    } else {
+      alert("악보 다운로드 후 다시 시도해 주세요.");
+    }
+  };
+
   return (
     <div className="container">
       <Header />
+      
       <div className={styles.container}>
         <SongList
           songs={songs}
@@ -156,32 +169,12 @@ const SelectSongPage = () => {
           showDelete={false}
           loadingSongs={loadingSongs}
         />
-        <div className={styles.controlContainer}>
-          {isPlaying ? (
-            <img src={pauseImage} onClick={handlePause} className={styles.button} alt="일시정지" />
-          ) : (
-            <img src={playImage} onClick={handlePlay} className={styles.button} alt="재생" />
-          )}
-          <div
-            className={styles.sheetContainer}
-            onClick={() => {
-              if (isDownloaded && chordTimeline.length > 0) {
-                navigate("/practice", {
-                  state: {
-                    fileUrl,                      // xml 파일 url
-                    song: selectedSong,           // 곡 정보
-                    audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`,      // 곡 재생 url
-                    chordTimeline,
-                  },
-                });
-              } else {
-                alert("악보 다운로드 후 다시 시도해 주세요.");
-              }
-            }}
-          >
-            <img src={panelImage} alt="연습 이동" className={styles.img} />
-          </div>
-        </div>
+        <SelectSongControls
+          isPlaying={isPlaying}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          onPractice={handlePractice}
+        />
       </div>
       <audio ref={audioRef} />
     </div>
@@ -189,4 +182,3 @@ const SelectSongPage = () => {
 };
 
 export default SelectSongPage;
-

@@ -25,6 +25,13 @@ const Playing = ({ chordTimeline, audioRef }) => {
   const JUDGE_X = CANVAS_WIDTH / 2;
   const TIMING_WINDOW = 0.3;
 
+  const isWithinTimingWindow = (currentTime) => {
+    return blocksRef.current.some(block => {
+      const timeDelta = Math.abs(currentTime - block.time);
+      return timeDelta <= TIMING_WINDOW;
+    });
+  };
+
   const connectWebSocket = () => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 
@@ -36,13 +43,19 @@ const Playing = ({ chordTimeline, audioRef }) => {
 
     wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      const currentTime = (Date.now() - startTimeRef.current) / 1000;
+
+      // 현재 시간이 타이밍 윈도우 내에 있는지 확인
+      if (!isWithinTimingWindow(currentTime)) {
+        setDetectedChord("---");
+        return;
+      }
+
       console.log("🎵 Top-4 Chords Received:", data.top4_chords);
 
       if (data.top4_chords && data.top4_chords.length > 0) {
         const top4Chords = data.top4_chords.map(normalizeChord);
         const primaryChord = normalizeChord(data.primary || "");
-
-        const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
         blocksRef.current.forEach((block) => {
           const expected = normalizeChord(block.chord);
@@ -147,6 +160,10 @@ const Playing = ({ chordTimeline, audioRef }) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send("stop");
       wsRef.current.close();
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
     wsRef.current = null;
     setDetectedChord("---");
