@@ -22,7 +22,9 @@ const Card = ({ image, text, isActive, position }) => {
     if (text === "음원 목록") {
       navigate("/music");         // MusicPage로 이동
     } else if (text === "연주하기") {
-      navigate("/select_song");   // PracticePage로 이동
+      navigate("/select_song", { state: { mode: "practice" } });   // PracticePage로 이동
+    } else if (text === "악보 연주") {
+      navigate("/select_song", { state: { mode: "sheet" } });  // SheetMusicPage로 이동
     } else if (text === "비교하기") {
       navigate("/accuracy");      // AccuracyPage로 이동
     } else if (text === "연주 기록") {
