@@ -23,9 +23,11 @@ const Playing = ({ chordTimeline, audioRef }) => {
   const SPEED = 100; 
   const CANVAS_WIDTH = 1000;
   const JUDGE_X = CANVAS_WIDTH / 2;
-  const TIMING_WINDOW = 0.25; // ±0.25초
+  const TIMING_WINDOW = 0.3;
 
   const connectWebSocket = () => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
+
     wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
 
     wsRef.current.onopen = () => {
@@ -34,24 +36,38 @@ const Playing = ({ chordTimeline, audioRef }) => {
 
     wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log("Top-4 Chords Received:", data.top4_chords);
+      console.log("🎵 Top-4 Chords Received:", data.top4_chords);
 
       if (data.top4_chords && data.top4_chords.length > 0) {
-        const expectedChords = blocksRef.current.map(block => normalizeChord(block.chord));
         const top4Chords = data.top4_chords.map(normalizeChord);
         const primaryChord = normalizeChord(data.primary || "");
 
-        // expected와 top-4 중 일치하는 값이 있는지 확인
-        let matchedChord = null;
+        const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
-        for (let expected of expectedChords) {
-          if (top4Chords.includes(expected)) {
-            matchedChord = expected;
-            break;
+        blocksRef.current.forEach((block) => {
+          const expected = normalizeChord(block.chord);
+          const timeDelta = currentTime - block.time;
+
+          // 이미 판정되었으면 건너뜀
+          if (block.judged) return;
+
+          if (Math.abs(timeDelta) <= TIMING_WINDOW) {
+            if (top4Chords.includes(expected)) {
+              block.state = "match";
+              block.judged = true;
+              console.log("✅ MATCH:", expected, "| top4:", top4Chords);
+            } else {
+              console.log("⏳ Waiting:", expected);
+            }
+          } else if (timeDelta > TIMING_WINDOW && !block.judged) {
+            block.state = "miss";
+            block.judged = true;
+            console.log("❌ MISS (too late):", expected,"| primary:", primaryChord);
           }
-        }
+        });
 
-        const finalChord = matchedChord || primaryChord || "---";
+        const matchedBlock = blocksRef.current.find(block => block.state === "match");
+        const finalChord = matchedBlock ? normalizeChord(matchedBlock.chord) : primaryChord || "---";
         setDetectedChord(finalChord);
       } else {
         setDetectedChord("---");
@@ -59,16 +75,16 @@ const Playing = ({ chordTimeline, audioRef }) => {
     };
   };
 
- const initializeBlocks = () => {
-  const blocks = chordTimeline.map(({ chord, time }) => ({
-    chord,
-    time,
-    x: CANVAS_WIDTH + time * SPEED, 
-    judged: false,
-    state: "pending"
-  }));
-  blocksRef.current = blocks;
-};
+  const initializeBlocks = () => {
+    const blocks = chordTimeline.map(({ chord, time }) => ({
+      chord,
+      time,
+      x: CANVAS_WIDTH + time * SPEED, 
+      judged: false,
+      state: "pending"
+    }));
+    blocksRef.current = blocks;
+  };
 
   const draw = () => {
     const canvas = canvasRef.current;
@@ -76,7 +92,6 @@ const Playing = ({ chordTimeline, audioRef }) => {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 판정선
     ctx.fillStyle = "#888";
     ctx.fillRect(JUDGE_X - 2, 0, 4, canvas.height);
 
@@ -101,26 +116,12 @@ const Playing = ({ chordTimeline, audioRef }) => {
 
     blocksRef.current.forEach((block) => {
       block.x = JUDGE_X + (block.time - currentTime) * SPEED - BLOCK_WIDTH / 2;
+      // 상태 판정 로직은 onmessage 에서 처리하므로 여기서는 위치 업데이트 및 그리기만 수행
 
-      const expected = normalizeChord(block.chord);
-      const actual = normalizeChord(detectedChord);
-      const timeDelta = currentTime - block.time;
-
-      if (!block.judged && Math.abs(timeDelta) <= TIMING_WINDOW) {
-        block.judged = true;
-        if (expected === actual) {
-          block.state = "match";
-          console.log("✅ match", expected, actual);
-        } else {
-          block.state = "miss";
-          console.log("❌ miss (wrong)", expected, actual);
-        }
-      }
-
-      if (!block.judged && timeDelta > TIMING_WINDOW) {
-        block.judged = true;
+      if (!block.judged && currentTime - block.time > TIMING_WINDOW) {
         block.state = "miss";
-        console.log("❌ miss (too late)", expected, actual);
+        block.judged = true;
+        console.log("❌ miss (no input)", normalizeChord(block.chord));
       }
     });
 
@@ -130,11 +131,14 @@ const Playing = ({ chordTimeline, audioRef }) => {
 
   const start = () => {
     if (!canvasRef.current) return;
+    stop();
     startTimeRef.current = Date.now();
     initializeBlocks();
     connectWebSocket();
-    audioRef.current.currentTime = 0;
-    audioRef.current.play();
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    }
     animationRef.current = requestAnimationFrame(update);
   };
 
@@ -144,7 +148,15 @@ const Playing = ({ chordTimeline, audioRef }) => {
       wsRef.current.send("stop");
       wsRef.current.close();
     }
+    wsRef.current = null;
+    setDetectedChord("---");
   };
+
+  useEffect(() => {
+    return () => {
+      stop();
+    };
+  }, []);
 
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
