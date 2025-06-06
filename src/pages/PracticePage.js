@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import PracticeViewer from "../components/PracticeViewer";
-import Playing from "../components/Playing";
+import Playing from "../components/Playing"; 
 import ChordGuide from "../components/ChordGuide";
+import Recorder from "../components/Recorder";
 import styles from "../styles/PracticePage.module.css";
 
 function PracticePage() {
@@ -46,6 +47,7 @@ function PracticePage() {
     <div className="container">
       <Header />
       <div className={styles.container}>
+        <Recorder />
         <audio ref={audioRef} src={audioUrl} />
         <ChordGuide chordTimeline={chordTimeline} />
         <Playing chordTimeline={chordTimeline} audioRef={audioRef} />
