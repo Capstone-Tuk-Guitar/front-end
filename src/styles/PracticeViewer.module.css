@@ -4,8 +4,8 @@
   min-height: 400px;
   background-color: #ffffff;
   border-radius: 8px;
-  overflow: hidden;
-  /* overflow-x: auto; */
+  overflow-x: auto; /* ✅ 수정 */
+  overflow-y: hidden; /* 추가 */
 }
 
 .viewerCanvas {
@@ -88,4 +88,22 @@
 
 .errorContainer button:hover {
   background-color: #c53030;
+}
+
+.controlButtons button {
+  font-size: 16px;
+  padding: 8px 16px;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.controlButtons button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+.note-status-marker {
+  pointer-events: none;
 }
