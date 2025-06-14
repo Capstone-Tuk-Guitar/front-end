@@ -52,7 +52,6 @@ const ChordGuide = ({ chordTimeline }) => {
       <div className={styles.chordGrid}>
         {uniqueChords.map((chord) => (
           <div key={chord} className={styles.chordItem}>
-            <h3>{chord}</h3>
             {chordImages[chord] && (
               <img 
                 src={chordImages[chord]} 

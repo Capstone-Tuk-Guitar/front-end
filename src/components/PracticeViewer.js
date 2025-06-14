@@ -1,42 +1,38 @@
-import React, {useEffect,useRef,forwardRef,useImperativeHandle,useState,} from "react";
+import React, { useEffect, useRef, forwardRef, useImperativeHandle, useState } from "react";
 import styles from "../styles/PracticeViewer.module.css";
 
-const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref) => {
+const PracticeViewer = forwardRef(({ xmlFile, audioRef }, ref) => {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
-  const audioRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useImperativeHandle(ref, () => ({
     play: handlePlay,
-    pause: handlePause,
+    stop: handleStop,
+    handleRestart: handleRestart,
     isReady: () => isReady,
     getError: () => error,
   }));
 
   const handlePlay = () => {
-    if (audioRef.current && apiRef.current?.player) {
-      audioRef.current.play();
+    if (apiRef.current?.player) {
       apiRef.current.play();
       setIsPlaying(true);
     }
   };
 
-  const handlePause = () => {
-    if (audioRef.current && apiRef.current?.player) {
-      audioRef.current.pause();
-      apiRef.current.pause();
+  const handleStop = () => {
+    if (apiRef.current?.player) {
+      apiRef.current.player.stop();
       setIsPlaying(false);
     }
   };
 
   const handleRestart = () => {
-    if (audioRef.current && apiRef.current?.player) {
-      audioRef.current.currentTime = 0;
+    if (apiRef.current?.player) {
       apiRef.current.player.stop();
-      audioRef.current.play();
       apiRef.current.play();
       setIsPlaying(true);
     }
@@ -48,9 +44,6 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
     setError(null);
     setIsReady(false);
 
-    const audio = new Audio(audioUrl);
-    audioRef.current = audio;
-
     const settings = {
       file: xmlFile,
       player: {
@@ -61,12 +54,12 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
         enablePlaybackSync: true,
         scrollElement: containerRef.current,
         scrollMode: "continuous",
-        scrollOffset: 0.5, //의미 없음
-        scrollSpeed: 0.5, // 의미 없음
+        scrollOffset: 0.5,
+        scrollSpeed: 0.5,
       },
       display: {
         layoutMode: "horizontal",
-        scale: 2,
+        scale: 1.2,
       },
     };
 
@@ -83,10 +76,6 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
         setIsReady(true);
       });
 
-      api.player.stateChanged.on((state) => {
-        setIsPlaying(state === 1);
-      });
-      //*************강제 스크롤 코드**************
       api.player.positionChanged.on((args) => {
         const tick = args.tickPosition;
         if (tick != null && api.scrollToPosition) {
@@ -103,26 +92,22 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
               const time = api.player.tickToTime(tick);
               const wasPlaying = !audioRef.current.paused;
 
-              //stop 먼저
               api.player.stop();
               audioRef.current.pause();
 
-              //이동
               api.player.seek(tick);
               audioRef.current.currentTime = time;
 
-              //다시 재생
               if (wasPlaying) {
                 setTimeout(() => {
                   api.player.play();
                   audioRef.current.play();
-                }, 50); // 약간의 지연을 주면 sync가 더 안정됨
+                }, 50);
               }
             }
           }
         });
       });
-
     } catch (error) {
       console.error("AlphaTab 초기화 실패:", error);
       setError(`악보 뷰어 초기화에 실패했습니다: ${error.message}`);
@@ -131,7 +116,7 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
     return () => {
       apiRef.current?.destroy();
     };
-  }, [xmlFile, audioUrl]);
+  }, [xmlFile, audioRef]);
 
   // 커서 스타일
   useEffect(() => {
@@ -141,32 +126,10 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
         cursor.style.background = "rgb(255, 0, 0)";
         cursor.style.borderRadius = "4px";
       }
-
-      document.querySelectorAll(".at-note, .at-beat").forEach((el) => {
-        const tick = parseInt(el.dataset.tick, 10);
-        if (!isNaN(tick)) {
-          const match = matchedNotes.find((m) => m.tick === tick);
-          if (match) {
-            let marker = el.querySelector(".note-status-marker");
-            if (!marker) {
-              marker = document.createElement("div");
-              marker.className = "note-status-marker";
-              el.appendChild(marker);
-            }
-            marker.style.position = "absolute";
-            marker.style.top = "-10px";
-            marker.style.left = "0";
-            marker.style.width = "8px";
-            marker.style.height = "8px";
-            marker.style.borderRadius = "50%";
-            marker.style.backgroundColor = match.correct ? "green" : "red";
-          }
-        }
-      });
     }, 200);
 
     return () => clearInterval(interval);
-  }, [matchedNotes]);
+  }, []);
 
   if (error) {
     return (
@@ -201,19 +164,6 @@ const PracticeViewer = forwardRef(({ xmlFile, audioUrl, matchedNotes = [] }, ref
           whiteSpace: "nowrap",
         }}
       />
-      {isReady && (
-        <div className={styles.controlButtons} style={{ marginTop: "10px", textAlign: "center" }}>
-          <button onClick={handlePlay} disabled={isPlaying} style={{ marginRight: "10px" }}>
-            재생
-          </button>
-          <button onClick={handlePause} disabled={!isPlaying} style={{ marginRight: "10px" }}>
-            일시정지
-          </button>
-          <button onClick={handleRestart}>
-            다시하기
-          </button>
-        </div>
-      )}
     </div>
   );
 });

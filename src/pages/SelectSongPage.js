@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SongList from "../components/SongList";
 import Header from "../components/Header";
 import SelectSongControls from "../components/SelectSongControls";
@@ -15,7 +15,6 @@ const SelectSongPage = () => {
   const audioRef = useRef(new Audio());                             // 오디오 객체
   const [loadingSongs, setLoadingSongs] = useState({});
   const navigate = useNavigate();
-  const location = useLocation();
 
   const outputType = "mxml";
   const downloadType = "xml";
@@ -39,25 +38,14 @@ const SelectSongPage = () => {
 
   // 곡 선택 시 재생 준비
   const handleSongSelect = (song) => {
-    const mode = location.state?.mode || "practice";
-    if (mode === "sheet") {
-      navigate("/sheet_music", {
-        state: {
-          fileUrl: song.fileUrl,
-          song: song,
-          audioUrl: song.audioUrl
-        }
-      });
-    } else {
-      navigate("/practice", {
-        state: {
-          fileUrl: song.fileUrl,
-          song: song,
-          audioUrl: song.audioUrl,
-          chordTimeline: song.chordTimeline
-        }
-      });
-    }
+    navigate("/practice", {
+      state: {
+        fileUrl: song.fileUrl,
+        song: song,
+        audioUrl: song.audioUrl,
+        chordTimeline: song.chordTimeline
+      }
+    });
   };
 
   const handlePlay = () => {
@@ -158,25 +146,14 @@ const SelectSongPage = () => {
 
   const handlePractice = () => {
     if (isDownloaded && chordTimeline.length > 0) {
-      const mode = location.state?.mode || "practice";
-      if (mode === "sheet") {
-        navigate("/sheet_music", {
-          state: {
-            fileUrl,
-            song: selectedSong,
-            audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`
-          }
-        });
-      } else {
-        navigate("/practice", {
-          state: {
-            fileUrl,
-            song: selectedSong,
-            audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`,
-            chordTimeline
-          }
-        });
-      }
+      navigate("/practice", {
+        state: {
+          fileUrl,
+          song: selectedSong,
+          audioUrl: `http://localhost:8000/stream-music/${selectedSong.music_id}`,
+          chordTimeline
+        }
+      });
     } else {
       alert("악보 다운로드 후 다시 시도해 주세요.");
     }
@@ -185,9 +162,6 @@ const SelectSongPage = () => {
   return (
     <div className="container">
       <Header />
-      <div className={styles.modeIndicator}>
-        {location.state?.mode === "sheet" ? "악보 연주 모드" : "연주하기 모드"}
-      </div>
       <div className={styles.mainContent}>
         <div className={styles.container}>
           <SongList
