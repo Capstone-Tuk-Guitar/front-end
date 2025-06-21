@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from "react";
-import "../styles/Playing.css";
+import "../styles/Playing.module.css";
 
 // 상수 정의
 const BLOCK_WIDTH = 50;
@@ -135,10 +135,10 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     <div className="playing-wrapper">
       <div className="canvas-container">
         <canvas
+          className="game-canvas"
           ref={canvasRef}
           width={CANVAS_WIDTH}
           height={150}
-          className="game-canvas"
         />
       </div>
     </div>
