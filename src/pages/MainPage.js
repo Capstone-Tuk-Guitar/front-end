@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Header from "../components/Header";
 import Card from "../components/Card";
 import styles from "../styles/MainPage.module.css";
@@ -11,7 +11,7 @@ import compareImage from "../assets/compare.svg";
 
 // 이미지 자동 import
 const importAll = (r) => r.keys().map(r);
-const chordImages = importAll(
+const allChordImages = importAll(
   require.context("../assets/ChordPhoto", false, /\.(png)$/)
 );
 
@@ -20,26 +20,39 @@ const MainPage = () => {
   const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
   const [randomChords, setRandomChords] = useState([]);
 
-  const slides = [
+  // 슬라이드 데이터를 useMemo로 메모이제이션
+  const slides = useMemo(() => [
     { id: 0, image: musicImage, text: "음원 목록" },
     { id: 1, image: guitarImage, text: "연주하기" },
     { id: 2, image: compareImage, text: "비교하기"},
     { id: 3, image: recordImage, text: "연주 기록" },
-  ];
+  ], []);
 
+  // 랜덤 코드 이미지 선택 (성능 최적화)
   useEffect(() => {
-    // 이미지 배열을 셔플해서 3개 선택
-    const shuffled = [...chordImages].sort(() => 0.5 - Math.random());
-    setRandomChords(shuffled.slice(0, 3));
+    if (allChordImages.length > 0) {
+      // 이미 로드된 이미지 배열에서 랜덤하게 3개 선택
+      const shuffledImages = [...allChordImages].sort(() => 0.5 - Math.random());
+      setRandomChords(shuffledImages.slice(0, 3));
+    }
   }, []);
 
-  const handleNext = () => {
+  // 콜백 함수 메모이제이션
+  const handleNext = useCallback(() => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
-  };
+  }, [slides.length]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
-  };
+  }, [slides.length]);
+
+  const handleChordClick = useCallback((img) => {
+    setSelectedChord(img);
+  }, []);
+
+  const handleCloseChord = useCallback(() => {
+    setSelectedChord(null);
+  }, []);
 
   return (
     <div className="container">
@@ -87,12 +100,13 @@ const MainPage = () => {
             src={img}
             alt={`Chord ${index}`}
             className={styles.fingeringImage}
-            onClick={() => setSelectedChord(img)}
+            onClick={() => handleChordClick(img)}
+            loading="lazy"
           />
         ))}
       </div>
 
-      {selectedChord && <DetailChord chordImage={selectedChord} onClose={() => setSelectedChord(null)} />}
+      {selectedChord && <DetailChord chordImage={selectedChord} onClose={handleCloseChord} />}
     </div>
   );
 };

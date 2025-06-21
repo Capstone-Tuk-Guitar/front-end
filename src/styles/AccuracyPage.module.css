@@ -32,6 +32,7 @@
 }
 .fileInsert .inputs {
     display: flex;
+    margin-top: 20px;
     width: 100%;
     flex-direction: column;
     gap: 10px;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom"; 
 import homeImage from "../assets/home.svg";
 import styles from "../styles/Header.module.css";
@@ -11,15 +11,30 @@ const Header = () => {
   const navigate = useNavigate(); // navigate 훅 사용
 
   // 각 메뉴 클릭 시 이동하는 함수
-  const handleNavigation = (path) => {
+  const handleNavigation = useCallback((path) => {
     navigate(path); // 해당 경로로 이동
-  };
+  }, [navigate]);
 
   // 로그아웃 처리 함수
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("isAuthenticated"); // 인증 상태 삭제
     navigate("/"); // 로그인 페이지로 이동
-  };
+  }, [navigate]);
+
+  // 메뉴 토글 함수
+  const handleMenuToggle = useCallback(() => {
+    setIsMenuOpen(prev => !prev);
+    setIsHeaderExpanded(prev => !prev);
+  }, []);
+
+  // 서브메뉴 핸들러
+  const handleSubMenuEnter = useCallback(() => {
+    setIsSubMenuOpen(true);
+  }, []);
+
+  const handleSubMenuLeave = useCallback(() => {
+    setIsSubMenuOpen(false);
+  }, []);
 
   return (
     <header className={`${styles.header} ${isHeaderExpanded ? styles.expanded : ""}`}>
@@ -35,8 +50,8 @@ const Header = () => {
 
             <div
               className={styles.menuItem}
-              onMouseEnter={() => setIsSubMenuOpen(true)}
-              onMouseLeave={() => setIsSubMenuOpen(false)}
+              onMouseEnter={handleSubMenuEnter}
+              onMouseLeave={handleSubMenuLeave}
             >
               연주하기
               {isSubMenuOpen && (
@@ -60,10 +75,7 @@ const Header = () => {
           </>
         )}
 
-        <span className={styles.menuItem} onClick={() => {
-            setIsMenuOpen(!isMenuOpen);
-            setIsHeaderExpanded(!isHeaderExpanded);
-          }}>
+        <span className={styles.menuItem} onClick={handleMenuToggle}>
           전체 메뉴
         </span>
         <span className={styles.menuItem} onClick={() => handleNavigation('/tuning')}>
@@ -78,4 +90,5 @@ const Header = () => {
   );
 };
 
-export default Header;
+// React.memo로 불필요한 렌더링 방지
+export default React.memo(Header);

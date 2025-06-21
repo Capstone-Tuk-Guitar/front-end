@@ -52,7 +52,7 @@ function RecordPage() {
                 {recordList.map((record) => (
                   <li key={record.record_id} className={styles.recordItem}>
                     <span className={styles.file}>{record.record_file}</span>
-                    <span className={styles.accuracy}>정확도: {record.accuracy}%</span>
+                    <span className={styles.accuracy}>정확도: {record.accuracy*100}%</span>
                     <span className={styles.date}>{new Date(record.record_date).toLocaleString()}</span>
                   </li>
                 ))}

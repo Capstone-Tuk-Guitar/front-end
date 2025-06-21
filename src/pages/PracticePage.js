@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import PracticeViewer from "../components/PracticeViewer";
 import ChordGuide from "../components/ChordGuide";
-import Recorder from "../components/Recorder";
 import Playing from "../components/Playing";
 import styles from "../styles/PracticePage.module.css";
 
@@ -21,7 +20,7 @@ function PracticePage() {
   const wsRef = useRef(null);
 
   const [xmlFile, setXmlFile] = useState(null);
-  const [song, setSong] = useState();
+  const [, setSong] = useState();
   const [audioUrl, setAudioUrl] = useState(null);
   const [chordTimeline, setChordTimeline] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);

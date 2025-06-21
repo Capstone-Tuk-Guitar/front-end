@@ -6,7 +6,7 @@ const PracticeViewer = forwardRef(({ xmlFile, audioRef }, ref) => {
   const apiRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [, setIsPlaying] = useState(false);
 
   useImperativeHandle(ref, () => ({
     play: handlePlay,

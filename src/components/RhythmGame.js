@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import styles from "../styles/RhythmGame.module.css";
 
-export const RhythmGame = ({ expectedChord }) => {
+const RhythmGame = ({ expectedChord }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const wsRef = useRef(null);
@@ -15,26 +15,32 @@ export const RhythmGame = ({ expectedChord }) => {
   const prevChordRef = useRef(null); // NEW
   const matchOccurredRef = useRef(false);
 
-  const BPM = 60;
-  const beatInterval = 60 / BPM;
-  const noteTravelTime = beatInterval * 6 * 1000;
+  // 상수들을 useMemo로 메모이제이션
+  const gameConfig = useMemo(() => {
+    const BPM = 60;
+    const beatInterval = 60 / BPM;
+    return {
+      BPM,
+      beatInterval,
+      noteTravelTime: beatInterval * 6 * 1000,
+      noteColors: {
+        match: "#4ade80",  // green
+        miss: "#f87171",   // red
+        neutral: "#94a3b8", // gray
+      }
+    };
+  }, []);
 
-  const noteColors = {
-    match: "#4ade80",  // green
-    miss: "#f87171",   // red
-    neutral: "#94a3b8", // gray
-  };
-
-  const normalizeChord = (chordStr) => {
+  const normalizeChord = useCallback((chordStr) => {
     if (!chordStr || typeof chordStr !== "string") return "";
       chordStr = chordStr.trim().replace(/\s+/g, " ");
       const [root, type] = chordStr.split(" ");
       const displayType = type === "maj" ? "major" :
                           type === "min" ? "minor" : type;
       return `${root} ${displayType}`.trim();
-  };
+  }, []);
 
-  const draw = () => {
+  const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -57,9 +63,9 @@ export const RhythmGame = ({ expectedChord }) => {
     if (isInsideCircle) {
       if (isMatch && !matchOccurredRef.current) {
         matchOccurredRef.current = true;
-        setFillColor(noteColors.match);
-      } else if (!matchOccurredRef.current && fillColor !== noteColors.miss) {
-        setFillColor(noteColors.miss);
+        setFillColor(gameConfig.noteColors.match);
+      } else if (!matchOccurredRef.current && fillColor !== gameConfig.noteColors.miss) {
+        setFillColor(gameConfig.noteColors.miss);
       }
     } else {
       if (fillColor !== "#000") {
@@ -78,18 +84,18 @@ export const RhythmGame = ({ expectedChord }) => {
     ctx.textAlign = "center";
     ctx.fillText("♪", centerX, centerY + 10);
 
-    let barColor = noteColors.neutral;
+    let barColor = gameConfig.noteColors.neutral;
     if (isInsideCircle) {
-      barColor = matchOccurredRef.current ? noteColors.match : noteColors.miss;
+      barColor = matchOccurredRef.current ? gameConfig.noteColors.match : gameConfig.noteColors.miss;
     }
 
     ctx.fillStyle = barColor;
     ctx.fillRect(barX, barY, barWidth, barHeight);
-  };
+  }, [expectedChord, fillColor, gameConfig.noteColors, normalizeChord]);
 
-  const updateBarPosition = () => {
+  const updateBarPosition = useCallback(() => {
     const elapsed = Date.now() - noteStartTimeRef.current;
-    const progress = elapsed / noteTravelTime;
+    const progress = elapsed / gameConfig.noteTravelTime;
     const startX = canvasRef.current?.width || 520;
     const endX = 0;
 
@@ -102,63 +108,67 @@ export const RhythmGame = ({ expectedChord }) => {
     } else {
       noteXRef.current = startX - (startX - endX) * progress;
     }
-  };
+  }, [gameConfig.noteTravelTime]);
 
-  const loop = () => {
+  const loopRef = useRef();
+  
+  const loop = useCallback(() => {
     updateBarPosition();
     draw();
-    animationRef.current = requestAnimationFrame(loop);
-  };
+    animationRef.current = requestAnimationFrame(loopRef.current);
+  }, [updateBarPosition, draw]);
 
-  const startAnimation = () => {
-  if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-    wsRef.current.send("start");
-    return;
-  }
+  loopRef.current = loop;
 
-  setDetectedChord("---");
-  prevChordRef.current = "---";
-  detectedChordRef.current = "---";
-
-  wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
-
-  wsRef.current.onopen = () => {
-    wsRef.current.send("start");
-  };
-
-  wsRef.current.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    console.log("Top-4 Chords Received:", data.top4_chords);
-
-    if (data.top4_chords && data.top4_chords.length > 0) {
-      const normalizedExpected = normalizeChord(expectedChord);
-      const normalizedTop4 = data.top4_chords.map(normalizeChord);
-      const matchedChord = normalizedTop4.find(
-        (chord) => chord === normalizedExpected
-      );
-
-      const finalChord = matchedChord || normalizeChord(data.primary) || "---";
-
-      //중복된 코드 연속 수신 시 업데이트 생략
-      if (finalChord !== prevChordRef.current) {
-        setDetectedChord(finalChord);
-        detectedChordRef.current = finalChord;
-        prevChordRef.current = finalChord;
-      }
-    } else {
-      if (prevChordRef.current !== "---") {
-        setDetectedChord("---");
-        detectedChordRef.current = "---";
-        prevChordRef.current = "---";
-      }
+  const startAnimation = useCallback(() => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send("start");
+      return;
     }
-  };
 
-  noteStartTimeRef.current = Date.now();
-  animationRef.current = requestAnimationFrame(loop);
-};
+    setDetectedChord("---");
+    prevChordRef.current = "---";
+    detectedChordRef.current = "---";
 
-  const stopAnimation = () => {
+    wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
+
+    wsRef.current.onopen = () => {
+      wsRef.current.send("start");
+    };
+
+    wsRef.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Top-4 Chords Received:", data.top4_chords);
+
+      if (data.top4_chords && data.top4_chords.length > 0) {
+        const normalizedExpected = normalizeChord(expectedChord);
+        const normalizedTop4 = data.top4_chords.map(normalizeChord);
+        const matchedChord = normalizedTop4.find(
+          (chord) => chord === normalizedExpected
+        );
+
+        const finalChord = matchedChord || normalizeChord(data.primary) || "---";
+
+        //중복된 코드 연속 수신 시 업데이트 생략
+        if (finalChord !== prevChordRef.current) {
+          setDetectedChord(finalChord);
+          detectedChordRef.current = finalChord;
+          prevChordRef.current = finalChord;
+        }
+      } else {
+        if (prevChordRef.current !== "---") {
+          setDetectedChord("---");
+          detectedChordRef.current = "---";
+          prevChordRef.current = "---";
+        }
+      }
+    };
+
+    noteStartTimeRef.current = Date.now();
+    animationRef.current = requestAnimationFrame(loopRef.current);
+  }, [expectedChord, normalizeChord]);
+
+  const stopAnimation = useCallback(() => {
     cancelAnimationFrame(animationRef.current);
 
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
@@ -177,7 +187,7 @@ export const RhythmGame = ({ expectedChord }) => {
     if (ctx) ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
     setFillColor("#000");
-  };
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -216,4 +226,6 @@ export const RhythmGame = ({ expectedChord }) => {
   );
 };
 
-export default RhythmGame;
+// React.memo로 불필요한 렌더링 방지
+export { RhythmGame };
+export default React.memo(RhythmGame);
