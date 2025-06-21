@@ -8,6 +8,11 @@ import styles from "../styles/AccuracyPage.module.css";
 function AccuracyPage() {
     const [file1, setFile1] = useState(null);
     const [file2, setFile2] = useState(null);
+    const [midiFile1, setMidiFile1] = useState(null);
+    const [midiFile2, setMidiFile2] = useState(null);
+    const [converting1, setConverting1] = useState(false);
+    const [converting2, setConverting2] = useState(false);
+    
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -22,15 +27,71 @@ function AccuracyPage() {
         setFile(event.target.files[0]);
     };
 
+    // MP3를 MIDI로 변환하는 함수
+    const convertToMidi = async (mp3File, setMidiFile, setConverting) => {
+        if (!mp3File) {
+            alert("MP3 파일을 먼저 선택하세요.");
+            return;
+        }
+
+        setConverting(true);
+
+        try {
+            // 변환 요청 보내기
+            const formData = new FormData();
+            formData.append("file", mp3File);
+            formData.append("model", "guitar");
+            formData.append("title", mp3File.name.replace('.mp3', ''));
+            formData.append("composer", "Unknown");
+            formData.append("outputs", "midi");
+
+            const res = await fetch("http://localhost:8000/convert/transcription/", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error("Transcription failed");
+            const { job_id } = await res.json();
+            console.log("job_id:", job_id);
+
+            // 1분 대기 후 MIDI 파일 다운로드
+            setTimeout(async () => {
+                try {
+                    const downloadRes = await fetch(`http://localhost:8000/convert/download/${job_id}/midi`);
+                    if (downloadRes.status === 200) {
+                        const midiBlob = await downloadRes.blob();
+                        const midiFile = new File([midiBlob], `${mp3File.name.replace('.mp3', '')}.mid`, { type: "audio/midi" });
+                        setMidiFile(midiFile);
+                    } else {
+                        alert("MIDI 변환에 실패했습니다.");
+                    }
+                } catch (err) {
+                    console.error("MIDI 다운로드 실패:", err);
+                    alert("MIDI 파일 다운로드에 실패했습니다.");
+                }
+                setConverting(false);
+            }, 60000); // 1분 대기
+
+        } catch (err) {
+            console.error("변환 요청 실패:", err);
+            alert("변환 요청에 실패했습니다.");
+            setConverting(false);
+        }
+    };
+
     const handleCompare = async () => {
-        if (!file1 || !file2) {
+        // MIDI 파일이 있는 경우 MIDI 파일로 비교, 없으면 원본 파일로 비교
+        const compareFile1 = midiFile1 || file1;
+        const compareFile2 = midiFile2 || file2;
+
+        if (!compareFile1 || !compareFile2) {
             alert("두 개의 파일을 업로드하세요.");
             return;
         }
 
         const formData = new FormData();
-        formData.append("file1", file1);
-        formData.append("file2", file2);
+        formData.append("file1", compareFile1);
+        formData.append("file2", compareFile2);
         formData.append("user_id", localStorage.getItem("user_id"));
 
         setLoading(true);
@@ -47,9 +108,11 @@ function AccuracyPage() {
         setLoading(false);
     };
 
-
     const handleDetailView = () => {
-        if (!file1 || !file2) {
+        const compareFile1 = midiFile1 || file1;
+        const compareFile2 = midiFile2 || file2;
+
+        if (!compareFile1 || !compareFile2) {
             alert("두 개의 파일을 업로드하세요.");
             return;
         }
@@ -61,7 +124,7 @@ function AccuracyPage() {
         }
 
         // 파일을 DetailDiffPage로 전달
-        navigate("/detail_diff", { state: { file1, file2 } });
+        navigate("/detail_diff", { state: { file1: compareFile1, file2: compareFile2 } });
     };
 
     return (
@@ -73,12 +136,41 @@ function AccuracyPage() {
                     <div className={styles.fileInsert}>
                         <h1>MIDI 파일 비교</h1>
                         <div className={styles.inputs}>
-                            <input type="file" accept=".mid, .midi" onChange={(e) => handleFileChange(e, setFile1)} />
-                            <input type="file" accept=".mid, .midi" onChange={(e) => handleFileChange(e, setFile2)} />
+                            <div className={styles.inputGroup}>
+                                <input 
+                                    type="file" 
+                                    accept=".mp3,.mid,.midi" 
+                                    onChange={(e) => handleFileChange(e, setFile1)} 
+                                />
+                                <button
+                                    onClick={() => convertToMidi(file1, setMidiFile1, setConverting1)}
+                                    disabled={converting1 || !file1}
+                                    className={styles.convertButton}
+                                >
+                                    {converting1 ? "변환 중..." : "MIDI 변환"}
+                                </button>
+                                {midiFile1 && <span className={styles.convertedText}>✓ 변환됨</span>}
+                            </div>
+                            <div className={styles.inputGroup}>
+                                <input 
+                                    type="file" 
+                                    accept=".mp3,.mid,.midi" 
+                                    onChange={(e) => handleFileChange(e, setFile2)} 
+                                />
+                                <button
+                                    onClick={() => convertToMidi(file2, setMidiFile2, setConverting2)}
+                                    disabled={converting2 || !file2}
+                                    className={styles.convertButton}
+                                >
+                                    {converting2 ? "변환 중..." : "MIDI 변환"}
+                                </button>
+                                {midiFile2 && <span className={styles.convertedText}>✓ 변환됨</span>}
+                            </div>
                         </div>
                         <button
                             onClick={handleCompare}
                             disabled={loading}
+                            className={styles.compareButton}
                         >
                             {loading ? "비교 중..." : "비교하기"}
                         </button>

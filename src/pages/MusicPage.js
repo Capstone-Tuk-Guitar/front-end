@@ -31,7 +31,7 @@ const MusicPage = () => {
       }
     };
     fetchSongs();
-  }, []);
+  }, [username]);
 
   // MP3 파일 업로드
   const handleFileUpload = async () => {

@@ -32,11 +32,75 @@
 }
 .fileInsert .inputs {
     display: flex;
-    margin: 20px 0;
+    width: 100%;
     flex-direction: column;
     gap: 10px;
     align-items: center;
 }
+
+.inputGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+}
+
+.inputGroup input[type="file"] {
+    width: 300px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.convertButton {
+    padding: 8px 16px;
+    width: auto;
+    height: auto;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.convertButton:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.convertButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.convertedText {
+    color: #4CAF50;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.compareButton {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.compareButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 .fileInsert button {
     padding: 0;
     width: 70px;

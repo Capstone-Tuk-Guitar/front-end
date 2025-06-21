@@ -26,6 +26,7 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     }));
   }, [chordTimeline]);
 
+  // 렌더링 관련 함수
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -33,9 +34,11 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // 판정선 그리기
     ctx.fillStyle = "#888";
     ctx.fillRect(JUDGE_X - 2, 0, 4, canvas.height);
 
+    // 블록 그리기
     blocksRef.current.forEach((block) => {
       const colorMap = {
         pending: "#94a3b8",
@@ -76,6 +79,7 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
   const startGame = () => {
     if (!canvasRef.current || isPlaying) return;
     
+    // 게임 시작 전 노드 상태 초기화
     blocksRef.current = blocksRef.current.map(block => ({
       ...block,
       judged: false,

@@ -188,12 +188,7 @@ function PracticePage() {
       <div className={styles.container}>
         <ChordGuide chordTimeline={chordTimeline} />
         <PracticeViewer ref={viewerRef} xmlFile={xmlFile} audioRef={audioRef} />
-        <Playing 
-          ref={playingRef} 
-          chordTimeline={chordTimeline} 
-          audioRef={audioRef}
-          onChordDetect={setDetectedChord}
-        />
+        <Playing  ref={playingRef} chordTimeline={chordTimeline} audioRef={audioRef} onChordDetect={setDetectedChord} />
         <div className={styles.detectedChord}>
           현재 입력 코드: {detectedChord}
         </div>
