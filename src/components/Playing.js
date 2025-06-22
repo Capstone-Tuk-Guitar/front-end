@@ -1,4 +1,4 @@
-import React, {useEffect,useRef,useState,useCallback,forwardRef,useImperativeHandle,} from "react";
+import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from "react";
 import styles from "../styles/Playing.module.css";
 
 const BLOCK_WIDTH = 50;
@@ -100,11 +100,7 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
         canvas.height / 2 + 6
       );
     });
-
-    if (!isPlaying) {
-      animationRef.current = requestAnimationFrame(draw);
-    }
-  }, [isPlaying]);
+  }, []);
 
   const update = () => {
     const currentTime = (Date.now() - startTimeRef.current) / 1000;
@@ -131,7 +127,7 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     animationRef.current = requestAnimationFrame(update);
   };
 
-  const startGame = () => {
+  const startGame = async () => {
     if (!canvasRef.current || isPlaying) return;
 
     blocksRef.current = blocksRef.current.map((block) => ({
@@ -143,15 +139,20 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
 
     setIsPlaying(true);
     stop();
-    startTimeRef.current = Date.now();
 
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
+    try {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+
+        await audioRef.current.play(); // 오디오가 실제 재생되면
+        startTimeRef.current = Date.now(); // 정확한 시작 기준 시점 설정
+      }
+
+      connectWebSocket();
+      animationRef.current = requestAnimationFrame(update);
+    } catch (e) {
+      console.error("오디오 재생 실패:", e);
     }
-
-    connectWebSocket();
-    animationRef.current = requestAnimationFrame(update);
   };
 
   const start = () => {
@@ -201,7 +202,9 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
           height={150}
         />
       </div>
-      <div className={styles.detectedChord}>현재 입력 코드: {detectedChord}</div>
+      <div className={styles.detectedChord}>
+        현재 입력 코드: {detectedChord}
+      </div>
     </div>
   );
 });

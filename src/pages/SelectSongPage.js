@@ -132,10 +132,11 @@ const SelectSongPage = () => {
             alert("변환된 파일을 불러오지 못했습니다.");
           }
         } catch (err) {
-          console.warn("다운로드 실패:", err);
-          alert("파일 다운로드에 실패했습니다.");
+          console.error("다운로드 실패:", err);
+          alert(`파일 다운로드에 실패했습니다: ${err.message}`);
+        } finally {
+          setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
         }
-        setLoadingSongs((prev) => ({ ...prev, [song.music_id]: false }));
       }, delay);
     } catch (err) {
       console.error("다운로드 요청 실패:", err);
