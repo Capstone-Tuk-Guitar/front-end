@@ -8,7 +8,6 @@ const MainPage = React.lazy(() => import('../pages/MainPage'));
 const MusicPage = React.lazy(() => import("../pages/MusicPage"));
 const SelectSongPage = React.lazy(() => import("../pages/SelectSongPage"));
 const PracticePage = React.lazy(() => import('../pages/PracticePage'));
-const SheetMusicPage = React.lazy(() => import('../pages/SheetMusicPage'));
 const AccuracyPage = React.lazy(() => import('../pages/AccuracyPage'));
 const DetailDiffPage = React.lazy(() => import('../pages/DetailDiffPage'));
 const RecordPage = React.lazy(() => import('../pages/RecordPage'));
@@ -39,7 +38,6 @@ function AppRoutes() {
         <Route path="/music" element={<MusicPage />} />
         <Route path='/select_song' element={<SelectSongPage />} />
         <Route path="/practice" element={<PracticePage />} />
-        <Route path="/sheet_music" element={<SheetMusicPage />} />
         <Route path="/accuracy" element={<AccuracyPage />} />
         <Route path="/detail_diff" element={<DetailDiffPage />} />
         <Route path="/records" element={<RecordPage />} />
