@@ -54,15 +54,8 @@
   z-index: 10;
 }
 
-/* styles/Playing.css */
-canvas {
-  background-color: #1e293b;
-  border-radius: 10px;
-}
-
 .playing_wrapper {
   text-align: center;
-  margin-top: 20px;
 }
 
 .canvas_container {

@@ -6,7 +6,6 @@ import MainPage from '../pages/MainPage';
 import MusicPage from "../pages/MusicPage";
 import SelectSongPage from "../pages/SelectSongPage";
 import PracticePage from '../pages/PracticePage';
-import SheetMusicPage from '../pages/SheetMusicPage';
 import AccuracyPage from '../pages/AccuracyPage';
 import DetailDiffPage from '../pages/DetailDiffPage'
 import RecordPage from '../pages/RecordPage';
@@ -23,7 +22,6 @@ function AppRoutes() {
       <Route path="/music" element={<MusicPage />} />
       <Route path='/select_song' element={<SelectSongPage />} />
       <Route path="/practice" element={<PracticePage />} />
-      <Route path="/sheet_music" element={<SheetMusicPage />} />
       <Route path="/accuracy" element={<AccuracyPage />} />
       <Route path="/detail_diff" element={<DetailDiffPage />} />
       <Route path="/records" element={<RecordPage />} />

@@ -12,11 +12,6 @@
     max-width: 1600px;
 }
 
-Button {
-    margin-bottom: 40px;
-    padding: 15px 15px;
-}
-
 .controlButtons {
     display: flex;
     justify-content: center;
@@ -36,7 +31,7 @@ Button {
     font-weight: 500;
 }
 
-/* 녹음 시작/정지 버튼 */
+/* 녹음 시작 버튼 */
 .controlButton:nth-child(1) {
     background-color: #ef4444;
     color: white;
@@ -66,7 +61,7 @@ Button {
     background-color: #7c3aed;
 }
 
-/* 재생 버튼 */
+/* 정지 버튼 */
 .controlButton:nth-child(4) {
     background-color: #10b981;
     color: white;
@@ -74,16 +69,6 @@ Button {
 
 .controlButton:nth-child(4):hover {
     background-color: #059669;
-}
-
-/* 정지 버튼 */
-.controlButton:nth-child(5) {
-    background-color: #f59e0b;
-    color: white;
-}
-
-.controlButton:nth-child(5):hover {
-    background-color: #d97706;
 }
 
 /* 비활성화된 버튼 */

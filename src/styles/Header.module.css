@@ -23,16 +23,6 @@
   width: 40px;
 }
 
-/* 홈 버튼 (글자) */
-/* .home {
-  position: absolute;
-  top: 20px; 
-  left: 40px;
-  font-size: 30px;
-  font-weight: bold;
-  color: #333;
-} */
-
 /* 메뉴 스타일 */
 .menu {
   display: flex;
