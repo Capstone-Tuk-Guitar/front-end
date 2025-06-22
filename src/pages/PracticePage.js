@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import PracticeViewer from "../components/PracticeViewer";
 import ChordGuide from "../components/ChordGuide";
-import Recorder from "../components/Recorder";
+import PracticeViewer from "../components/PracticeViewer";
 import Playing from "../components/Playing";
 import styles from "../styles/PracticePage.module.css";
 
 function PracticePage() {
   const location = useLocation();
   const navigate = useNavigate();
+  
   const viewerRef = useRef(null);
   const playingRef = useRef(null);
   const audioRef = useRef(new Audio());
@@ -17,51 +17,12 @@ function PracticePage() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const isUploading = useRef(false);
-  const [detectedChord, setDetectedChord] = useState("---");
-  const wsRef = useRef(null);
 
   const [xmlFile, setXmlFile] = useState(null);
   const [song, setSong] = useState();
   const [audioUrl, setAudioUrl] = useState(null);
   const [chordTimeline, setChordTimeline] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  // WebSocket 연결 및 코드 감지
-  const connectWebSocket = () => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) return;
-
-    wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
-
-    wsRef.current.onopen = () => {
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
-        wsRef.current.send("start");
-      }
-    };
-
-    wsRef.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.top4_chords?.length > 0) {
-        const primaryChord = data.primary || "---";
-        setDetectedChord(primaryChord);
-      } else {
-        setDetectedChord("---");
-      }
-    };
-  };
-
-  const disconnectWebSocket = () => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send("stop");
-      wsRef.current.close();
-    }
-    wsRef.current = null;
-  };
-
-  useEffect(() => {
-    return () => {
-      disconnectWebSocket();
-    };
-  }, []);
 
   useEffect(() => {
     if (location.state?.fileUrl && location.state?.song) {
@@ -104,7 +65,6 @@ function PracticePage() {
     }
     audioRef.current.play();
     setIsPlaying(true);
-    connectWebSocket();
   };
 
   const handleStop = () => {
@@ -117,7 +77,6 @@ function PracticePage() {
     audioRef.current.pause();
     audioRef.current.currentTime = 0;
     setIsPlaying(false);
-    disconnectWebSocket();
   };
 
   const startRecording = async () => {
@@ -188,11 +147,8 @@ function PracticePage() {
       <div className={styles.container}>
         <ChordGuide chordTimeline={chordTimeline} />
         <PracticeViewer ref={viewerRef} xmlFile={xmlFile} audioRef={audioRef} />
-        <Playing  ref={playingRef} chordTimeline={chordTimeline} audioRef={audioRef} onChordDetect={setDetectedChord} />
+        <Playing ref={playingRef} chordTimeline={chordTimeline} audioRef={audioRef} />
         
-        <div className={styles.detectedChord}>
-          현재 입력 코드: {detectedChord}
-        </div>
         <div className={styles.controlButtons}>
           {!isRecording ? (
             <button onClick={startRecording} className={styles.controlButton} disabled={isPlaying}>

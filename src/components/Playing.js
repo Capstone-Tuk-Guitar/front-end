@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from "react";
-import "../styles/Playing.module.css";
+import styles from "../styles/Playing.module.css";
 
 // 상수 정의
 const BLOCK_WIDTH = 50;
@@ -14,7 +14,41 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
   const animationRef = useRef(null);
   const blocksRef = useRef([]);
   const startTimeRef = useRef(null);
+  const wsRef = useRef(null);
+  
   const [isPlaying, setIsPlaying] = useState(false);
+  const [detectedChord, setDetectedChord] = useState("---");
+
+  // WebSocket 연결 및 코드 감지
+  const connectWebSocket = () => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+
+    wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
+
+    wsRef.current.onopen = () => {
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send("start");
+      }
+    };
+
+    wsRef.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.top4_chords?.length > 0) {
+        const primaryChord = data.primary || "---";
+        setDetectedChord(primaryChord);
+      } else {
+        setDetectedChord("---");
+      }
+    };
+  };
+
+  const disconnectWebSocket = () => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send("stop");
+      wsRef.current.close();
+    }
+    wsRef.current = null;
+  };
 
   const initializeBlocks = useCallback(() => {
     blocksRef.current = chordTimeline.map(({ chord, time }) => ({
@@ -26,7 +60,6 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     }));
   }, [chordTimeline]);
 
-  // 렌더링 관련 함수
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -34,11 +67,9 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 판정선 그리기
     ctx.fillStyle = "#888";
     ctx.fillRect(JUDGE_X - 2, 0, 4, canvas.height);
 
-    // 블록 그리기
     blocksRef.current.forEach((block) => {
       const colorMap = {
         pending: "#94a3b8",
@@ -66,7 +97,15 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     blocksRef.current.forEach((block) => {
       block.x = JUDGE_X + (block.time - currentTime) * SPEED - BLOCK_WIDTH / 2;
 
-      if (!block.judged && currentTime - block.time > TIMING_WINDOW) {
+      // 감지된 코드와 현재 블록의 코드가 일치하고, 타이밍 윈도우 내에 있는지 확인
+      if (!block.judged && 
+          Math.abs(currentTime - block.time) <= TIMING_WINDOW && 
+          detectedChord === block.chord) {
+        block.state = "match";
+        block.judged = true;
+      }
+      // 타이밍 윈도우를 벗어났고 아직 판정되지 않은 경우
+      else if (!block.judged && currentTime - block.time > TIMING_WINDOW) {
         block.state = "miss";
         block.judged = true;
       }
@@ -79,7 +118,6 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
   const startGame = () => {
     if (!canvasRef.current || isPlaying) return;
     
-    // 게임 시작 전 노드 상태 초기화
     blocksRef.current = blocksRef.current.map(block => ({
       ...block,
       judged: false,
@@ -95,6 +133,9 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       audioRef.current.play();
     }
     
+    // WebSocket 연결
+    connectWebSocket();
+    
     animationRef.current = requestAnimationFrame(update);
   };
 
@@ -109,6 +150,9 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
+    
+    // WebSocket 연결 해제
+    disconnectWebSocket();
     
     setIsPlaying(false);
   }, [audioRef]);
@@ -128,18 +172,24 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
   }, [chordTimeline, draw, initializeBlocks]);
 
   useEffect(() => {
-    return () => stop();
+    return () => {
+      stop();
+      disconnectWebSocket();
+    };
   }, [stop]);
 
   return (
-    <div className="playing-wrapper">
-      <div className="canvas-container">
+    <div className={styles.playing_wrapper}>
+      <div className={styles.canvas_container}>
         <canvas
-          className="game-canvas"
+          className={styles.game_canvas}
           ref={canvasRef}
           width={CANVAS_WIDTH}
           height={150}
         />
+      </div>
+      <div className={styles.detectedChord}>
+        현재 입력 코드: {detectedChord}
       </div>
     </div>
   );

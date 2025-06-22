@@ -60,16 +60,16 @@ canvas {
   border-radius: 10px;
 }
 
-.playing-wrapper {
+.playing_wrapper {
   text-align: center;
   margin-top: 20px;
 }
 
-.canvas-container {
+.canvas_container {
   position: relative;
 }
 
-.game-canvas {
+.game_canvas {
   background-color: #1e293b;
   border-radius: 10px;
   border: 1px solid #ccc;
@@ -115,8 +115,14 @@ canvas {
   background-color: #ef4444;
 }
 
-.detected-chord {
+.detectedChord {
+  width: 100%;
   font-size: 18px;
-  color: #64748b;
-  margin-top: 10px;
+  font-weight: bold;
+  color: #1e293b;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
 }
