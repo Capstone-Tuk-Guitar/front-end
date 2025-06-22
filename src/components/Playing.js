@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from "react";
+import React, {useEffect,useRef,useState,useCallback,forwardRef,useImperativeHandle,} from "react";
 import styles from "../styles/Playing.module.css";
 
-// 상수 정의
 const BLOCK_WIDTH = 50;
 const BLOCK_HEIGHT = 30;
 const SPEED = 100;
@@ -15,30 +14,36 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
   const blocksRef = useRef([]);
   const startTimeRef = useRef(null);
   const wsRef = useRef(null);
-  
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [detectedChord, setDetectedChord] = useState("---");
 
-  // WebSocket 연결 및 코드 감지
+  // WebSocket 연결
   const connectWebSocket = () => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
     wsRef.current = new WebSocket("ws://localhost:8000/ws/chordprac");
 
     wsRef.current.onopen = () => {
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
-        wsRef.current.send("start");
-      }
+      wsRef.current?.send("start");
     };
 
     wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.top4_chords?.length > 0) {
-        const primaryChord = data.primary || "---";
-        setDetectedChord(primaryChord);
-      } else {
-        setDetectedChord("---");
-      }
+      const primaryChord = data.primary || "---";
+      setDetectedChord(primaryChord);
+
+      const currentTime = (Date.now() - startTimeRef.current) / 1000;
+
+      //타이밍 윈도우 안에 있는 경우 감지된 코드 기록
+      blocksRef.current.forEach((block) => {
+        if (
+          !block.judged &&
+          Math.abs(currentTime - block.time) <= TIMING_WINDOW
+        ) {
+          block.matchedblock.push(primaryChord);
+        }
+      });
     };
   };
 
@@ -56,14 +61,15 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       time,
       x: CANVAS_WIDTH + time * SPEED,
       judged: false,
-      state: "pending"
+      state: "pending",
+      matchedblock: [],
     }));
   }, [chordTimeline]);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -74,16 +80,25 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       const colorMap = {
         pending: "#94a3b8",
         match: "#4ade80",
-        miss: "#f87171"
+        miss: "#f87171",
       };
-      
+
       ctx.fillStyle = colorMap[block.state] || "#94a3b8";
-      ctx.fillRect(block.x, canvas.height / 2 - BLOCK_HEIGHT / 2, BLOCK_WIDTH, BLOCK_HEIGHT);
+      ctx.fillRect(
+        block.x,
+        canvas.height / 2 - BLOCK_HEIGHT / 2,
+        BLOCK_WIDTH,
+        BLOCK_HEIGHT
+      );
 
       ctx.fillStyle = "#fff";
       ctx.font = "18px Arial";
       ctx.textAlign = "center";
-      ctx.fillText(block.chord, block.x + BLOCK_WIDTH / 2, canvas.height / 2 + 6);
+      ctx.fillText(
+        block.chord,
+        block.x + BLOCK_WIDTH / 2,
+        canvas.height / 2 + 6
+      );
     });
 
     if (!isPlaying) {
@@ -95,18 +110,19 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
     const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
     blocksRef.current.forEach((block) => {
-      block.x = JUDGE_X + (block.time - currentTime) * SPEED - BLOCK_WIDTH / 2;
+      block.x =
+        JUDGE_X + (block.time - currentTime) * SPEED - BLOCK_WIDTH / 2;
 
-      // 감지된 코드와 현재 블록의 코드가 일치하고, 타이밍 윈도우 내에 있는지 확인
-      if (!block.judged && 
-          Math.abs(currentTime - block.time) <= TIMING_WINDOW && 
-          detectedChord === block.chord) {
-        block.state = "match";
-        block.judged = true;
-      }
-      // 타이밍 윈도우를 벗어났고 아직 판정되지 않은 경우
-      else if (!block.judged && currentTime - block.time > TIMING_WINDOW) {
-        block.state = "miss";
+      const timeDiff = currentTime - block.time;
+
+      if (!block.judged && timeDiff > TIMING_WINDOW) {
+        // matchedblock 배열에 block.chord와 일치하는 게 있는지 확인
+        if (block.matchedblock.includes(block.chord)) {
+          //한개라도 존재하면 match
+          block.state = "match";
+        } else {
+          block.state = "miss";
+        }
         block.judged = true;
       }
     });
@@ -117,25 +133,24 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
 
   const startGame = () => {
     if (!canvasRef.current || isPlaying) return;
-    
-    blocksRef.current = blocksRef.current.map(block => ({
+
+    blocksRef.current = blocksRef.current.map((block) => ({
       ...block,
       judged: false,
-      state: "pending"
+      state: "pending",
+      matchedblock: [],
     }));
-    
+
     setIsPlaying(true);
     stop();
     startTimeRef.current = Date.now();
-    
+
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
     }
-    
-    // WebSocket 연결
+
     connectWebSocket();
-    
     animationRef.current = requestAnimationFrame(update);
   };
 
@@ -145,27 +160,25 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
 
   const stop = useCallback(() => {
     cancelAnimationFrame(animationRef.current);
-    
+
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-    
-    // WebSocket 연결 해제
+
     disconnectWebSocket();
-    
     setIsPlaying(false);
   }, [audioRef]);
 
   useImperativeHandle(ref, () => ({
-    start: start,
-    stop: stop
+    start,
+    stop,
   }));
 
   useEffect(() => {
     initializeBlocks();
     draw();
-    
+
     return () => {
       cancelAnimationFrame(animationRef.current);
     };
@@ -188,9 +201,7 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
           height={150}
         />
       </div>
-      <div className={styles.detectedChord}>
-        현재 입력 코드: {detectedChord}
-      </div>
+      <div className={styles.detectedChord}>현재 입력 코드: {detectedChord}</div>
     </div>
   );
 });
