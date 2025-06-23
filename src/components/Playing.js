@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from "react";
+import React, {useEffect,useRef,useState,useCallback,forwardRef,useImperativeHandle} from "react";
 import styles from "../styles/Playing.module.css";
 
 const BLOCK_WIDTH = 50;
@@ -6,7 +6,17 @@ const BLOCK_HEIGHT = 30;
 const SPEED = 100;
 const CANVAS_WIDTH = 1000;
 const JUDGE_X = CANVAS_WIDTH / 2;
-const TIMING_WINDOW = 0.3;
+const TIMING_WINDOW = 0.4;
+
+const normalizeChord = (chordStr) => {
+  if (!chordStr || chordStr === "---") return "---";
+  if (!chordStr || typeof chordStr !== "string") return "";
+  chordStr = chordStr.trim().replace(/\s+/g, " ");
+  const [root, type] = chordStr.split(" ");
+  const displayType =
+    type === "maj" ? "major" : type === "min" ? "minor" : type;
+  return `${root} ${displayType}`.trim();
+};
 
 const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
   const canvasRef = useRef(null);
@@ -28,22 +38,31 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       wsRef.current?.send("start");
     };
 
-    wsRef.current.onmessage = (event) => {
+   wsRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      const primaryChord = data.primary || "---";
-      setDetectedChord(primaryChord);
+      const top4 = data.top4_chords || [];
+      const normalizedTop4 = top4.map(normalizeChord);
+      const primaryChord = normalizeChord(data.primary || "---");
 
       const currentTime = (Date.now() - startTimeRef.current) / 1000;
 
-      //타이밍 윈도우 안에 있는 경우 감지된 코드 기록
+      let matchedChord = null;
+
       blocksRef.current.forEach((block) => {
         if (
           !block.judged &&
           Math.abs(currentTime - block.time) <= TIMING_WINDOW
         ) {
-          block.matchedblock.push(primaryChord);
+          const normalizedBlockChord = normalizeChord(block.chord);
+          if (normalizedTop4.includes(normalizedBlockChord)) {
+            block.matchedblock.push(normalizedBlockChord);
+            matchedChord = normalizedBlockChord;
+          }
         }
       });
+
+      //매칭된 코드가 있으면 그것을 표시, 없으면 primary 표시
+      setDetectedChord(matchedChord || primaryChord);
     };
   };
 
@@ -112,9 +131,10 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       const timeDiff = currentTime - block.time;
 
       if (!block.judged && timeDiff > TIMING_WINDOW) {
-        // matchedblock 배열에 block.chord와 일치하는 게 있는지 확인
-        if (block.matchedblock.includes(block.chord)) {
-          //한개라도 존재하면 match
+        const normalizedBlockChord = normalizeChord(block.chord);
+        const matchedNormalized = block.matchedblock.map(normalizeChord);
+
+        if (matchedNormalized.includes(normalizedBlockChord)) {
           block.state = "match";
         } else {
           block.state = "miss";
@@ -144,8 +164,8 @@ const Playing = forwardRef(({ chordTimeline, audioRef }, ref) => {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
 
-        await audioRef.current.play(); // 오디오가 실제 재생되면
-        startTimeRef.current = Date.now(); // 정확한 시작 기준 시점 설정
+        await audioRef.current.play();
+        startTimeRef.current = Date.now();
       }
 
       connectWebSocket();
