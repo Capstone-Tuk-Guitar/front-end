@@ -11,7 +11,6 @@ const PracticePage = React.lazy(() => import('../pages/PracticePage'));
 const AccuracyPage = React.lazy(() => import('../pages/AccuracyPage'));
 const DetailDiffPage = React.lazy(() => import('../pages/DetailDiffPage'));
 const RecordPage = React.lazy(() => import('../pages/RecordPage'));
-const GuidePage = React.lazy(() => import('../pages/GuidePage'));
 const TuningPage = React.lazy(() => import('../pages/TuningPage'));
 const ChordPage = React.lazy(() => import('../pages/ChordPage'));
 
@@ -41,7 +40,6 @@ function AppRoutes() {
         <Route path="/accuracy" element={<AccuracyPage />} />
         <Route path="/detail_diff" element={<DetailDiffPage />} />
         <Route path="/records" element={<RecordPage />} />
-        <Route path="/guide" element={<GuidePage />} />
         <Route path="/tuning" element={<TuningPage />} />
         <Route path="/chord" element={<ChordPage />} />
       </Routes>
