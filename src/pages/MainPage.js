@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Card from "../components/Card";
 import styles from "../styles/MainPage.module.css";
@@ -16,9 +17,15 @@ const allChordImages = importAll(
 );
 
 const MainPage = () => {
-  const [activeIndex, setActiveIndex] = useState(1); // 중앙 슬라이드 인덱스
+  const navigate = useNavigate();
+  // localStorage에서 마지막 클릭한 카드 인덱스를 가져오거나 기본값 1 사용
+  const [activeIndex, setActiveIndex] = useState(() => {
+    const savedIndex = localStorage.getItem('lastClickedCardIndex');
+    return savedIndex ? parseInt(savedIndex, 10) : 1;
+  });
   const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
   const [randomChords, setRandomChords] = useState([]);
+  const [isAnimating, setIsAnimating] = useState(false); // 애니메이션 진행 상태
 
   // 슬라이드 데이터를 useMemo로 메모이제이션
   const slides = useMemo(() => [
@@ -39,12 +46,14 @@ const MainPage = () => {
 
   // 콜백 함수 메모이제이션
   const handleNext = useCallback(() => {
+    if (isAnimating) return;
     setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
-  }, [slides.length]);
+  }, [slides.length, isAnimating]);
 
   const handlePrev = useCallback(() => {
+    if (isAnimating) return;
     setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
-  }, [slides.length]);
+  }, [slides.length, isAnimating]);
 
   const handleChordClick = useCallback((img) => {
     setSelectedChord(img);
@@ -53,6 +62,37 @@ const MainPage = () => {
   const handleCloseChord = useCallback(() => {
     setSelectedChord(null);
   }, []);
+
+  // 카드 클릭 핸들러
+  const handleCardClick = useCallback((text, navigationPath, isCenter = false) => {
+    // 애니메이션 진행 중이면 클릭 무시
+    if (isAnimating) return;
+    
+    // 클릭된 카드에 해당하는 인덱스 찾기
+    const clickedIndex = slides.findIndex(slide => slide.text === text);
+    
+    if (clickedIndex !== -1) {
+      // 마지막 클릭한 카드 인덱스를 localStorage에 저장
+      localStorage.setItem('lastClickedCardIndex', clickedIndex.toString());
+      
+      if (isCenter) {
+        // 가운데 카드인 경우 바로 페이지 이동
+        navigate(navigationPath);
+      } else if (clickedIndex !== activeIndex) {
+        // 양옆 카드인 경우 애니메이션 후 페이지 이동
+        setIsAnimating(true);
+        
+        // 해당 카드를 가운데로 이동
+        setActiveIndex(clickedIndex);
+        
+        // 애니메이션 완료 후 페이지 이동 (500ms 대기)
+        setTimeout(() => {
+          setIsAnimating(false);
+          navigate(navigationPath);
+        }, 500);
+      }
+    }
+  }, [slides, activeIndex, navigate, isAnimating]);
 
   return (
     <div className="container">
@@ -72,6 +112,7 @@ const MainPage = () => {
                 text={slide.text}
                 isActive={index === activeIndex}
                 position={index - activeIndex} // 활성화 상태와 위치를 기준으로 스타일 조정
+                onCardClick={handleCardClick}
               />
             ))}
           </div>
@@ -86,7 +127,11 @@ const MainPage = () => {
             <span
               key={index}
               className={`${styles.dot} ${index === activeIndex ? styles.active : ""}`}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                if (!isAnimating) {
+                  setActiveIndex(index);
+                }
+              }}
             ></span>
           ))}
         </div>
