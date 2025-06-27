@@ -1,10 +1,7 @@
 import React, { useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "../styles/Card.module.css";
 
-const Card = ({ image, text, isActive, position }) => {
-  // 페이지 이동 함수
-  const navigate = useNavigate();
+const Card = ({ image, text, isActive, position, onCardClick }) => {
 
   // 위치에 따른 클래스를 useMemo로 메모이제이션
   const positionClass = useMemo(() => {
@@ -29,10 +26,16 @@ const Card = ({ image, text, isActive, position }) => {
     return pathMap[text] || "/";
   }, [text]);
 
-  // 카드 클릭 시 이동
+  // 카드 클릭 처리
   const handleClick = useCallback(() => {
-    navigate(navigationPath);
-  }, [navigate, navigationPath]);
+    if (position === 0) {
+      // 가운데 카드인 경우 부모 컴포넌트에 알린 후 바로 페이지 이동
+      onCardClick?.(text, navigationPath, true); // 세 번째 인자로 즉시 이동 여부 전달
+    } else {
+      // 양옆 카드인 경우 부모 컴포넌트에 알림
+      onCardClick?.(text, navigationPath, false);
+    }
+  }, [position, navigationPath, onCardClick, text]);
 
   return (
     <div

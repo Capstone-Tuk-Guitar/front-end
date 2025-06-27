@@ -65,13 +65,3 @@
   gap: 5px;
   min-width: 120px;
 }
-
-.subItem {
-  font-size: 14px;
-  color: #555;
-  cursor: pointer;
-}
-
-.subItem:hover {
-  color: #E91B1B;
-}

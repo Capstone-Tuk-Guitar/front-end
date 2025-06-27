@@ -5,7 +5,6 @@ import styles from "../styles/Header.module.css";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [isHeaderExpanded, setIsHeaderExpanded] = useState(false);
 
   const navigate = useNavigate(); // navigate 훅 사용
@@ -27,15 +26,6 @@ const Header = () => {
     setIsHeaderExpanded(prev => !prev);
   }, []);
 
-  // 서브메뉴 핸들러
-  const handleSubMenuEnter = useCallback(() => {
-    setIsSubMenuOpen(true);
-  }, []);
-
-  const handleSubMenuLeave = useCallback(() => {
-    setIsSubMenuOpen(false);
-  }, []);
-
   return (
     <header className={`${styles.header} ${isHeaderExpanded ? styles.expanded : ""}`}>
       <img className={styles.home} src={homeImage} onClick={() => handleNavigation('/main')} alt="홈 화면" />
@@ -48,30 +38,17 @@ const Header = () => {
               음원 목록
             </span>
 
-            <div
-              className={styles.menuItem}
-              onMouseEnter={handleSubMenuEnter}
-              onMouseLeave={handleSubMenuLeave}
-            >
+            <span className={styles.menuItem} onClick={() => handleNavigation('/select_song')}>
               연주하기
-              {isSubMenuOpen && (
-                <div className={styles.subMenu}>
-                  <span className={styles.subItem} onClick={() => handleNavigation('/practice')}>
-                    피드백 연주
-                  </span>
-                  <span className={styles.subItem} onClick={() => handleNavigation('/practice')}>
-                    정확도 연주
-                  </span>
-                </div>
-              )}
-            </div>
+            </span>
 
             <span className={styles.menuItem} onClick={() => handleNavigation('/records')}>
               연주 기록
             </span>
-            <span className={styles.menuItem} onClick={() => handleNavigation('/guide')}>사전 가이드</span>
-            <span className={styles.menuItem} onClick={() => handleNavigation('/chord')}>음 연습</span>
-            <span className={styles.menuItem}>설정</span>
+
+            <span className={styles.menuItem} onClick={() => handleNavigation('/chord')}>
+              음 연습
+            </span>
           </>
         )}
 
