@@ -22,27 +22,22 @@ const MusicPage = () => {
     {
       target: 'controlPanel',
       title: '음악 컨트롤',
-      description: '선택한 음악을 재생, 일시정지, 정지할 수 있습니다.'
+      description: '선택한 음악을 재생, 일시정지, 정지할 수 있습니다.',
+      top: -250
     },
     {
       target: 'songList',
       title: '음악 목록',
-      description: '업로드한 음악들을 확인하고 \n 악보로 변환하거나 삭제할 수 있습니다.'
+      description: '업로드한 음악들을 확인하고 \n 악보로 변환하거나 삭제할 수 있습니다.',
+      top: -280
     },
     {
       target: 'uploadButton',
       title: '음원 추가',
-      description: 'MP3 파일을 업로드하여 \n 새로운 음악을 추가할 수 있습니다.'
+      description: 'MP3 파일을 업로드하여 \n 새로운 음악을 추가할 수 있습니다.',
+      top: -275
     }
   ];
-
-  // MusicPage 전용 위치 계산 함수
-  const musicPagePositionCalculator = (rect, scrollTop) => {
-    return {
-      top: rect.top + scrollTop - 270,      // MusicPage에 최적화된 위치
-      left: rect.left + rect.width / 2      // 요소 중앙
-    };
-  };
 
   // 도움말 투어 훅 사용
   const {
@@ -54,10 +49,7 @@ const MusicPage = () => {
     prevTourStep,
     endTour,
     getHighlightClass
-//} = useTour(tourSteps);                 // 기본 위치 계산 함수 사용
-  } = useTour(tourSteps, {                // 커스텀 위치 계산 함수 사용
-    positionCalculator: musicPagePositionCalculator
-  });
+  } = useTour(tourSteps);
 
   const username = localStorage.getItem("user_id");
 

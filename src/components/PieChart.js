@@ -5,7 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart = ({ title, value, color }) => {
+const PieChart = ({ title, value, color, size = "small" }) => {
     const chartData = {
         labels: [],
         datasets: [
@@ -19,6 +19,7 @@ const PieChart = ({ title, value, color }) => {
 
     const chartOptions = {
         responsive: true,
+        maintainAspectRatio: true,
         cutout: "0%",
         plugins: {
             tooltip: {
@@ -26,15 +27,22 @@ const PieChart = ({ title, value, color }) => {
                     label: (tooltipItem) => `${tooltipItem.raw.toFixed(1)}%`,
                 },
             },
+            legend: {
+                display: false,
+            },
         },
         animation: {
             animateScale: true,
         },
     };
 
+    const chartClass = size === "large" 
+        ? `${styles.chart} ${styles.large}` 
+        : styles.chart;
+
     return (
-        <div className={styles.chart}>
-            <h3 className={styles.chart_title}>{title}</h3>
+        <div className={chartClass}>
+            {title && <h3 className={styles.chart_title}>{title}</h3>}
             <Pie data={chartData} options={chartOptions} />
             <p className={styles.chart_percentage}>{(value * 100).toFixed(1)}%</p>
         </div>

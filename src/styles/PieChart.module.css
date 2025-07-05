@@ -1,22 +1,116 @@
 .chart {
     text-align: center;
-    width: 200px;
+    width: 180px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .chart_title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 10px;
+    line-height: 1.3;
 }
 
 .chart_percentage {
     margin-top: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
 }
 
 /* Chart.js 캔버스 스타일 오버라이드 */
 .chart canvas {
     background-color: white !important;
+    max-width: 160px;
+    max-height: 160px;
+}
+
+/* 큰 차트 (최종 유사도용) */
+.chart.large {
+    width: 280px;
+}
+
+.chart.large canvas {
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.chart.large .chart_title {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.chart.large .chart_percentage {
+    font-size: 28px;
+    margin-top: 15px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .chart {
+        width: 160px;
+    }
+    
+    .chart canvas {
+        max-width: 140px;
+        max-height: 140px;
+    }
+    
+    .chart.large {
+        width: 240px;
+    }
+    
+    .chart.large canvas {
+        max-width: 220px;
+        max-height: 220px;
+    }
+    
+    .chart.large .chart_title {
+        font-size: 20px;
+    }
+    
+    .chart.large .chart_percentage {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .chart {
+        width: 140px;
+    }
+    
+    .chart canvas {
+        max-width: 120px;
+        max-height: 120px;
+    }
+    
+    .chart_title {
+        font-size: 14px;
+    }
+    
+    .chart_percentage {
+        font-size: 16px;
+    }
+    
+    .chart.large {
+        width: 200px;
+    }
+    
+    .chart.large canvas {
+        max-width: 180px;
+        max-height: 180px;
+    }
+    
+    .chart.large .chart_title {
+        font-size: 18px;
+    }
+    
+    .chart.large .chart_percentage {
+        font-size: 22px;
+    }
 }

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaQuestionCircle } from "react-icons/fa";
 import Header from "../components/Header";
 import PieChart from "../components/PieChart";
+import Button from "../components/Button";
+import { useTour, TourOverlay } from "../components/TourHelper";
 import styles from "../styles/AccuracyPage.module.css";
 
 function AccuracyPage() {
@@ -16,6 +19,52 @@ function AccuracyPage() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // 투어 단계별 정보
+    const tourSteps = [
+        {
+            target: 'fileUploadCard',
+            title: '파일 업로드',
+            description: 'MP3 또는 MIDI 파일을 업로드하여\n두 음악 파일을 비교할 수 있습니다.',
+                        top: -160
+        },
+        {
+            target: 'compareButton',
+            title: '비교 실행',
+            description: '업로드된 두 파일을 비교하여\n유사도를 분석합니다.',
+            top: -275
+        },
+        {
+            target: 'finalResultCard',
+            title: '최종 유사도',
+            description: '두 음악의 전체적인 유사도를\n확인할 수 있습니다.',
+            top: -180
+        },
+        {
+            target: 'detailResultsCard',
+            title: '세부 유사도',
+            description: '음 높이, 리듬, 멜로디 간격별로\n세부적인 유사도를 확인할 수 있습니다.',
+            top: -275
+        },
+        {
+            target: 'detailViewCard',
+            title: '상세보기',
+            description: '더 자세한 분석 결과를 확인하려면\n상세보기를 클릭하세요.',
+            top: -275
+        }
+    ];
+
+    // 도움말 투어 훅 사용
+    const {
+        isTourActive,
+        tourStep,
+        tooltipPosition,
+        startTour,
+        nextTourStep,
+        prevTourStep,
+        endTour,
+        getHighlightClass
+    } = useTour(tourSteps);
+    
     const [result, setResult] = useState({
         pitch_similarity: 0,
         rhythm_similarity: 0,
@@ -131,70 +180,109 @@ function AccuracyPage() {
         <div className="container">
             <Header />
             
+            {/* 도움말 버튼 */}
+            <div className={styles.helpButtonContainer}>
+                <Button className={styles.helpButton} onClick={startTour} icon={FaQuestionCircle}>
+                    도움말
+                </Button>
+            </div>
+            
             <div className={styles.container}>
-                <div className={styles.topSection}>
-                    <div className={styles.fileInsert}>
-                        <h1>MIDI 파일 비교</h1>
-                        <div className={styles.inputs}>
-                            <div className={styles.inputGroup}>
-                                <input 
-                                    type="file" 
-                                    accept=".mp3,.mid,.midi" 
-                                    onChange={(e) => handleFileChange(e, setFile1)} 
-                                />
-                                <button
-                                    onClick={() => convertToMidi(file1, setMidiFile1, setConverting1)}
-                                    disabled={converting1 || !file1}
-                                    className={styles.convertButton}
-                                >
-                                    {converting1 ? "변환 중..." : "MIDI 변환"}
-                                </button>
-                                {midiFile1 && <span className={styles.convertedText}>✓ 변환됨</span>}
-                            </div>
-                            <div className={styles.inputGroup}>
-                                <input 
-                                    type="file" 
-                                    accept=".mp3,.mid,.midi" 
-                                    onChange={(e) => handleFileChange(e, setFile2)} 
-                                />
-                                <button
-                                    onClick={() => convertToMidi(file2, setMidiFile2, setConverting2)}
-                                    disabled={converting2 || !file2}
-                                    className={styles.convertButton}
-                                >
-                                    {converting2 ? "변환 중..." : "MIDI 변환"}
-                                </button>
-                                {midiFile2 && <span className={styles.convertedText}>✓ 변환됨</span>}
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleCompare}
-                            disabled={loading}
-                            className={styles.compareButton}
+                <div className={styles.mainContent}>
+                    <div className={styles.leftSection}>
+                        <div 
+                            id="fileUploadCard" 
+                            className={`${styles.fileUploadCard} ${getHighlightClass('fileUploadCard')}`}
                         >
-                            {loading ? "비교 중..." : "비교하기"}
-                        </button>
-                    </div>
-                    <div className={styles.showSheet}>
-                        <div onClick={handleDetailView}>
-                            상세보기
+                            <h1>MIDI 파일 비교</h1>
+                            <div className={styles.inputs}>
+                                <div className={styles.inputGroup}>
+                                    <input 
+                                        type="file" 
+                                        accept=".mp3,.mid,.midi" 
+                                        onChange={(e) => handleFileChange(e, setFile1)}
+                                        placeholder="첫 번째 파일을 선택하세요"
+                                    />
+                                    <button
+                                        onClick={() => convertToMidi(file1, setMidiFile1, setConverting1)}
+                                        disabled={converting1 || !file1}
+                                        className={styles.convertButton}
+                                    >
+                                        {converting1 ? "변환 중..." : "MIDI 변환"}
+                                    </button>
+                                    {midiFile1 && <span className={styles.convertedText}>✓ 변환 완료</span>}
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <input 
+                                        type="file" 
+                                        accept=".mp3,.mid,.midi" 
+                                        onChange={(e) => handleFileChange(e, setFile2)}
+                                        placeholder="두 번째 파일을 선택하세요"
+                                    />
+                                    <button
+                                        onClick={() => convertToMidi(file2, setMidiFile2, setConverting2)}
+                                        disabled={converting2 || !file2}
+                                        className={styles.convertButton}
+                                    >
+                                        {converting2 ? "변환 중..." : "MIDI 변환"}
+                                    </button>
+                                    {midiFile2 && <span className={styles.convertedText}>✓ 변환 완료</span>}
+                                </div>
+                            </div>
+                            <button
+                                id="compareButton"
+                                onClick={handleCompare}
+                                disabled={loading}
+                                className={`${styles.compareButton} ${getHighlightClass('compareButton')}`}
+                            >
+                                {loading ? "비교 중..." : "비교하기"}
+                            </button>
+                        </div>
+                        
+                        <div 
+                            id="detailViewCard" 
+                            className={`${styles.detailViewCard} ${getHighlightClass('detailViewCard')}`} 
+                            onClick={handleDetailView}
+                        >
+                            <h3>상세 비교 결과 보기</h3>
+                            <p>클릭하여 상세한 비교 분석을 확인하세요</p>
                         </div>
                     </div>
-                    <div className={styles.final_chart}>
-                        <h2 className={styles.results_text}>최종 유사도</h2> 
-                        <PieChart value={result.final_similarity} color="#4BC0C0" />
-                    </div>
-                </div>
 
-                <div className={styles.bottomSection}>
-                    <h2 className={styles.results_text}>세부 유사도</h2> 
-                    <div className={styles.detail_charts}>
-                        <PieChart title="음 높이 유사도" value={result.pitch_similarity} color="#FF6384" />
-                        <PieChart title="리듬 유사도" value={result.rhythm_similarity} color="#36A2EB" />
-                        <PieChart title="멜로디 간격 유사도" value={result.interval_similarity} color="#FFCE56" />
+                    <div className={styles.rightSection}>
+                        <div 
+                            id="finalResultCard" 
+                            className={`${styles.finalResultCard} ${getHighlightClass('finalResultCard')}`}
+                        >
+                            <h2>최종 유사도</h2>
+                            <PieChart value={result.final_similarity} color="#4BC0C0" size="large" />
+                        </div>
+                        
+                        <div 
+                            id="detailResultsCard" 
+                            className={`${styles.detailResultsCard} ${getHighlightClass('detailResultsCard')}`}
+                        >
+                            <h2>세부 유사도</h2>
+                            <div className={styles.detail_charts}>
+                                <PieChart title="음 높이" value={result.pitch_similarity} color="#FF6384" />
+                                <PieChart title="리듬" value={result.rhythm_similarity} color="#36A2EB" />
+                                <PieChart title="멜로디 간격" value={result.interval_similarity} color="#FFCE56" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            
+            {/* 투어 오버레이 */}
+            <TourOverlay
+                isTourActive={isTourActive}
+                tourStep={tourStep}
+                tooltipPosition={tooltipPosition}
+                tourSteps={tourSteps}
+                endTour={endTour}
+                prevTourStep={prevTourStep}
+                nextTourStep={nextTourStep}
+            />
         </div>
     );
 }

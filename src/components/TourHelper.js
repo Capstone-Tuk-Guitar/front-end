@@ -8,21 +8,26 @@ export const useTour = (tourSteps, options = {}) => {
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   // 기본 위치 계산 함수
-  const defaultPositionCalculator = (rect, scrollTop) => {
+  const defaultPositionCalculator = (rect, scrollTop, customOffset) => {
     const viewportWidth = window.innerWidth;
-    
-    // 요소 위쪽에 충분한 공간이 있는지 확인
-    const spaceAbove = rect.top;
-    const tooltipHeight = 200; // 예상 말풍선 높이
     
     let top, left;
     
-    if (spaceAbove > tooltipHeight + 50) {
-      // 위쪽에 공간이 있으면 요소 위에 배치
-      top = rect.top + scrollTop - 180;
+    // 커스텀 offset이 있으면 사용, 없으면 기본 로직 사용
+    if (customOffset !== undefined) {
+      top = rect.top + scrollTop + customOffset;
     } else {
-      // 아니면 아래쪽에 배치
-      top = rect.bottom + scrollTop + 20;
+      // 요소 위쪽에 충분한 공간이 있는지 확인
+      const spaceAbove = rect.top;
+      const tooltipHeight = 200; // 예상 말풍선 높이
+      
+      if (spaceAbove > tooltipHeight + 50) {
+        // 위쪽에 공간이 있으면 요소 위에 배치
+        top = rect.top + scrollTop - 180;
+      } else {
+        // 아니면 아래쪽에 배치
+        top = rect.bottom + scrollTop + 20;
+      }
     }
     
     // 좌우 위치 계산 (화면 밖으로 나가지 않도록)
@@ -48,10 +53,14 @@ export const useTour = (tourSteps, options = {}) => {
       const rect = element.getBoundingClientRect();
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       
-      const position = positionCalculator(rect, scrollTop);
+      // 현재 단계의 top 속성 가져오기
+      const currentStep = tourSteps && tourSteps[tourStep];
+      const customOffset = currentStep ? currentStep.top : undefined;
+      
+      const position = positionCalculator(rect, scrollTop, customOffset);
       setTooltipPosition(position);
     }
-  }, [positionCalculator]);
+  }, [positionCalculator, tourSteps, tourStep]);
 
   // 투어 단계가 변경될 때마다 말풍선 위치 업데이트
   useEffect(() => {
