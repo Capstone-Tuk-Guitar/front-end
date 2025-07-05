@@ -13,6 +13,8 @@
   transition: transform 0.3s, opacity 0.3s, z-index 0.3s;
   position: absolute;
   cursor: pointer;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* 이미지 */
@@ -24,10 +26,73 @@
 
 /* 텍스트 */
 .text {
-  margin-top: 50px;
+  margin-top: 30px;
   font-size: clamp(16px, 2vw, 32px);
   font-weight: bold;
   color: #333;
+  margin-bottom: 15px;
+}
+
+/* 설명 텍스트 */
+.description {
+  font-size: clamp(12px, 1.5vw, 18px);
+  color: #666;
+  line-height: 1.4;
+  white-space: pre-line;
+  margin: 0;
+}
+
+/* 각 카드별 색상 */
+.musicCard {
+  background: linear-gradient(135deg, #e8f4fd 0%, #d1e7dd 100%);
+  border-color: #b8d4da;
+}
+
+.musicCard .text {
+  color: #2c5aa0;
+}
+
+.musicCard .description {
+  color: #5a7c8a;
+}
+
+.playCard {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  border-color: #f9c0d4;
+}
+
+.playCard .text {
+  color: #be185d;
+}
+
+.playCard .description {
+  color: #9d174d;
+}
+
+.compareCard {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-color: #93c5fd;
+}
+
+.compareCard .text {
+  color: #1e40af;
+}
+
+.compareCard .description {
+  color: #3b82f6;
+}
+
+.recordCard {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-color: #86efac;
+}
+
+.recordCard .text {
+  color: #166534;
+}
+
+.recordCard .description {
+  color: #16a34a;
 }
 
 .card.active {
