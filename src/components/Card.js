@@ -15,35 +15,52 @@ const Card = ({ image, text, isActive, position, onCardClick }) => {
     return "";
   }, [position]);
 
-  // 내비게이션 경로를 useMemo로 메모이제이션
-  const navigationPath = useMemo(() => {
-    const pathMap = {
-      "음원 목록": "/music",
-      "연주하기": "/select_song",
-      "비교하기": "/accuracy",
-      "연주 기록": "/records"
+  // 내비게이션 경로와 설명을 useMemo로 메모이제이션
+  const cardInfo = useMemo(() => {
+    const infoMap = {
+      "음원 목록": {
+        path: "/music",
+        description: "다양한 기타 연주곡을\n추가하고 들어보세요",
+        colorClass: styles.musicCard
+      },
+      "연주하기": {
+        path: "/select_song",
+        description: "선택한 곡을 따라하며\n기타 연주를 연습하세요",
+        colorClass: styles.playCard
+      },
+      "비교하기": {
+        path: "/accuracy",
+        description: "연주한 곡을 원곡과 비교하여\n정확도를 확인하세요",
+        colorClass: styles.compareCard
+      },
+      "연주 기록": {
+        path: "/records",
+        description: "연주한 곡들의 기록을확인하고\n정확도 누적 결과를 확인하세요",
+        colorClass: styles.recordCard
+      }
     };
-    return pathMap[text] || "/";
+    return infoMap[text] || { path: "/", description: "", colorClass: "" };
   }, [text]);
 
   // 카드 클릭 처리
   const handleClick = useCallback(() => {
     if (position === 0) {
       // 가운데 카드인 경우 부모 컴포넌트에 알린 후 바로 페이지 이동
-      onCardClick?.(text, navigationPath, true); // 세 번째 인자로 즉시 이동 여부 전달
+      onCardClick?.(text, cardInfo.path, true); // 세 번째 인자로 즉시 이동 여부 전달
     } else {
       // 양옆 카드인 경우 부모 컴포넌트에 알림
-      onCardClick?.(text, navigationPath, false);
+      onCardClick?.(text, cardInfo.path, false);
     }
-  }, [position, navigationPath, onCardClick, text]);
+  }, [position, cardInfo.path, onCardClick, text]);
 
   return (
     <div
-      className={`${styles.card} ${isActive ? styles.active : styles.inactive} ${positionClass}`}
+      className={`${styles.card} ${isActive ? styles.active : styles.inactive} ${positionClass} ${cardInfo.colorClass}`}
       onClick={handleClick}
     >
       <img src={image} alt={text} className={styles.image} loading="lazy" />
       <p className={styles.text}>{text}</p>
+      <p className={styles.description}>{cardInfo.description}</p>
     </div>
   );
 };

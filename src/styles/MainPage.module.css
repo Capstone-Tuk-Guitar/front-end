@@ -86,6 +86,7 @@
 .fingering img {
   width: 200px;
   height: 90px;
+  border: 1px solid #000;
 }
 
 /* 화면이 1360px 이하일 때 두 개만 표시 */
