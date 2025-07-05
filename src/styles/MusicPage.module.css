@@ -6,7 +6,59 @@
   gap: 3vw;
 }
 
+.emptyArea {
+  height: 60px;
+}
+
 .uploadButton {
   padding: 15px 150px;
-  margin-top: 60px;
+}
+
+.helpButtonContainer {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.helpButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.helpButton:hover {
+  background-color: #0056b3;
+}
+
+/* MusicPage 전용 투어 스타일 */
+/* uploadButton wrapper - 하이라이트 시 wrapper는 투명하게, 버튼만 하이라이트 */
+#uploadButton.highlighted {
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: none !important;
+  padding: 0;
+  pointer-events: none; /* 클릭 차단 */
+}
+
+#uploadButton.highlighted .uploadButton {
+  position: relative;
+  z-index: 1001;
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.3);
+  background-color: white;
+  animation: pulse 2s infinite;
+  pointer-events: none; /* 버튼 클릭 차단 */
+}
+
+/* uploadButton의 모든 자식 요소도 클릭 차단 */
+#uploadButton.highlighted * {
+  pointer-events: none;
 }

@@ -10,6 +10,8 @@
   justify-content: flex-start;
   overflow-y: auto;
   overflow-x: visible;
+  border: 1px solid #ccc;
+  border-radius: 15px;
 }
 
 .emptyMessage {

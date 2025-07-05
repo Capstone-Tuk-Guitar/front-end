@@ -6,7 +6,7 @@ import playImage from "../assets/play.svg";
 import pauseImage from "../assets/pause.svg";
 import stopImage from "../assets/stop.svg";
 
-const ControlPanel = ({ selectedSong, audioRef }) => {
+const ControlPanel = ({ selectedSong, audioRef, className = '', id }) => {
   const handlePlay = () => {
     if (audioRef.current) {
       audioRef.current.play();
@@ -27,7 +27,7 @@ const ControlPanel = ({ selectedSong, audioRef }) => {
   };
 
   return (
-    <div className={styles.panel}>
+    <div className={`${styles.panel} ${className}`} id={id}>
       <img src={panelImage} alt="controlpanel" className={styles.panelImage} />
       <p className={styles.placeholder}>
         {selectedSong ? (

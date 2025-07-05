@@ -1,0 +1,134 @@
+/* 투어 관련 스타일 */
+.tourOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.highlighted {
+  position: relative;
+  z-index: 1001;
+  border-radius: 15px;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.3);
+  background-color: white;
+  animation: pulse 2s infinite;
+  pointer-events: none; /* 클릭 차단 */
+}
+
+/* 하이라이트된 요소의 모든 자식 요소도 클릭 차단 */
+.highlighted * {
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.4), 0 0 30px rgba(0, 123, 255, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.3);
+  }
+}
+
+.tourTooltip {
+  position: absolute;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1002;
+  max-width: 500px;
+  min-width: 420px;
+}
+
+.tooltipArrow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+}
+
+.tourTooltip h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.tourTooltip p {
+  margin: 0 0 20px 0;
+  color: #666;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.tourButtons {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-height: 36px;
+}
+
+.stepIndicator {
+  color: #999;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0 10px;
+  user-select: none;
+  flex: 1;
+  text-align: center;
+}
+
+.skipButton,
+.prevButton,
+.nextButton {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.skipButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.skipButton:hover {
+  background-color: #5a6268;
+}
+
+.prevButton {
+  background-color: #28a745;
+  color: white;
+}
+
+.prevButton:hover {
+  background-color: #218838;
+}
+
+.nextButton {
+  background-color: #007bff;
+  color: white;
+}
+
+.nextButton:hover {
+  background-color: #0056b3;
+} 

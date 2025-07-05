@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUpload } from "react-icons/fa";
+import { FaUpload, FaQuestionCircle } from "react-icons/fa";
 import ControlPanel from "../components/ControlPanel";
 import SongList from "../components/SongList";
 import Header from "../components/Header";
 import Button from "../components/Button";
+import { useTour, TourOverlay } from "../components/TourHelper";
 import styles from "../styles/MusicPage.module.css";
 
 const MusicPage = () => {
@@ -16,8 +17,50 @@ const MusicPage = () => {
   const delay = 60000;                                        // klangio api 대기 시간 (1분)
   const [loadingSongs, setLoadingSongs] = useState({});
 
+  // 투어 단계별 정보
+  const tourSteps = [
+    {
+      target: 'controlPanel',
+      title: '음악 컨트롤',
+      description: '선택한 음악을 재생, 일시정지, 정지할 수 있습니다.'
+    },
+    {
+      target: 'songList',
+      title: '음악 목록',
+      description: '업로드한 음악들을 확인하고 \n 악보로 변환하거나 삭제할 수 있습니다.'
+    },
+    {
+      target: 'uploadButton',
+      title: '음원 추가',
+      description: 'MP3 파일을 업로드하여 \n 새로운 음악을 추가할 수 있습니다.'
+    }
+  ];
+
+  // MusicPage 전용 위치 계산 함수
+  const musicPagePositionCalculator = (rect, scrollTop) => {
+    return {
+      top: rect.top + scrollTop - 270,      // MusicPage에 최적화된 위치
+      left: rect.left + rect.width / 2      // 요소 중앙
+    };
+  };
+
+  // 도움말 투어 훅 사용
+  const {
+    isTourActive,
+    tourStep,
+    tooltipPosition,
+    startTour,
+    nextTourStep,
+    prevTourStep,
+    endTour,
+    getHighlightClass
+//} = useTour(tourSteps);                 // 기본 위치 계산 함수 사용
+  } = useTour(tourSteps, {                // 커스텀 위치 계산 함수 사용
+    positionCalculator: musicPagePositionCalculator
+  });
+
   const username = localStorage.getItem("user_id");
-  
+
   // 서버에 업로드된 MP3 목록
   useEffect(() => {
     const fetchSongs = async () => {
@@ -168,19 +211,46 @@ const MusicPage = () => {
     <div className="container">
       <Header />
       
+      <div className={styles.helpButtonContainer}>
+        <Button className={styles.helpButton} onClick={startTour} icon={FaQuestionCircle}>
+          도움말
+        </Button>
+      </div>
+      
       <div className={styles.container}>
-        <ControlPanel selectedSong={selectedSong} audioRef={audioRef} />
+        <ControlPanel 
+          selectedSong={selectedSong} 
+          audioRef={audioRef}
+          className={getHighlightClass('controlPanel')}
+          id="controlPanel"
+        />
         <SongList
           songs={songs}
           onSongSelect={handleSongSelect}
           onDownload={handleDownload}
           onDelete={handleDelete}
           loadingSongs={loadingSongs}
+          className={getHighlightClass('songList')}
+          id="songList"
         />
       </div>
-      <Button className={styles.uploadButton} onClick={handleFileUpload} icon={FaUpload}>
-        음원 추가
-      </Button>
+      <div className={styles.emptyArea}></div>
+      <div id="uploadButton" className={getHighlightClass('uploadButton')}>
+        <Button className={styles.uploadButton} onClick={handleFileUpload} icon={FaUpload}>
+          음원 추가
+        </Button>
+      </div>
+      
+      {/* 투어 오버레이 */}
+      <TourOverlay
+        isTourActive={isTourActive}
+        tourStep={tourStep}
+        tooltipPosition={tooltipPosition}
+        tourSteps={tourSteps}
+        endTour={endTour}
+        prevTourStep={prevTourStep}
+        nextTourStep={nextTourStep}
+      />
       <audio ref={audioRef} />
     </div>
   );

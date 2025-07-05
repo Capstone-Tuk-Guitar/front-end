@@ -10,9 +10,11 @@ const SongList = ({
   showDownload = true,
   showDelete = true,
   loadingSongs = {},
+  className = '',
+  id,
 }) => {
   return (
-    <div className={styles.songListContainer}>
+    <div className={`${styles.songListContainer} ${className}`} id={id}>
       {songs.length === 0 ? (
         <p className={styles.emptyMessage}>아직 업로드한 곡이 없습니다 🎶</p>
       ) : (
