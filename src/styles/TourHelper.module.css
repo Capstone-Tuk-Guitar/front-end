@@ -48,7 +48,7 @@
   min-width: 420px;
 }
 
-.tooltipArrow {
+.tooltipArrowDown {
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -57,7 +57,19 @@
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid white;
+  border-top: 10px solid white; /* 아래쪽에 위치한 말풍선에서 화살표는 위로 향함 */
+}
+
+.tooltipArrowUp {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white; /* 위쪽에 위치한 말풍선에서 화살표는 아래로 향함 */
 }
 
 .tourTooltip h3 {
@@ -132,3 +144,47 @@
 .nextButton:hover {
   background-color: #0056b3;
 } 
+
+/* Header 전용 하이라이트 보정 */
+.highlightedHeader {
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.6), 0 0 20px rgba(0, 123, 255, 0.3);
+  background-color: white;
+  animation: pulse 2s infinite;
+  border-radius: 8px;
+  position: absolute;
+  top: -75px; 
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+/* 화면 하단 dot 버튼 영역 */
+.dotNavigation {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1100;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.dot:hover {
+  background-color: #007bff;
+  transform: scale(1.2);
+}
+
+.activeDot {
+  background-color: #007bff;
+  transform: scale(1.4);
+}

@@ -37,7 +37,7 @@ const chordImages = {
   "A# 7": require("../assets/ChordPhoto/A_7.png"),
 };
 
-const ChordGuide = ({ chordTimeline }) => {
+const ChordGuide = React.forwardRef(({ chordTimeline }, ref) => {
   const [uniqueChords, setUniqueChords] = useState([]);
   const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
 
@@ -48,7 +48,7 @@ const ChordGuide = ({ chordTimeline }) => {
   }, [chordTimeline]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={ref} id="fingering">
       <div className={styles.chordGrid}>
         {uniqueChords.map((chord) => (
           <div key={chord} className={styles.chordItem}>
@@ -67,6 +67,6 @@ const ChordGuide = ({ chordTimeline }) => {
       {selectedChord && <DetailChord chordImage={selectedChord} onClose={() => setSelectedChord(null)} />}
     </div>
   );
-};
+});
 
 export default ChordGuide; 

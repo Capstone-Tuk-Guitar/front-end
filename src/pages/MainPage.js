@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaQuestionCircle } from "react-icons/fa";
+
 import Header from "../components/Header";
 import Card from "../components/Card";
-import styles from "../styles/MainPage.module.css";
 import DetailChord from "../components/DetailChord";
+import { useTour, TourOverlay } from "../components/TourHelper";
 
+import styles from "../styles/MainPage.module.css";
 import musicImage from "../assets/music.svg";
 import guitarImage from "../assets/guitar.svg";
 import recordImage from "../assets/stats.svg";
@@ -18,42 +21,42 @@ const allChordImages = importAll(
 
 const MainPage = () => {
   const navigate = useNavigate();
-  // localStorage에서 마지막 클릭한 카드 인덱스를 가져오거나 기본값 1 사용
+
   const [activeIndex, setActiveIndex] = useState(() => {
-    const savedIndex = localStorage.getItem('lastClickedCardIndex');
+    const savedIndex = localStorage.getItem("lastClickedCardIndex");
     return savedIndex ? parseInt(savedIndex, 10) : 1;
   });
-  const [selectedChord, setSelectedChord] = useState(null); // 선택한 코드 이미지 저장
+
+  const [selectedChord, setSelectedChord] = useState(null);
   const [randomChords, setRandomChords] = useState([]);
-  const [isAnimating, setIsAnimating] = useState(false); // 애니메이션 진행 상태
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  // 슬라이드 데이터를 useMemo로 메모이제이션
-  const slides = useMemo(() => [
-    { id: 0, image: musicImage, text: "음원 목록" },
-    { id: 1, image: guitarImage, text: "연주하기" },
-    { id: 2, image: compareImage, text: "비교하기"},
-    { id: 3, image: recordImage, text: "연주 기록" },
-  ], []);
+  const slides = useMemo(
+    () => [
+      { id: 0, image: musicImage, text: "음원 목록" },
+      { id: 1, image: guitarImage, text: "연주하기" },
+      { id: 2, image: compareImage, text: "비교하기" },
+      { id: 3, image: recordImage, text: "연주 기록" },
+    ],
+    []
+  );
 
-  // 랜덤 코드 이미지 선택 (성능 최적화)
   useEffect(() => {
     if (allChordImages.length > 0) {
-      // 이미 로드된 이미지 배열에서 랜덤하게 3개 선택
       const shuffledImages = [...allChordImages].sort(() => 0.5 - Math.random());
       setRandomChords(shuffledImages.slice(0, 3));
     }
   }, []);
 
-  // 콜백 함수 메모이제이션
   const handleNext = useCallback(() => {
     if (isAnimating) return;
     setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
-  }, [slides.length, isAnimating]);
+  }, [isAnimating, slides.length]);
 
   const handlePrev = useCallback(() => {
     if (isAnimating) return;
     setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
-  }, [slides.length, isAnimating]);
+  }, [isAnimating, slides.length]);
 
   const handleChordClick = useCallback((img) => {
     setSelectedChord(img);
@@ -63,47 +66,85 @@ const MainPage = () => {
     setSelectedChord(null);
   }, []);
 
-  // 카드 클릭 핸들러
-  const handleCardClick = useCallback((text, navigationPath, isCenter = false) => {
-    // 애니메이션 진행 중이면 클릭 무시
-    if (isAnimating) return;
-    
-    // 클릭된 카드에 해당하는 인덱스 찾기
-    const clickedIndex = slides.findIndex(slide => slide.text === text);
-    
-    if (clickedIndex !== -1) {
-      // 마지막 클릭한 카드 인덱스를 localStorage에 저장
-      localStorage.setItem('lastClickedCardIndex', clickedIndex.toString());
-      
-      if (isCenter) {
-        // 가운데 카드인 경우 바로 페이지 이동
-        navigate(navigationPath);
-      } else if (clickedIndex !== activeIndex) {
-        // 양옆 카드인 경우 애니메이션 후 페이지 이동
-        setIsAnimating(true);
-        
-        // 해당 카드를 가운데로 이동
-        setActiveIndex(clickedIndex);
-        
-        // 애니메이션 완료 후 페이지 이동 (500ms 대기)
-        setTimeout(() => {
-          setIsAnimating(false);
+  const handleCardClick = useCallback(
+    (text, navigationPath, isCenter = false) => {
+      if (isAnimating) return;
+
+      const clickedIndex = slides.findIndex((slide) => slide.text === text);
+
+      if (clickedIndex !== -1) {
+        localStorage.setItem("lastClickedCardIndex", clickedIndex.toString());
+
+        if (isCenter) {
           navigate(navigationPath);
-        }, 500);
+        } else if (clickedIndex !== activeIndex) {
+          setIsAnimating(true);
+          setActiveIndex(clickedIndex);
+
+          setTimeout(() => {
+            setIsAnimating(false);
+            navigate(navigationPath);
+          }, 500);
+        }
       }
-    }
-  }, [slides, activeIndex, navigate, isAnimating]);
+    },
+    [slides, activeIndex, navigate, isAnimating]
+  );
+
+  // ✅ 도움말 단계 정의
+  const tourSteps = [
+    {
+      target: "headerSection",
+      title: "상단 메뉴바",
+      description: "여기서 페이지 이동, 전체 메뉴 보기, 로그아웃 등을 할 수 있어요!",
+      top: 60,
+    },
+    {
+      target: "sliderSection",
+      title: "메인 카드 선택",
+      description: "연주하기, 음원 목록, 기록 보기 등 다양한 기능을 이곳에서 선택할 수 있어요!",
+      top: -280,
+    },
+    {
+      target: "fingeringSection",
+      title: "코드 운지 연습",
+      description: "여기서는 무작위로 추천된 코드 운지 이미지를 클릭해 자세히 볼 수 있어요!",
+      top: -280,
+    },
+  ];
+
+  // ✅ useTour 사용
+  const {
+    isTourActive,
+    tourStep,
+    tooltipPosition,
+    startTour,
+    nextTourStep,
+    prevTourStep,
+    endTour,
+    getHighlightClass,
+    moveToStep,
+  } = useTour(tourSteps);
 
   return (
     <div className="container">
-      <Header />
+      {/* Header에 id/className 추가 */}
+      <Header
+        id="headerSection"
+        className={`${getHighlightClass("headerSection")} ${!isTourActive ? styles.headerReset : ""}`}
+      />
 
-      <div className={styles.container}>
+      {/* 도움말 버튼 */}
+      <div className={styles.helpButtonContainer}>
+        <button className={styles.helpButton} onClick={startTour}>
+          <FaQuestionCircle style={{ marginRight: "8px" }} />
+          도움말
+        </button>
+      </div>
+
+      <div className={`${styles.container} ${getHighlightClass("sliderSection")}`} id="sliderSection">
         <div className={styles.slider}>
-          <button className={styles.arrowButton} onClick={handlePrev}>
-            ❮
-          </button>
-
+          <button className={styles.arrowButton} onClick={handlePrev}>❮</button>
           <div className={styles.slide}>
             {slides.map((slide, index) => (
               <Card
@@ -111,15 +152,12 @@ const MainPage = () => {
                 image={slide.image}
                 text={slide.text}
                 isActive={index === activeIndex}
-                position={index - activeIndex} // 활성화 상태와 위치를 기준으로 스타일 조정
+                position={index - activeIndex}
                 onCardClick={handleCardClick}
               />
             ))}
           </div>
-
-          <button className={styles.arrowButton} onClick={handleNext}>
-            ❯
-          </button>
+          <button className={styles.arrowButton} onClick={handleNext}>❯</button>
         </div>
 
         <div className={styles.pagination}>
@@ -137,8 +175,11 @@ const MainPage = () => {
         </div>
       </div>
 
-      {/* 운지법 이미지 랜덤 표시 */}
-      <div className={styles.fingering}>
+      {/* 운지 이미지 */}
+      <div
+        className={`${styles.fingering} ${getHighlightClass("fingeringSection")}`}
+        id="fingeringSection"
+      >
         {randomChords.map((img, index) => (
           <img
             key={index}
@@ -151,7 +192,22 @@ const MainPage = () => {
         ))}
       </div>
 
-      {selectedChord && <DetailChord chordImage={selectedChord} onClose={handleCloseChord} />}
+      {/* 선택된 코드 운지 상세 */}
+      {selectedChord && (
+        <DetailChord chordImage={selectedChord} onClose={handleCloseChord} />
+      )}
+
+      {/* TourOverlay 추가 */}
+      <TourOverlay
+        isTourActive={isTourActive}
+        tourStep={tourStep}
+        tooltipPosition={tooltipPosition}
+        tourSteps={tourSteps}
+        endTour={endTour}
+        prevTourStep={prevTourStep}
+        nextTourStep={nextTourStep}
+        moveToStep={moveToStep}
+      />
     </div>
   );
 };

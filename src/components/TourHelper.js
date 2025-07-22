@@ -10,6 +10,7 @@ export const useTour = (tourSteps, options = {}) => {
   // 기본 위치 계산 함수
   const defaultPositionCalculator = (rect, scrollTop, customOffset) => {
     const viewportWidth = window.innerWidth;
+    const targetCenterY = rect.top + scrollTop + rect.height / 2;
     
     let top, left;
     
@@ -40,7 +41,9 @@ export const useTour = (tourSteps, options = {}) => {
       left = tooltipWidth / 2 + 20;
     }
     
-    return { top, left };
+     const isAboveTarget = top > targetCenterY;
+
+    return { top, left, isAboveTarget  };
   };
 
   // 위치 계산 함수 (커스텀 또는 기본)
@@ -99,10 +102,20 @@ export const useTour = (tourSteps, options = {}) => {
     setIsTourActive(false);
     setTourStep(0);
   };
+  // 새로 추가: 특정 단계로 바로 이동하는 함수
+  const moveToStep = (step) => {
+    if (step >= 0 && step < tourSteps.length) {
+      setTourStep(step);
+    }
+  };
 
   // 하이라이트 클래스 반환
   const getHighlightClass = (target) => {
-    return isTourActive && tourSteps && tourSteps[tourStep]?.target === target ? styles.highlighted : '';
+    if (!isTourActive || !tourSteps) return '';
+    if (tourSteps[tourStep]?.target === target) {
+      return target === 'headerSection' ? styles.highlightedHeader : styles.highlighted;
+    }
+    return '';
   };
 
   return {
@@ -113,7 +126,8 @@ export const useTour = (tourSteps, options = {}) => {
     nextTourStep,
     prevTourStep,
     endTour,
-    getHighlightClass
+    getHighlightClass,
+    moveToStep,
   };
 };
 
@@ -125,37 +139,59 @@ export const TourOverlay = ({
   tourSteps, 
   endTour, 
   prevTourStep, 
-  nextTourStep 
+  nextTourStep,
+  moveToStep,
 }) => {
   if (!isTourActive) return null;
+
+  const arrowClass = tooltipPosition.isAboveTarget
+    ? styles.tooltipArrowUp
+    : styles.tooltipArrowDown;
 
   return (
     <>
       <div className={styles.tourOverlay} onClick={endTour}></div>
-      <div 
+
+      <div
         className={styles.tourTooltip}
         style={{
           top: `${tooltipPosition.top}px`,
           left: `${tooltipPosition.left}px`,
-          transform: 'translateX(-50%)'
+          transform: "translateX(-50%)",
         }}
       >
-        <div className={styles.tooltipArrow}></div>
+        <div className={arrowClass}></div>
         <h3>{tourSteps[tourStep]?.title}</h3>
         <p>{tourSteps[tourStep]?.description}</p>
         <div className={styles.tourButtons}>
-          <button onClick={endTour} className={styles.skipButton}>건너뛰기</button>
+          <button onClick={endTour} className={styles.skipButton}>
+            건너뛰기
+          </button>
           <div className={styles.stepIndicator}>
             {tourStep + 1}/{tourSteps.length}
           </div>
           {tourStep > 0 && (
-            <button onClick={prevTourStep} className={styles.prevButton}>이전</button>
+            <button onClick={prevTourStep} className={styles.prevButton}>
+              이전
+            </button>
           )}
           <button onClick={nextTourStep} className={styles.nextButton}>
-            {tourStep < tourSteps.length - 1 ? '다음' : '완료'}
+            {tourStep < tourSteps.length - 1 ? "다음" : "완료"}
           </button>
         </div>
       </div>
+
+      {/* 화면 하단 dot 버튼 영역 */}
+      <div className={styles.dotNavigation}>
+        {tourSteps.map((_, index) => (
+          <button
+            key={index}
+            className={`${styles.dot} ${index === tourStep ? styles.activeDot : ""}`}
+            onClick={() => moveToStep(index)}
+            aria-label={`Go to step ${index + 1}`}
+          />
+        ))}
+      </div>
     </>
   );
-}; 
+};

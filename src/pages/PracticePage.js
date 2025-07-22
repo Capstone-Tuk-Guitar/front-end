@@ -5,13 +5,20 @@ import ChordGuide from "../components/ChordGuide";
 import PracticeViewer from "../components/PracticeViewer";
 import Playing from "../components/Playing";
 import styles from "../styles/PracticePage.module.css";
+import { FaQuestionCircle } from "react-icons/fa";
+import { useTour, TourOverlay } from "../components/TourHelper";
 
 function PracticePage() {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const viewerRef = useRef(null);
   const playingRef = useRef(null);
+  const fingeringRef = useRef(null);
+  const recordBtnRef = useRef(null);
+  const playBtnRef = useRef(null);
+  const stopBtnRef = useRef(null);
+
   const audioRef = useRef(new Audio());
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -23,6 +30,51 @@ function PracticePage() {
   const [audioUrl, setAudioUrl] = useState(null);
   const [chordTimeline, setChordTimeline] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const tourSteps = [
+    {
+      target: "fingering",
+      title: "운지법 보기",
+      description: "해당 노래 안에 있는 모든 운지법 표시합니다. 클릭하면 더 큰 화면으로 볼 수 있습니다.",
+      top: 160
+    },
+    {
+      target: "viewer",
+      title: "악보 보기",
+      description: "연주하고 있는 노래의 악보를 확인할 수 있습니다. 빨간 커서로 실시간 악보 위치를 확인할 수 있습니다.",
+      top: -350
+    },
+    {
+      target: "playing",
+      title: "연주 타이밍 화면",
+      description: "리듬게임처럼 가운데 선에 들어오는 운지법을 보고 쳐서 맞으면 초록, 틀리면 빨강으로 표시됩니다.",
+      top: -280
+    },
+    {
+      target: "recordGroup",
+      title: "녹음 및 저장",
+      description: "연주와 동시에 녹음을 하는 기능입니다. 재생 버튼을 누르지 않고 녹음 시작 버튼을 눌러도 연주가 시작됩니다. 연주가 끝나면 녹음 저장 버튼을 누르시면 됩니다.",
+      top: -315,
+    },
+    {
+      target: "playGroup",
+      title: "재생 및 정지",
+      description: "재생 버튼은 녹음하지 않고 연주를 시작합니다. 녹음을 하시려면 정지 버튼을 눌러 멈추고 녹음 시작 버튼을 누르시면 됩니다.",
+      top: -290,
+    },
+  ];
+
+  const {
+    isTourActive,
+    tourStep,
+    tooltipPosition,
+    startTour,
+    nextTourStep,
+    prevTourStep,
+    endTour,
+    getHighlightClass,
+    moveToStep,
+  } = useTour(tourSteps);
 
   useEffect(() => {
     if (location.state?.fileUrl && location.state?.song) {
@@ -144,39 +196,104 @@ function PracticePage() {
   return (
     <div className="container">
       <Header />
+      <div className={styles.helpButtonContainer}>
+          <button className={styles.helpButton} onClick={startTour}>
+            <FaQuestionCircle style={{ marginRight: "8px" }}/> 도움말
+          </button>
+        </div>
       <div className={styles.container}>
-        <ChordGuide chordTimeline={chordTimeline} />
-        <PracticeViewer ref={viewerRef} xmlFile={xmlFile} audioRef={audioRef} />
-        <Playing ref={playingRef} chordTimeline={chordTimeline} audioRef={audioRef} />
-        
+        <div
+          id="fingering"
+          ref={fingeringRef}
+          className={getHighlightClass("fingering")}
+        >
+          <ChordGuide ref={fingeringRef} chordTimeline={chordTimeline} />
+        </div>
+
+        <div
+          id="viewer"
+          ref={viewerRef}
+          className={getHighlightClass("viewer")}
+        >
+          <PracticeViewer ref={viewerRef} xmlFile={xmlFile} audioRef={audioRef} />
+        </div>
+
+        <div
+          id="playing"
+          ref={playingRef}
+          className={getHighlightClass("playing")}
+        >
+          <Playing ref={playingRef} chordTimeline={chordTimeline} audioRef={audioRef} />
+        </div>
+
         <div className={styles.controlButtons}>
-          {!isRecording ? (
-            <button onClick={startRecording} className={styles.controlButton} disabled={isPlaying}>
-              🎙️ 녹음 시작
-            </button>
-          ) : (
-            <button onClick={stopRecording} className={styles.controlButton}>
-              ⏹️ 녹음 정지
-            </button>
-          )}
-          <button 
-            onClick={uploadRecording} 
+        {/* 녹음 그룹 */}
+        <div
+          id="recordGroup"
+          className={getHighlightClass("recordGroup")}
+          style={{ display: "flex", gap: "10px" }}
+        >
+          <button
+            id="recordBtn"
+            ref={recordBtnRef}
+            onClick={isRecording ? stopRecording : startRecording}
+            className={styles.controlButton}
+            disabled={isPlaying}
+          >
+            {isRecording ? "⏹️ 녹음 정지" : "🎙️ 녹음 시작"}
+          </button>
+
+          <button
+            id="uploadBtn"
+            onClick={uploadRecording}
             className={styles.controlButton}
             disabled={isRecording || recordedChunks.length === 0 || isPlaying}
           >
             💾 녹음 저장
           </button>
-          <button onClick={handlePlay} disabled={isPlaying || isRecording} className={styles.controlButton}>
+        </div>
+
+        {/* 재생 그룹 */}
+        <div
+          id="playGroup"
+          className={getHighlightClass("playGroup")}
+          style={{ display: "flex", gap: "10px" }}
+        >
+          <button
+            id="playBtn"
+            ref={playBtnRef}
+            onClick={handlePlay}
+            className={styles.controlButton}
+            disabled={isPlaying || isRecording}
+          >
             재생
           </button>
-          <button onClick={handleStop} disabled={!isPlaying || isRecording} className={styles.controlButton}>
+
+          <button
+            id="stopBtn"
+            ref={stopBtnRef}
+            onClick={handleStop}
+            className={styles.controlButton}
+            disabled={!isPlaying || isRecording}
+          >
             정지
           </button>
         </div>
       </div>
+
+      </div>
+      <TourOverlay
+        isTourActive={isTourActive}
+        tourStep={tourStep}
+        tooltipPosition={tooltipPosition}
+        tourSteps={tourSteps}
+        endTour={endTour}
+        prevTourStep={prevTourStep}
+        nextTourStep={nextTourStep}
+        moveToStep={moveToStep}
+      />
     </div>
   );
 }
 
 export default PracticePage;
-
