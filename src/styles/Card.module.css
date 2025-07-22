@@ -44,55 +44,55 @@
 
 /* 각 카드별 색상 */
 .musicCard {
-  background: linear-gradient(135deg, #e8f4fd 0%, #d1e7dd 100%);
-  border-color: #b8d4da;
+  background: linear-gradient(135deg, #fff7d6 0%, #fff0b3 100%);
+  border-color: #ffe98a;
 }
 
 .musicCard .text {
-  color: #2c5aa0;
+  color: #7a5c0e;
 }
 
 .musicCard .description {
-  color: #5a7c8a;
+  color: #a67916;
 }
 
 .playCard {
-  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
-  border-color: #f9c0d4;
+  background: linear-gradient(135deg, #d6f7f2 0%, #b8ede6 100%);
+  border-color: #a0e0d6;
 }
 
 .playCard .text {
-  color: #be185d;
+  color: #0f5f55;
 }
 
 .playCard .description {
-  color: #9d174d;
+  color: #1c7e72;
 }
 
 .compareCard {
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  border-color: #93c5fd;
+  background: linear-gradient(135deg, #e4ddfa 0%, #d6ccf2 100%);
+  border-color: #c5b7e9;
 }
 
 .compareCard .text {
-  color: #1e40af;
+  color: #5a3fa0;
 }
 
 .compareCard .description {
-  color: #3b82f6;
+  color: #6b4ec2;
 }
 
 .recordCard {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  border-color: #86efac;
+  background: linear-gradient(135deg, #fde2d2 0%, #fcc9b6 100%);
+  border-color: #fbb7a1;
 }
 
 .recordCard .text {
-  color: #166534;
+  color: #a64427;
 }
 
 .recordCard .description {
-  color: #16a34a;
+  color: #b94f30;
 }
 
 .card.active {
