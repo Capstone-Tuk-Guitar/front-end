@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SongList from "../components/SongList";
 import Header from "../components/Header";
+import Button from "../components/Button";
 import SelectSongControls from "../components/SelectSongControls";
 import styles from "../styles/SelectSongPage.module.css";
+import { FaUpload, FaQuestionCircle } from "react-icons/fa";
+import { useTour, TourOverlay } from "../components/TourHelper";
 
 const SelectSongPage = () => {
   const [fileUrl, setFileUrl] = useState(null);
@@ -19,6 +22,33 @@ const SelectSongPage = () => {
   const outputType = "mxml";
   const downloadType = "xml";
   const delay = 60000;                                              // klangio api 대기 시간 (1분)
+
+  const tourSteps = [
+  {
+    target: "songList",
+    title: "곡 목록",
+    description: "음원 목록에서 추가한 곡을 확인할 수 있습니다. \n 악보다운로드 버튼을 통해 연주 준비를 하세요. ",
+    top: -280,
+  },
+  
+  {
+    target: "selectControls",
+    title: "음원 재생 & 연주하기 ",
+    description: "다운로드 후 곡을 재생·일시정지하고, 연습 화면으로 이동할 수 있습니다.",
+    top: -300,
+  },
+];
+   // 투어 훅
+  const {
+    isTourActive,
+    tourStep,
+    tooltipPosition,
+    startTour,
+    nextTourStep,
+    prevTourStep,
+    endTour,
+    getHighlightClass,
+  } = useTour(tourSteps);
 
   // 곡 목록 불러오기
   useEffect(() => {
@@ -160,12 +190,19 @@ const SelectSongPage = () => {
     }
   };
 
-  return (
+ return (
     <div className="container">
       <Header />
+      <div className={styles.helpButtonContainer}>
+        <Button className={styles.helpButton} onClick={startTour} icon={FaQuestionCircle}>
+          도움말
+        </Button>
+      </div>
       <div className={styles.mainContent}>
         <div className={styles.container}>
           <SongList
+            id="songList"
+            className={getHighlightClass("songList")}
             songs={songs}
             onSongSelect={handleSongSelect}
             onDownload={handleDownload}
@@ -173,6 +210,8 @@ const SelectSongPage = () => {
             loadingSongs={loadingSongs}
           />
           <SelectSongControls
+            id="selectControls"
+            className={getHighlightClass("selectControls")}
             isPlaying={isPlaying}
             onPlay={handlePlay}
             onPause={handlePause}
@@ -180,6 +219,15 @@ const SelectSongPage = () => {
           />
         </div>
       </div>
+      <TourOverlay
+        isTourActive={isTourActive}
+        tourStep={tourStep}
+        tooltipPosition={tooltipPosition}
+        tourSteps={tourSteps}
+        endTour={endTour}
+        prevTourStep={prevTourStep}
+        nextTourStep={nextTourStep}
+      />
       <audio ref={audioRef} />
     </div>
   );

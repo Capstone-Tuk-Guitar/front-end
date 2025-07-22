@@ -116,3 +116,43 @@
 .textWrapper41 { color: #000000; font-size: 28px; left: 250px; top: 270px;} 
 .textWrapper51 { color: #000000; font-size: 28px; left: 205px; top: 330px;} 
 .textWrapper61 { color: #000000; font-size: 28px; left: 161px; top: 395px;} 
+
+
+.helpButtonContainer {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+}
+
+.helpButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.helpButton:hover {
+  background-color: #0056b3;
+}
+
+/* 투어 하이라이트 대상: centerSquare와 overlap */
+#centerSquare,
+#guitarVisual {
+  position: relative;
+  display: block;
+}
+
+/* highlight 시 절대 위치 제거 */
+#centerSquare.highlighted {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+}
