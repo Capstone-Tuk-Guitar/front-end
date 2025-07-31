@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from "../components/Header";
+import { FaQuestionCircle } from "react-icons/fa";
+import { useTour, TourOverlay } from "../components/TourHelper"; // ✅ 추가
 import styles from "../styles/RecordPage.module.css";
 
 function RecordPage() {
-  const [records, setRecords] = useState([]);       // DB 연주 기록
-  const [files, setFiles] = useState([]);           // uploads/record 폴더의 mp3 목록
-  const [loading, setLoading] = useState({});       // 파일별 변환 중 상태
+  const [records, setRecords] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState({});
 
-  const delay = 60000;       // Klango.io 처리 대기 시간 (1분)
+  const delay = 60000;
   const outputType = "midi";
   const downloadType = "midi";
 
@@ -20,11 +22,9 @@ function RecordPage() {
         return;
       }
       try {
-        // 1) DB에 저장된 연주 기록 가져오기
         const recRes = await axios.get(`http://localhost:8000/get-records/${userId}`);
         setRecords(recRes.data);
 
-        // 2) uploads/record 폴더의 mp3 파일 목록 가져오기
         const filesRes = await axios.get("http://localhost:8000/record-files/");
         setFiles(filesRes.data.recording || []);
       } catch (err) {
@@ -32,7 +32,6 @@ function RecordPage() {
         alert("데이터를 불러오는 중 오류가 발생했습니다.");
       }
     };
-
     fetchData();
   }, []);
 
@@ -46,7 +45,6 @@ function RecordPage() {
       const mp3Blob = await mp3Res.blob();
       const file = new File([mp3Blob], filename, { type: "audio/mpeg" });
 
-      //Klango.io 변환 요청
       const formData = new FormData();
       formData.append("file", file);
       formData.append("model", "guitar");
@@ -64,7 +62,6 @@ function RecordPage() {
       setTimeout(() => {
         let attempts = 0;
         const maxAttempts = 5;
-
         const interval = setInterval(async () => {
           attempts++;
           try {
@@ -86,7 +83,6 @@ function RecordPage() {
               throw new Error("다운로드 타임아웃");
             }
           } catch (err) {
-            console.warn(`폴링 ${attempts}회 실패:`, err);
             if (attempts >= maxAttempts) {
               clearInterval(interval);
               alert(`${filename} MIDI 변환에 실패했습니다.`);
@@ -109,14 +105,56 @@ function RecordPage() {
     return acc;
   }, {});
 
+  // ✅ 도움말 단계 정의
+  const tourSteps = [
+    {
+      target: "leftRecordPanel",
+      title: "비교 기록",
+      description: "비교했던 결과를 확인할 수 있어요.",
+      top: -280,
+    },
+    {
+      target: "rightFilePanel",
+      title: "녹음 파일 및 변환",
+      description: "녹음한 mp3 파일을 확인하고, MIDI로 변환할 수 있어요.",
+      top: -280,
+    },
+  ];
+
+  const {
+    isTourActive,
+    tourStep,
+    tooltipPosition,
+    startTour,
+    nextTourStep,
+    prevTourStep,
+    endTour,
+    getHighlightClass,
+    moveToStep,
+  } = useTour(tourSteps);
+
   return (
     <div className="container">
-      <Header />
+      <Header
+        id="headerSection"
+        className={`${getHighlightClass("headerSection")}`}
+      />
+
+      {/* ✅ 도움말 버튼 */}
+      <div className={styles.helpButtonContainer}>
+        <button className={styles.helpButton} onClick={startTour}>
+          <FaQuestionCircle style={{ marginRight: "8px" }} />
+          도움말
+        </button>
+      </div>
+
       <h1>녹음 파일 목록 & MIDI 변환</h1>
 
       <div className={styles.flexContainer}>
-        {/* 좌측: DB 연주 기록 */}
-        <div className={styles.leftPanel}>
+        <div
+          className={`${styles.leftPanel} ${getHighlightClass("leftRecordPanel")}`}
+          id="leftRecordPanel"
+        >
           {Object.keys(grouped).length === 0 ? (
             <p>연주 기록이 없습니다.</p>
           ) : (
@@ -137,8 +175,10 @@ function RecordPage() {
           )}
         </div>
 
-        {/* 우측: MP3 파일 & MIDI 변환 버튼 */}
-        <div className={styles.rightPanel}>
+        <div
+          className={`${styles.rightPanel} ${getHighlightClass("rightFilePanel")}`}
+          id="rightFilePanel"
+        >
           <h2 className={styles.title}>녹음 파일</h2>
           {files.length === 0 ? (
             <p>녹음된 파일이 없습니다.</p>
@@ -164,6 +204,18 @@ function RecordPage() {
           )}
         </div>
       </div>
+
+      {/* ✅ 도움말 오버레이 */}
+      <TourOverlay
+        isTourActive={isTourActive}
+        tourStep={tourStep}
+        tooltipPosition={tooltipPosition}
+        tourSteps={tourSteps}
+        endTour={endTour}
+        prevTourStep={prevTourStep}
+        nextTourStep={nextTourStep}
+        moveToStep={moveToStep}
+      />
     </div>
   );
 }
