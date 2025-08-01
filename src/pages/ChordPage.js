@@ -1,66 +1,116 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import ChordDiagram from '../components/ChordDiagram';
 import ChordSelector from '../components/ChordSelector';
 import RhythmGame from '../components/RhythmGame';
 import Header from "../components/Header";
+import { FaQuestionCircle } from "react-icons/fa";
+import { useTour, TourOverlay } from "../components/TourHelper";
 import styles from '../styles/ChordPage.module.css';
 
-export const ChordPage = () => {
-    const [selectedRoot, setSelectedRoot] = useState('C');
-    const [selectedType, setSelectedType] = useState('major');
-    //const [expectedNotes, setExpectedNotes] = useState([]);
-    //const [detectedNote, setDetectedNote] = useState(null);
+const ChordPage = () => {
+  const [selectedRoot, setSelectedRoot] = useState('C');
+  const [selectedType, setSelectedType] = useState('major');
 
-    const currentdiagramChord = `${selectedRoot}${selectedType === 'major' ? '' : selectedType}`;
-    const currentChord = `${selectedRoot} ${selectedType}`;
-    
-    //useEffect(() => {
-    //    fetch("http://localhost:8000/chords")
-    //        .then(response => response.json())
-    //        .then(data => {
-    //            setExpectedNotes(data[currentChord] || []);
-    //        })
-    //        .catch(error => console.error("Error loading chord data:", error));
-    //}, [currentChord]);
+  const currentdiagramChord = `${selectedRoot}${selectedType === 'major' ? '' : selectedType}`;
+  const currentChord = `${selectedRoot} ${selectedType}`;
 
-    //useEffect(() => {
-    //    const ws = new WebSocket("ws://localhost:8000/ws/chordpc");
-//
-   //     ws.onmessage = (event) => {
-    //        setDetectedNote(event.data);
-     //   };
-//
-     //   return () => {
-     //       ws.close();
-     //   };
-  //  }, []);
+  
+  const tourSteps = [
+    {
+      target: "chordDiagramStep",
+      title: "코드 다이어그램",
+      description: "현재 선택된 코드의 운지법을 확인할 수 있어요!",
+      top: 60,
+    },
+    {
+      target: "chordSelectorStep",
+      title: "코드 선택",
+      description: "여기서 코드 음와 음정을 선택할 수 있어요.",
+      top: -250,
+    },
+    {
+      target: "rhythmGameStep",
+      title: "리듬 게임",
+      description: "이곳에서 리듬에 맞춰 연주 연습을 할 수 있어요.",
+      top: -180,
+    },
+  ];
 
-    return (
-        <div className={styles.container}>
-            <Header />
+  // ✅ useTour 훅 사용
+  const {
+    isTourActive,
+    tourStep,
+    tooltipPosition,
+    startTour,
+    nextTourStep,
+    prevTourStep,
+    endTour,
+    getHighlightClass,
+    moveToStep,
+  } = useTour(tourSteps);
 
-            <div className={styles.content}>
-                <div className={styles.chordSection}>
-                    <ChordDiagram chord={currentdiagramChord} />
-                </div>
+  return (
+    <div className={styles.container}>
+      {/* ✅ Header에 id/class 추가 */}
+      <Header
+        id="headerSection"
+        className={getHighlightClass("headerSection")}
+      />
 
-                <div className={styles.selectorWrapper}>
-                    <ChordSelector 
-                        selectedRoot={selectedRoot} 
-                        setSelectedRoot={setSelectedRoot}
-                        selectedType={selectedType}
-                        setSelectedType={setSelectedType}
-                    />
-                </div>
+      {/* ✅ 도움말 버튼 */}
+      <div className={styles.helpButtonContainer}>
+        <button className={styles.helpButton} onClick={startTour}>
+          <FaQuestionCircle />
+          도움말
+        </button>
+      </div>
 
-        <div className={styles.statusLayout}>
-            <div className={styles.rhythmGameWrapper}>
-                <RhythmGame expectedChord={currentChord} />  
-            </div>
+      <div className={styles.content}>
+        {/* ✅ 코드 다이어그램 */}
+        <div
+          className={`${styles.chordSection} ${getHighlightClass("chordDiagramStep")}`}
+          id="chordDiagramStep"
+        >
+          <ChordDiagram chord={currentdiagramChord} />
         </div>
-            </div>
+
+        {/* ✅ 코드 선택 */}
+        <div
+          className={`${styles.selectorWrapper} ${getHighlightClass("chordSelectorStep")}`}
+          id="chordSelectorStep"
+        >
+          <ChordSelector
+            selectedRoot={selectedRoot}
+            setSelectedRoot={setSelectedRoot}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+          />
         </div>
-    );
+
+        {/* ✅ 리듬 게임 */}
+        <div
+          className={`${styles.statusLayout} ${getHighlightClass("rhythmGameStep")}`}
+          id="rhythmGameStep"
+        >
+          <div className={styles.rhythmGameWrapper}>
+            <RhythmGame expectedChord={currentChord} />
+          </div>
+        </div>
+      </div>
+
+      {/* ✅ TourOverlay 삽입 */}
+      <TourOverlay
+        isTourActive={isTourActive}
+        tourStep={tourStep}
+        tooltipPosition={tooltipPosition}
+        tourSteps={tourSteps}
+        endTour={endTour}
+        prevTourStep={prevTourStep}
+        nextTourStep={nextTourStep}
+        moveToStep={moveToStep}
+      />
+    </div>
+  );
 };
 
 export default ChordPage;

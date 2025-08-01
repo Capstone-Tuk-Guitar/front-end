@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from "../components/Header";
 import { FaQuestionCircle } from "react-icons/fa";
-import { useTour, TourOverlay } from "../components/TourHelper"; // ✅ 추가
+import { useTour, TourOverlay } from "../components/TourHelper";
 import styles from "../styles/RecordPage.module.css";
 
 function RecordPage() {
@@ -22,9 +22,11 @@ function RecordPage() {
         return;
       }
       try {
+        // 1) DB에 저장된 연주 기록 가져오기
         const recRes = await axios.get(`http://localhost:8000/get-records/${userId}`);
         setRecords(recRes.data);
 
+        // 2) uploads/record 폴더의 mp3 파일 목록 가져오기
         const filesRes = await axios.get("http://localhost:8000/record-files/");
         setFiles(filesRes.data.recording || []);
       } catch (err) {
@@ -45,6 +47,7 @@ function RecordPage() {
       const mp3Blob = await mp3Res.blob();
       const file = new File([mp3Blob], filename, { type: "audio/mpeg" });
 
+      //Klango.io 변환 요청
       const formData = new FormData();
       formData.append("file", file);
       formData.append("model", "guitar");
@@ -83,6 +86,7 @@ function RecordPage() {
               throw new Error("다운로드 타임아웃");
             }
           } catch (err) {
+            console.warn(`폴링 ${attempts}회 실패:`, err);
             if (attempts >= maxAttempts) {
               clearInterval(interval);
               alert(`${filename} MIDI 변환에 실패했습니다.`);
@@ -105,7 +109,6 @@ function RecordPage() {
     return acc;
   }, {});
 
-  // ✅ 도움말 단계 정의
   const tourSteps = [
     {
       target: "leftRecordPanel",
@@ -140,7 +143,6 @@ function RecordPage() {
         className={`${getHighlightClass("headerSection")}`}
       />
 
-      {/* ✅ 도움말 버튼 */}
       <div className={styles.helpButtonContainer}>
         <button className={styles.helpButton} onClick={startTour}>
           <FaQuestionCircle style={{ marginRight: "8px" }} />
@@ -151,6 +153,7 @@ function RecordPage() {
       <h1>녹음 파일 목록 & MIDI 변환</h1>
 
       <div className={styles.flexContainer}>
+      {/* 좌측: DB 연주 기록 */}
         <div
           className={`${styles.leftPanel} ${getHighlightClass("leftRecordPanel")}`}
           id="leftRecordPanel"
@@ -175,6 +178,7 @@ function RecordPage() {
           )}
         </div>
 
+        {/* 우측: MP3 파일 & MIDI 변환 버튼 */}
         <div
           className={`${styles.rightPanel} ${getHighlightClass("rightFilePanel")}`}
           id="rightFilePanel"
@@ -205,7 +209,6 @@ function RecordPage() {
         </div>
       </div>
 
-      {/* ✅ 도움말 오버레이 */}
       <TourOverlay
         isTourActive={isTourActive}
         tourStep={tourStep}
