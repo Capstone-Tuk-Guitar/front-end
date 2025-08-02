@@ -204,9 +204,10 @@ const MusicPage = () => {
       <Header />
       
       <div className={styles.helpButtonContainer}>
-        <Button className={styles.helpButton} onClick={startTour} icon={FaQuestionCircle}>
+        <button className={styles.helpButton} onClick={startTour}>
+          <FaQuestionCircle style={{ marginRight: "8px" }} />
           도움말
-        </Button>
+        </button>
       </div>
       
       <div className={styles.container}>

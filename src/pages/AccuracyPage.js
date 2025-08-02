@@ -4,7 +4,7 @@ import axios from "axios";
 import { FaQuestionCircle } from "react-icons/fa";
 import Header from "../components/Header";
 import PieChart from "../components/PieChart";
-import Button from "../components/Button";
+
 import { useTour, TourOverlay } from "../components/TourHelper";
 import styles from "../styles/AccuracyPage.module.css";
 
@@ -182,9 +182,10 @@ function AccuracyPage() {
             
             {/* 도움말 버튼 */}
             <div className={styles.helpButtonContainer}>
-                <Button className={styles.helpButton} onClick={startTour} icon={FaQuestionCircle}>
+                <button className={styles.helpButton} onClick={startTour}>
+                    <FaQuestionCircle style={{ marginRight: "8px" }} />
                     도움말
-                </Button>
+                </button>
             </div>
             
             <div className={styles.container}>

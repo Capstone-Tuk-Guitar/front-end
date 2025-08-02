@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styles from "../styles/TuningPage.module.css"; 
 import Header from "../components/Header";
-import Button from "../components/Button";
+
 import { FaQuestionCircle } from "react-icons/fa";
 import { useTour, TourOverlay } from "../components/TourHelper";
 
@@ -84,13 +84,10 @@ export const TuningPage = ({ className, fender = fenderImage }) => {
 
       {/* 도움말 버튼 */}
       <div className={styles.helpButtonContainer}>
-        <Button
-          className={styles.helpButton}
-          onClick={startTour}
-          icon={FaQuestionCircle}
-        >
+        <button className={styles.helpButton} onClick={startTour}>
+          <FaQuestionCircle style={{ marginRight: "8px" }} />
           도움말
-        </Button>
+        </button>
       </div>
 
       {/* 튜닝 화면 */}

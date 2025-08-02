@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SongList from "../components/SongList";
 import Header from "../components/Header";
-import Button from "../components/Button";
+
 import SelectSongControls from "../components/SelectSongControls";
 import styles from "../styles/SelectSongPage.module.css";
 import { FaUpload, FaQuestionCircle } from "react-icons/fa";
@@ -194,9 +194,10 @@ const SelectSongPage = () => {
     <div className="container">
       <Header />
       <div className={styles.helpButtonContainer}>
-        <Button className={styles.helpButton} onClick={startTour} icon={FaQuestionCircle}>
+        <button className={styles.helpButton} onClick={startTour}>
+          <FaQuestionCircle style={{ marginRight: "8px" }} />
           도움말
-        </Button>
+        </button>
       </div>
       <div className={styles.mainContent}>
         <div className={styles.container}>

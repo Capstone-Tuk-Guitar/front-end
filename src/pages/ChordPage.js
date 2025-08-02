@@ -3,6 +3,7 @@ import ChordDiagram from '../components/ChordDiagram';
 import ChordSelector from '../components/ChordSelector';
 import RhythmGame from '../components/RhythmGame';
 import Header from "../components/Header";
+
 import { FaQuestionCircle } from "react-icons/fa";
 import { useTour, TourOverlay } from "../components/TourHelper";
 import styles from '../styles/ChordPage.module.css';
@@ -60,7 +61,7 @@ const ChordPage = () => {
       {/* ✅ 도움말 버튼 */}
       <div className={styles.helpButtonContainer}>
         <button className={styles.helpButton} onClick={startTour}>
-          <FaQuestionCircle />
+          <FaQuestionCircle style={{ marginRight: "8px" }} />
           도움말
         </button>
       </div>
