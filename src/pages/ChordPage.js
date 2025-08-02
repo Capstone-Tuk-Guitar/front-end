@@ -50,7 +50,7 @@ const ChordPage = () => {
   } = useTour(tourSteps);
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       {/* ✅ Header에 id/class 추가 */}
       <Header
         id="headerSection"

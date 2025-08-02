@@ -33,7 +33,7 @@ const Card = ({ image, text, isActive, position, onCardClick }) => {
         description: "연주한 곡을 원곡과 비교하여\n정확도를 확인하세요",
         colorClass: styles.compareCard
       },
-      "연주 기록": {
+      "기록 관리": {
         path: "/records",
         description: "비교한 기록을 확인하고\n녹음한 파일을 확인하세요",
         colorClass: styles.recordCard

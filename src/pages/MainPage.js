@@ -36,7 +36,7 @@ const MainPage = () => {
       { id: 0, image: musicImage, text: "음원 목록" },
       { id: 1, image: guitarImage, text: "연주하기" },
       { id: 2, image: compareImage, text: "비교하기" },
-      { id: 3, image: recordImage, text: "연주 기록" },
+      { id: 3, image: recordImage, text: "기록 관리" },
     ],
     []
   );
