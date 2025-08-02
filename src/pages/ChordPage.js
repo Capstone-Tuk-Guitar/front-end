@@ -20,8 +20,8 @@ const ChordPage = () => {
     {
       target: "chordDiagramStep",
       title: "코드 다이어그램",
-      description: "현재 선택된 코드의 운지법을 확인할 수 있어요!",
-      top: 60,
+      description: "현재 선택된 코드의 운지법을 확인할 수 있어요.",
+      top: -200,
     },
     {
       target: "chordSelectorStep",
@@ -33,7 +33,7 @@ const ChordPage = () => {
       target: "rhythmGameStep",
       title: "리듬 게임",
       description: "이곳에서 리듬에 맞춰 연주 연습을 할 수 있어요.",
-      top: -180,
+      top: -250,
     },
   ];
 
