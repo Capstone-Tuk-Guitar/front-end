@@ -102,13 +102,13 @@ const MainPage = () => {
     {
       target: "sliderSection",
       title: "메인 카드 선택",
-      description: "연주하기, 음원 목록, 기록 보기 등 다양한 기능을 이곳에서 선택할 수 있어요.",
+      description: "연주하기, 음원 목록, 비교하기 등 다양한 기능을 이곳에서 선택할 수 있어요.",
       top: -280,
     },
     {
       target: "fingeringSection",
-      title: "코드 운지 연습",
-      description: "여기서는 무작위로 추천된 코드 운지 이미지를 클릭해 자세히 볼 수 있어요.",
+      title: "코드 운지법 연습",
+      description: "무작위로 추천된 코드 운지법 이미지를 클릭해 자세히 볼 수 있어요.",
       top: -280,
     },
   ];

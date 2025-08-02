@@ -119,7 +119,7 @@ function RecordPage() {
     {
       target: "rightFilePanel",
       title: "녹음 파일 및 변환",
-      description: "녹음한 mp3 파일을 확인하고, MIDI로 변환할 수 있어요.",
+      description: "녹음한 mp3 파일을 확인하고 MIDI로 변환할 수 있어요.",
       top: -280,
     },
   ];

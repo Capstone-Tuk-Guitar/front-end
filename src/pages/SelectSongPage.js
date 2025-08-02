@@ -27,14 +27,14 @@ const SelectSongPage = () => {
   {
     target: "songList",
     title: "곡 목록",
-    description: "음원 목록에서 추가한 곡을 확인할 수 있습니다. \n 악보다운로드 버튼을 통해 연주 준비를 하세요. ",
+    description: "음원 목록에서 추가한 곡을 확인할 수 있습니다. \n 악보 다운로드 버튼을 통해 연주 준비를 하세요. ",
     top: -280,
   },
   
   {
     target: "selectControls",
     title: "음원 재생 & 연주하기 ",
-    description: "다운로드 후 곡을 재생·일시정지하고, 연습 화면으로 이동할 수 있습니다.",
+    description: "다운로드 후 곡을 재생·일시정지하고, 레코드를 클릭하면 연습 화면으로 이동할 수 있습니다.",
     top: -300,
   },
 ];
