@@ -35,7 +35,7 @@ const Card = ({ image, text, isActive, position, onCardClick }) => {
       },
       "연주 기록": {
         path: "/records",
-        description: "연주한 곡들의 기록을확인하고\n정확도 누적 결과를 확인하세요",
+        description: "비교한 기록을 확인하고\n녹음한 파일을 확인하세요",
         colorClass: styles.recordCard
       }
     };
