@@ -42,7 +42,7 @@ function AccuracyPage() {
         {
             target: 'detailResultsCard',
             title: '세부 유사도',
-            description: '음 높이, 리듬, 멜로디 간격별로\n세부적인 유사도를 확인할 수 있습니다.',
+            description: '음 높이, 리듬별로\n세부적인 유사도를 확인할 수 있습니다.',
             top: -275
         },
         {
@@ -68,7 +68,6 @@ function AccuracyPage() {
     const [result, setResult] = useState({
         pitch_similarity: 0,
         rhythm_similarity: 0,
-        interval_similarity: 0,
         final_similarity: 0,
     });
 
@@ -267,7 +266,6 @@ function AccuracyPage() {
                             <div className={styles.detail_charts}>
                                 <PieChart title="음 높이" value={result.pitch_similarity} color="#FF6384" />
                                 <PieChart title="리듬" value={result.rhythm_similarity} color="#36A2EB" />
-                                <PieChart title="멜로디 간격" value={result.interval_similarity} color="#FFCE56" />
                             </div>
                         </div>
                     </div>

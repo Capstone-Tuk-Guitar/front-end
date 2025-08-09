@@ -217,10 +217,10 @@
 
 .detail_charts {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
     height: calc(100% - 60px);
-    gap: 12px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 

@@ -80,22 +80,7 @@ function DetailDiffPage() {
                                     </div>
                                 </div>
 
-                                <div className={styles.section}>
-                                    <h2>멜로디 간격 차이</h2>
-                                    <div className={styles.scrollBox}>
-                                        <ul>
-                                            {Array.isArray(diffResult["멜로디 간격 차이"]) &&
-                                                diffResult["멜로디 간격 차이"].map((diff, index) => (
-                                                    <li key={index}>
-                                                        음표 번호: {diff["차이 나는 음표 번호"]} <br />
-                                                        1번째 파일 값: {diff["1번째 파일 멜로디"]} <br />
-                                                        2번째 파일 값: {diff["2번째 파일 멜로디"]} <br />
-                                                        시간: {diff["시간"]}초
-                                                    </li>
-                                                ))}
-                                        </ul>
-                                    </div>
-                                </div>
+
                             </div>
                         ) : (
                             <p>비교 결과가 없습니다.</p>
