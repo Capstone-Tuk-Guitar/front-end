@@ -1,5 +1,3 @@
-/* 기존 스타일 유지 */
-
 .divWrapper {
   display: flex;
   position: relative;
@@ -9,17 +7,29 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 검은색 테두리 */
+  box-sizing: border-box;
 }
 
-/*정사각형*/
+.StringWarpper {
+  display: flex;
+  position: relative;
+  width: 600px;
+  height: 200px;
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* 정사각형 */
 .centerSquare {
   display: flex;
   position: absolute;
   top: 50%;
-  left: 16%;
+  left: 10%;
   width: 600px;
   height: 480px;
-  background: linear-gradient(to bottom, black, white);  /* 검정에서 흰색으로 그라데이션 */
+  background: linear-gradient(to bottom, black, white);
   font-size: 50px;
   color: white;
   border-radius: 10px;
@@ -27,9 +37,12 @@
   justify-content: center;
   align-items: center;
   transform: translate(0, -50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.2); /* 연한 흰색 테두리 */
+  box-sizing: border-box;
 }
 
-/*정사각형 내부 텍스트*/
+/* 정사각형 내부 텍스트 */
 .squareText {
   font-family: 'Arial', sans-serif;
   font-weight: bold;
@@ -42,81 +55,7 @@
   font-weight: bold;
   font-size: 50px;
   color: #222222;
-
 }
-
-.overlap {
-  position: relative;
-  width: 600px;
-  height: 600px;
-  top: 54px;
-  left: 450px;
-}
-
-/*기타사진*/
-.fender {
-  position: absolute;
-  width: 425px;
-  height: 600px;
-  top: 66.4px; 
-  left: 198px;
-  object-fit: cover;
-}
-
-/*동그라미*/
-.ellipse1,
-.ellipse5,
-.ellipse2,
-.ellipse3,
-.ellipse4,
-.ellipse6 {
-  position: absolute;
-  width: 63px;
-  height: 59.5px;
-  border-radius: 45px / 42.5px;
-}
-
-/*초록 #2df43b*/
-.ellipse1 { background-color: #d9d9d9; left: 360px; top: 75px; } /*,+45*/
-.ellipse2 { background-color: #d9d9d9; left: 315px; top: 135px; }
-.ellipse3 { background-color: #d9d9d9; left: 270px; top: 195px; }
-.ellipse4 { background-color: #d9d9d9; left: 230px; top: 255px; } 
-.ellipse5 { background-color: #d9d9d9; left: 185px; top: 315px; }
-.ellipse6 { background-color: #d9d9d9; left: 140px; top: 380px; }
-
-/*텍스트, 1과 11 한세트, 2와 21 한세트 ...*/
-.textWrapper1,
-.textWrapper2,
-.textWrapper3,
-.textWrapper4,
-.textWrapper5,
-.textWrapper6,
-.textWrapper11,
-.textWrapper21,
-.textWrapper31,
-.textWrapper41,
-.textWrapper51,
-.textWrapper61 {
-  position: absolute;
-  font-family: "Inter-Regular", Helvetica;
-  font-size: 25.2px;
-  font-weight: 400;
-  text-align: center;
-}
-  
-.textWrapper1 { color: #000000; left: 255px; top: 83px; width: 106.4px; } 
-.textWrapper2 { color: #000000; left: 210px; top: 145px; width: 106.4px; } 
-.textWrapper3 { color: #000000; left: 165px; top: 205px; width: 106.4px; } 
-.textWrapper4 { color: #000000; left: 125px; top: 264px; width: 106.4px; } 
-.textWrapper5 { color: #000000; left: 80px; top: 326px; width: 106.4px; } 
-.textWrapper6 { color: #000000; left: 35px; top: 393px; width: 106.4px; } 
-.textWrapper11 { color: #000000; font-size: 28px; left: 380px; top: 90px;} 
-.textWrapper21 { color: #000000; font-size: 28px; left: 336px; top: 150px;} 
-.textWrapper31 { color: #000000; font-size: 28px; left: 290px; top: 210px;} 
-.textWrapper41 { color: #000000; font-size: 28px; left: 250px; top: 270px;} 
-.textWrapper51 { color: #000000; font-size: 28px; left: 205px; top: 330px;} 
-.textWrapper61 { color: #000000; font-size: 28px; left: 161px; top: 395px;} 
-
 
 .helpButtonContainer {
   position: absolute;
@@ -142,6 +81,7 @@
   background-color: #0056b3;
 }
 
+
 /* 투어 하이라이트 대상: centerSquare와 overlap */
 #centerSquare,
 #guitarVisual {
@@ -155,4 +95,118 @@
   top: auto !important;
   left: auto !important;
   transform: none !important;
+}
+
+.controlButtons {
+  position: absolute;
+  top: calc(50% - 300px);
+  left: 10%;
+  width: 600px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 2;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.controlButtons button {
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+}
+
+.controlButtons button:hover {
+  background-color: #218838;
+}
+
+.controlButtons button:nth-child(2) {
+  background-color: #dc3545;
+}
+
+.controlButtons button:nth-child(2):hover {
+  background-color: #c82333;
+}
+
+/* 버튼 감싸는 박스 */
+.stringButtons {
+  position: absolute;
+  top: 120px;
+  left: 27%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-sizing: border-box;
+}
+
+/* 버튼 스타일 */
+.stringBtn {
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.stringBtn:hover {
+  background-color: #ddd;
+}
+
+.stringBtn.active {
+  background-color: #007bff;
+  color: white;
+}
+.frequencyTextWrapper{
+  top: calc(50% - 300px);
+  left: 10%;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-sizing: border-box;
+}
+.tuningInfoContainer{
+  width:600px;
+  height: 90px;
+  margin-top: calc(20% - 410px);
+  margin-right: 840px;
+  border: 5px solid rgba(0, 0, 0, 0.7); /* 검은색 테두리 */
+  box-sizing: border-box;
+  border-radius: 3%;
+}
+
+/* 주파수 텍스트 */
+.tuningInfoText {
+  font-size: 26px;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+  
+}
+
+/* 버튼 위로 이동 애니메이션 */
+.controlButtons {
+  transition: transform 0.4s ease;
+}
+.controlButtons.shifted {
+  transform: translateY(-60px);
 }

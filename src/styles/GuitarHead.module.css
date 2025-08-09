@@ -1,0 +1,151 @@
+.overlap {
+  position: relative;
+  width: 655px;
+  height: 673.5px;
+  top: 54px;
+  left: 450px;
+  border: 5px solid rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  border-radius: 3%;
+}
+
+.fender {
+  position: absolute;
+  width: 425px;
+  height: 600px;
+  top: 66.4px;
+  left: 198px;
+  object-fit: cover;
+}
+
+/* ../assets/guitarhead.png 일 때*/
+.ellipse1,.ellipse2,.ellipse3,
+.ellipse4,.ellipse5,.ellipse6 {
+  position: absolute;
+  width: 63px;
+  height: 59.5px;
+  border-radius: 45px / 42.5px;
+}
+
+.ellipse1 { left: 140px; top: 380px; }
+.ellipse2 { left: 185px; top: 315px; }
+.ellipse3 { left: 230px; top: 255px; }
+.ellipse4 { left: 270px; top: 195px; }
+.ellipse5 { left: 315px; top: 135px; }
+.ellipse6 { left: 360px; top: 75px; }
+
+.textWrapper1,.textWrapper2,.textWrapper3,
+.textWrapper4,.textWrapper5,.textWrapper6,
+.textWrapper11,.textWrapper21,.textWrapper31,
+.textWrapper41,.textWrapper51,.textWrapper61 {
+  position: absolute;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 25.2px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.textWrapper1 { left: 255px; top: 83px; width: 106.4px; }
+.textWrapper2 { left: 210px; top: 145px; width: 106.4px; }
+.textWrapper3 { left: 165px; top: 205px; width: 106.4px; }
+.textWrapper4 { left: 125px; top: 264px; width: 106.4px; }
+.textWrapper5 { left: 80px; top: 326px; width: 106.4px; }
+.textWrapper6 { left: 35px; top: 393px; width: 106.4px; }
+
+.textWrapper11 { font-size: 28px; left: 380px; top: 90px; }
+.textWrapper21 { font-size: 28px; left: 336px; top: 150px; }
+.textWrapper31 { font-size: 28px; left: 290px; top: 210px; }
+.textWrapper41 { font-size: 28px; left: 250px; top: 270px; }
+.textWrapper51 { font-size: 28px; left: 205px; top: 330px; }
+.textWrapper61 { font-size: 28px; left: 161px; top: 395px; }
+
+/* ../assets/guitarhead2.png 일때 */
+.fenderShiftLeft {
+  left: 120px;
+  .ellipse1 {left: 100px; top: 50px;}
+}
+
+/* 기타줄 위치 변경 */
+.ellipse1Shift { left: 100px; top: 440px; }
+.ellipse2Shift { left: 110px; top: 318px; }
+.ellipse3Shift { left: 105px; top: 200px; }
+.ellipse4Shift { left: 500px; top: 200px; }
+.ellipse5Shift { left: 495px; top: 318px; }
+.ellipse6Shift { left: 500px; top: 440px; }
+
+/* 텍스트 위치 변경 */
+.textWrapper1Shift { left: 555px; top: 447px; }
+.textWrapper2Shift { left: 550px; top: 325px; }
+.textWrapper3Shift { left: 555px; top: 208px; }
+.textWrapper4Shift { left: 5px; top: 208px; }
+.textWrapper5Shift { left: 10px; top: 325px; }
+.textWrapper6Shift { left: 0px; top: 450px; }
+
+.textWrapper11Shift { left: 522px; top: 454px; }
+.textWrapper21Shift { left: 517.5px; top: 331px; }
+.textWrapper31Shift { left: 521px; top: 214px; }
+.textWrapper41Shift { left: 127px; top: 214px; }
+.textWrapper51Shift { left: 132px; top: 331px; }
+.textWrapper61Shift { left: 121px; top: 455px; }
+
+.arrowLeft,
+.arrowRight {
+  position: absolute;
+  top: 15%;
+  transform: translateY(-50%);
+  font-size: 32px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5); /* 반투명한 블랙 배경 */
+  border: none;
+  border-radius: 50%; /* 원형 버튼 */
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.arrowLeft:hover,
+.arrowRight:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.1); /* 살짝 커짐 */
+}
+
+.arrowLeft {
+  left: 10px;
+}
+
+.arrowRight {
+  right: 10px;
+}
+
+.statusLegend {
+  position: relative;
+  top: calc(50% - 330px); /* 필요에 따라 조정 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px; /* 기본보다 3px 크게, 예: 기본 12px + 3px */
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.redDot {
+  color: red;
+  font-size: 35px;
+}
+
+.blueDot {
+  color: #4287f5;
+  font-size: 35px;
+}
+
+.greenDot {
+  color: #2df43b;
+  font-size: 35px;
+}
