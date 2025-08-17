@@ -10,12 +10,12 @@ import guitar1 from "../assets/guitarhead.png";
 import guitar2 from "../assets/guitarhead2.png";
 
 const correctNotes = {
-  E: "ellipse6", // 낮은 E
+  E: "ellipse6",
   A: "ellipse5",
   D: "ellipse4",
   G: "ellipse3",
   B: "ellipse2",
-  E_high: "ellipse1", // 높은 E
+  E_high: "ellipse1",
 };
 
 const tuningRanges = {
@@ -40,14 +40,14 @@ const TuningPage = ({ className }) => {
   const [showStringButtons, setShowStringButtons] = useState(false);
   const [selectedString, setSelectedString] = useState(null);
   const [tunedStatus, setTunedStatus] = useState({
-    1: false,
-    2: false,
-    3: false,
-    4: false,
-    5: false,
-    6: false
+    1: false, 2: false, 3: false, 4: false, 5: false, 6: false
   });
   const isListeningRef = useRef(false);
+  const controlsRef = useRef(null);
+  const centerRef = useRef(null);
+  const topGroupRef = useRef(null);
+  const controlButtonsRef = useRef(null);
+  const stringButtonsRef = useRef(null);
 
   const guitarImages = [guitar1, guitar2];
 
@@ -83,18 +83,12 @@ const TuningPage = ({ className }) => {
   ];
 
   const {
-    isTourActive,
-    tourStep,
-    tooltipPosition,
-    startTour,
-    nextTourStep,
-    prevTourStep,
-    endTour,
-    getHighlightClass,
-    moveToStep,
+    isTourActive, tourStep, tooltipPosition,
+    startTour, nextTourStep, prevTourStep, endTour,
+    getHighlightClass, moveToStep,
   } = useTour(tourSteps);
-  
-  // 웹소켓 연결
+
+  // 웹소켓 전송
   const createWebSocket = () => {
     const socket = new WebSocket("ws://localhost:8000/ws");
 
@@ -121,7 +115,6 @@ const TuningPage = ({ className }) => {
 
       if (!detectedString) return;
 
-      // 각 줄 버튼 누르면 해당 줄만 반응
       if (selectedString && selectedString !== "all" && detectedString !== selectedString) {
         return;
       }
@@ -135,10 +128,7 @@ const TuningPage = ({ className }) => {
         const freqNum = parseFloat(roundedFreq);
 
         if (freqNum >= low && freqNum <= high) {
-          setTunedStatus((prev) => ({
-            ...prev,
-            [detectedString]: true,
-          }));
+          setTunedStatus((prev) => ({ ...prev, [detectedString]: true }));
         }
       }
     };
@@ -174,10 +164,8 @@ const TuningPage = ({ className }) => {
     setTunedStatus({ 1: false, 2: false, 3: false, 4: false, 5: false, 6: false });
   };
 
-  // 전체, 각 줄 버튼 선택 시 동작 함수
   const handleStringButtonClick = (num) => {
     if (num === "all") {
-      // 전체 버튼 누르면 튜닝 상태 초기화
       setTunedStatus({ 1: false, 2: false, 3: false, 4: false, 5: false, 6: false });
     }
     setSelectedString(num);
@@ -188,6 +176,37 @@ const TuningPage = ({ className }) => {
       setActiveString(selectedString);
     }
   }, [selectedString]);
+
+  useEffect(() => {
+    const updatePositions = () => {
+      if (!controlsRef.current || !centerRef.current || !controlButtonsRef.current || !topGroupRef.current) return;
+      const containerRect = controlsRef.current.getBoundingClientRect();
+      const centerRect = centerRef.current.getBoundingClientRect();
+      const controlH = controlButtonsRef.current.offsetHeight || 0;
+      const stringH = (stringButtonsRef.current && stringButtonsRef.current.offsetHeight) || 0;
+      const gap = 12; 
+      const centerTopInContainer = centerRect.top - containerRect.top;
+
+      let top;
+      if (showStringButtons) {
+        top = centerTopInContainer - controlH - stringH - gap;
+      } else {
+        top = centerTopInContainer - controlH - gap;
+      }
+
+      const minTop = 8;
+      if (top < minTop) top = minTop;
+
+      topGroupRef.current.style.top = `${top}px`;
+    };
+
+    const raf = requestAnimationFrame(updatePositions);
+    window.addEventListener("resize", updatePositions);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", updatePositions);
+    };
+  }, [showStringButtons, imageIndex, selectedString, frequency, note]);
 
   let color = "black";
   if (isListening && selectedString && frequency) {
@@ -224,51 +243,58 @@ const TuningPage = ({ className }) => {
       </div>
 
       <div className={`${styles.divWrapper} ${className || ""}`}>
-        {/* 버튼 그룹 */}
-        <div
-          id="startStopGroup"
-          className={`${styles.controlButtons} ${showStringButtons ? styles.shifted : ""} ${getHighlightClass("startStopGroup")}`}
-        >
-          <button onClick={handleStart} disabled={isListening}>측정 시작</button>
-          <button onClick={handleStop} disabled={!isListening}>정지</button>
-        </div>
-
-        {showStringButtons && (
-          <div className={styles.stringButtons}>
-            {["1", "2", "3", "4", "5", "6", "all"].map((num) => (
-              <button
-                key={num}
-                className={`${styles.stringBtn} ${selectedString === num ? styles.active : ""}`}
-                onClick={() => handleStringButtonClick(num)}
+        <div className={styles.mainLayout}>
+          <div ref={controlsRef} className={styles.controlsContainer}>
+            <div ref={topGroupRef} className={styles.buttonMotion}>
+              <div
+                id="startStopGroup"
+                ref={controlButtonsRef}
+                className={`${styles.controlButtons} ${getHighlightClass("startStopGroup")}`}
               >
-                {num === "all" ? "전체" : `${num}번 줄`}
-              </button>
-            ))}
-          </div>
-        )}
+                <button onClick={handleStart} disabled={isListening}>측정 시작</button>
+                <button onClick={handleStop} disabled={!isListening}>정지</button>
+              </div>
 
-        <div id="centerSquare" className={`${styles.centerSquare} ${getHighlightClass("centerSquare")}`}>
-          <span className={styles.squareText} style={{ color }}>{note || "—"}</span>
-          <span className={styles.squarefre}>{frequency ? `${frequency} Hz` : "—"}</span>
-        </div>
-
-        <GuitarHead
-          fenderImage={guitarImages[imageIndex]}
-          guitar2={guitar2}
-          activeString={activeString}
-          getHighlightClass={getHighlightClass}
-          onPrevImage={() => setImageIndex((prev) => (prev - 1 + guitarImages.length) % guitarImages.length)}
-          onNextImage={() => setImageIndex((prev) => (prev + 1) % guitarImages.length)}
-          selectedString={selectedString}
-          tunedStrings={Object.keys(tunedStatus).filter((key) => tunedStatus[key])}
-        />
-
-        <div id="tuningInfo" className={`${styles.tuningInfoContainer} ${getHighlightClass("tuningInfo")}`}>
-          {showStringButtons && selectedString && (
-            <div className={styles.tuningInfoText}>
-              (A4=440 기준) {tuningRanges[selectedString].text}
+              <div
+                ref={stringButtonsRef}
+                className={`${styles.stringButtons} ${showStringButtons ? styles.stringButtonsVisible : ""}`}
+              >
+                {["1", "2", "3", "4", "5", "6", "all"].map((num) => (
+                  <button
+                    key={num}
+                    className={`${styles.stringBtn} ${selectedString === num ? styles.active : ""}`}
+                    onClick={() => handleStringButtonClick(num)}
+                  >
+                    {num === "all" ? "전체" : `${num}번 줄`}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
+
+            <div id="centerSquare" ref={centerRef} className={`${styles.centerSquare} ${getHighlightClass("centerSquare")}`}>
+              <span className={styles.squareText} style={{ color }}>{note || "—"}</span>
+              <span className={styles.squarefre}>{frequency ? `${frequency} Hz` : "—"}</span>
+            </div>
+
+            <div id="tuningInfo" className={`${styles.tuningInfoContainer} ${getHighlightClass("tuningInfo")}`}>
+              {showStringButtons && selectedString && (
+                <div className={styles.tuningInfoText}>
+                  (A4=440 기준) {tuningRanges[selectedString].text}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <GuitarHead
+            fenderImage={guitarImages[imageIndex]}
+            guitar2={guitar2}
+            activeString={activeString}
+            getHighlightClass={getHighlightClass}
+            onPrevImage={() => setImageIndex((prev) => (prev - 1 + guitarImages.length) % guitarImages.length)}
+            onNextImage={() => setImageIndex((prev) => (prev + 1) % guitarImages.length)}
+            selectedString={selectedString}
+            tunedStrings={Object.keys(tunedStatus).filter((key) => tunedStatus[key])}
+          />
         </div>
       </div>
 

@@ -2,117 +2,72 @@
   display: flex;
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.1); /* 검은색 테두리 */
+  border: 1px solid rgba(0,0,0,0.1);
   box-sizing: border-box;
 }
 
-.StringWarpper {
-  display: flex;
+/* 좌우 2열 레이아웃 (controls / GuitarHead) */
+.mainLayout {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(360px, 1fr);
+  gap: clamp(16px, 3vw, 32px);
+  align-items: start;
+  width: 100%;
+  max-width: 1200px;
+  padding: clamp(8px, 2vh, 16px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .mainLayout { grid-template-columns: 1fr; }
+}
+
+.controlsContainer {
   position: relative;
-  width: 600px;
-  height: 200px;
-
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  transform: translate(-200px, -20px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  gap: 5px;
+  width: min(90vw, 800px);
+  height: min(100vw, 880px);
+  padding: clamp(8px, 2vh, 16px);
   box-sizing: border-box;
 }
 
-/* 정사각형 */
-.centerSquare {
-  display: flex;
+
+.buttonMotion {
   position: absolute;
-  top: 50%;
-  left: 10%;
-  width: 600px;
-  height: 480px;
-  background: linear-gradient(to bottom, black, white);
-  font-size: 50px;
-  color: white;
-  border-radius: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  transform: translate(0, -50%);
-
-  border: 1px solid rgba(255, 255, 255, 0.2); /* 연한 흰색 테두리 */
-  box-sizing: border-box;
+  width: 100%;
+  max-width: 600px;
+  z-index: 4;
+  transition: top 350ms cubic-bezier(.2,.8,.2,1); 
+  pointer-events: auto;
 }
 
-/* 정사각형 내부 텍스트 */
-.squareText {
-  font-family: 'Arial', sans-serif;
-  font-weight: bold;
-  font-size: 180px;
-  color: #222222;
-}
-
-.squarefre {
-  font-family: 'Arial', sans-serif;
-  font-weight: bold;
-  font-size: 50px;
-  color: #222222;
-}
-
-.helpButtonContainer {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
-}
-
-.helpButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.helpButton:hover {
-  background-color: #0056b3;
-}
-
-
-/* 투어 하이라이트 대상: centerSquare와 overlap */
-#centerSquare,
-#guitarVisual {
-  position: relative;
-  display: block;
-}
-
-/* highlight 시 절대 위치 제거 */
-#centerSquare.highlighted {
-  position: relative !important;
-  top: auto !important;
-  left: auto !important;
-  transform: none !important;
-}
-
+/* 버튼 그룹 */
 .controlButtons {
-  position: absolute;
-  top: calc(50% - 300px);
-  left: 10%;
-  width: 600px;
+  width: 100%;
   display: flex;
   justify-content: center;
-  gap: 20px;
-  z-index: 2;
-  padding: 8px;
+  gap: clamp(10px, 2vw, 24px);
+  padding: 4px;
   box-sizing: border-box;
+  transition: transform 250ms ease;
 }
-
 .controlButtons button {
   padding: 12px 24px;
-  font-size: 18px;
+  font-size: clamp(14px, 1.8vw, 18px);
   border: none;
   border-radius: 8px;
   background-color: #28a745;
@@ -120,93 +75,85 @@
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: background-color 0.3s ease;
 }
+.controlButtons button:hover { background-color: #218838; }
+.controlButtons button:nth-child(2) { background-color: #dc3545; }
+.controlButtons button:nth-child(2):hover { background-color: #c82333; }
 
-.controlButtons button:hover {
-  background-color: #218838;
-}
-
-.controlButtons button:nth-child(2) {
-  background-color: #dc3545;
-}
-
-.controlButtons button:nth-child(2):hover {
-  background-color: #c82333;
-}
-
-/* 버튼 감싸는 박스 */
+/* 각 줄 버튼 */
 .stringButtons {
-  position: absolute;
-  top: 120px;
-  left: 27%;
-  transform: translateX(-50%);
+  width: 100%;
+  max-width: 840px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  flex-wrap: nowrap;
   justify-content: center;
-
-  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 6px 12px;
   box-sizing: border-box;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 260ms ease, transform 260ms ease;
+  pointer-events: none; /* 숨겨진 상태에서 클릭 방지 */
 }
 
-/* 버튼 스타일 */
+.stringButtonsVisible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
 .stringBtn {
   padding: 10px 18px;
-  font-size: 16px;
+  font-size: clamp(13px, 1.6vw, 15.2px);
   border-radius: 8px;
   border: none;
   background-color: #eee;
   cursor: pointer;
   font-weight: bold;
 }
+.stringBtn:hover { background-color: #ddd; }
+.stringBtn.active { background-color: #007bff; color: white; }
 
-.stringBtn:hover {
-  background-color: #ddd;
-}
-
-.stringBtn.active {
-  background-color: #007bff;
-  color: white;
-}
-.frequencyTextWrapper{
-  top: calc(50% - 300px);
-  left: 10%;
-  margin-top: 8px;
+/* 주파수 측정기 (정사각형) */
+.centerSquare {
   display: flex;
+  position: relative;
+  width: min(90%, 600px);
+  height: clamp(280px, 50vh, 480px);
+  background: linear-gradient(to bottom, black, white);
+  border-radius: 10px;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,0.2);
   box-sizing: border-box;
-}
-.tuningInfoContainer{
-  width:600px;
-  height: 90px;
-  margin-top: calc(20% - 410px);
-  margin-right: 840px;
-  border: 5px solid rgba(0, 0, 0, 0.7); /* 검은색 테두리 */
-  box-sizing: border-box;
-  border-radius: 3%;
+  overflow: hidden;
+  color: white;
 }
 
-/* 주파수 텍스트 */
-.tuningInfoText {
-  font-size: 26px;
-  font-weight: 500;
-  color: #333;
-  text-align: center;
-  
+.squareText { font-family: Arial, sans-serif; font-weight: bold; font-size: clamp(72px, 12vw, 160px); color: #222; line-height: 1; }
+.squarefre  { font-family: Arial, sans-serif; font-weight: bold; font-size: clamp(22px, 3.5vw, 42px); color: #222; line-height: 1.2; }
+
+/* 튜닝 주파수 텍스트 박스 */
+.tuningInfoContainer {
+  width: 100%;
+  max-width: 600px;
+  min-height: 56px;
+  border: 3px solid rgba(0,0,0,0.7);
+  box-sizing: border-box;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  margin-top: -250px; 
 }
 
-/* 버튼 위로 이동 애니메이션 */
-.controlButtons {
-  transition: transform 0.4s ease;
-}
-.controlButtons.shifted {
-  transform: translateY(-60px);
-}
+.tuningInfoText { font-size: clamp(16px, 2vw, 22px); font-weight: 600; color:#333; text-align:center; }
+
+.helpButtonContainer { position: absolute; top: 20px; right: 20px; z-index: 10; }
+.helpButton { padding: 10px 20px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer; font-size:14px; display:flex; align-items:center; gap:8px; }
+.helpButton:hover { background:#0056b3; }
