@@ -19,9 +19,11 @@ function DetailDiffPage() {
                 formData.append("file2", file2);
 
                 try {
-                    const response = await axios.post("http://localhost:8000/compare/detail/", formData, {
-                        headers: { "Content-Type": "multipart/form-data" },
-                    });
+                    const response = await axios.post(
+                        "http://localhost:8000/compare/detail/",
+                        formData,
+                        { headers: { "Content-Type": "multipart/form-data" } }
+                    );
                     setDiffResult(response.data);
                 } catch (error) {
                     console.error("비교 실패:", error);
@@ -37,7 +39,6 @@ function DetailDiffPage() {
     return (
         <div className="container">
             <Header />
-
             <div className={styles.container}>
                 <h1>세부 비교 결과</h1>
                 {loading ? (
@@ -47,19 +48,22 @@ function DetailDiffPage() {
                         {diffResult ? (
                             <div className={styles.detailBox}>
                                 <div className={styles.section}>
-                                    <h2>피치 차이</h2>
+                                    <h2>조성 차이</h2>
                                     <div className={styles.scrollBox}>
-                                        <ul>
-                                            {Array.isArray(diffResult["음 높낮이 차이"]) &&
-                                                diffResult["음 높낮이 차이"].map((diff, index) => (
+                                        {Array.isArray(diffResult["조성 차이"]) &&
+                                        diffResult["조성 차이"].length > 0 ? (
+                                            <ul>
+                                                {diffResult["조성 차이"].map((diff, index) => (
                                                     <li key={index}>
                                                         음표 번호: {diff["차이 나는 음표 번호"]} <br />
-                                                        1번째 파일 값: {diff["1번째 파일 값"]} <br />
-                                                        2번째 파일 값: {diff["2번째 파일 값"]} <br />
-                                                        시간: {diff["시간"]}초
+                                                        1번째 파일: {diff["파일1"]} <br />
+                                                        2번째 파일: {diff["파일2"]}
                                                     </li>
                                                 ))}
-                                        </ul>
+                                            </ul>
+                                        ) : (
+                                            <p>조성 차이가 없습니다.</p>
+                                        )}
                                     </div>
                                 </div>
 
@@ -79,8 +83,6 @@ function DetailDiffPage() {
                                         </ul>
                                     </div>
                                 </div>
-
-
                             </div>
                         ) : (
                             <p>비교 결과가 없습니다.</p>
