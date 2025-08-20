@@ -68,14 +68,13 @@ const SelectSongPage = () => {
 
   // 곡 선택 시 재생 준비
   const handleSongSelect = (song) => {
-    navigate("/practice", {
-      state: {
-        fileUrl: song.fileUrl,
-        song: song,
-        audioUrl: song.audioUrl,
-        chordTimeline: song.chordTimeline
-      }
-    });
+    setSelectedSong(song);
+    setIsDownloaded(false);
+    setChordTimeline([]);
+    if (audioRef.current) {
+      audioRef.current.src = `http://localhost:8000/stream-music/${song.music_id}`;
+      setIsPlaying(false);
+    }
   };
 
   const handlePlay = () => {
