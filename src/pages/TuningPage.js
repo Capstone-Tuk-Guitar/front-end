@@ -42,7 +42,7 @@ const TuningPage = ({ className }) => {
     1: false, 2: false, 3: false, 4: false, 5: false, 6: false
   });
 
-  const wsRef = useRef(null);   // ✅ WebSocket을 useRef로 관리
+  const wsRef = useRef(null); 
   const isListeningRef = useRef(false);
   const controlsRef = useRef(null);
   const centerRef = useRef(null);
@@ -89,7 +89,6 @@ const TuningPage = ({ className }) => {
     getHighlightClass, moveToStep,
   } = useTour(tourSteps);
 
-  // ✅ WebSocket 생성
   const createWebSocket = () => {
     const socket = new WebSocket("ws://localhost:8000/ws");
 
@@ -134,7 +133,7 @@ const TuningPage = ({ className }) => {
       }
     };
 
-    wsRef.current = socket;  // ✅ ref에 저장
+    wsRef.current = socket;
   };
 
   const handleStart = () => {
@@ -208,12 +207,10 @@ const TuningPage = ({ className }) => {
     };
   }, [showStringButtons, imageIndex, selectedString, frequency, note]);
 
-  // ✅ 컴포넌트 언마운트 시 WebSocket 정리
   useEffect(() => {
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
-        console.log("TuningPage 언마운트 - WebSocket 종료");
       }
       isListeningRef.current = false;
       setIsListening(false);
