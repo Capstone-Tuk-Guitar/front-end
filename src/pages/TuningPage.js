@@ -35,13 +35,14 @@ const TuningPage = ({ className }) => {
   const [note, setNote] = useState("");
   const [activeString, setActiveString] = useState(null);
   const [imageIndex, setImageIndex] = useState(0);
-  const [ws, setWs] = useState(null);
   const [isListening, setIsListening] = useState(false);
   const [showStringButtons, setShowStringButtons] = useState(false);
   const [selectedString, setSelectedString] = useState(null);
   const [tunedStatus, setTunedStatus] = useState({
     1: false, 2: false, 3: false, 4: false, 5: false, 6: false
   });
+
+  const wsRef = useRef(null);   // ✅ WebSocket을 useRef로 관리
   const isListeningRef = useRef(false);
   const controlsRef = useRef(null);
   const centerRef = useRef(null);
@@ -88,7 +89,7 @@ const TuningPage = ({ className }) => {
     getHighlightClass, moveToStep,
   } = useTour(tourSteps);
 
-  // 웹소켓 전송
+  // ✅ WebSocket 생성
   const createWebSocket = () => {
     const socket = new WebSocket("ws://localhost:8000/ws");
 
@@ -133,13 +134,12 @@ const TuningPage = ({ className }) => {
       }
     };
 
-    return socket;
+    wsRef.current = socket;  // ✅ ref에 저장
   };
 
   const handleStart = () => {
-    if (ws) ws.close();
-    const newWs = createWebSocket();
-    setWs(newWs);
+    if (wsRef.current) wsRef.current.close();
+    createWebSocket();
     isListeningRef.current = true;
     setShowStringButtons(true);
     setNote("");
@@ -150,9 +150,9 @@ const TuningPage = ({ className }) => {
   };
 
   const handleStop = () => {
-    if (ws) {
-      ws.close();
-      setWs(null);
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
     }
     isListeningRef.current = false;
     setIsListening(false);
@@ -207,6 +207,18 @@ const TuningPage = ({ className }) => {
       window.removeEventListener("resize", updatePositions);
     };
   }, [showStringButtons, imageIndex, selectedString, frequency, note]);
+
+  // ✅ 컴포넌트 언마운트 시 WebSocket 정리
+  useEffect(() => {
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+        console.log("TuningPage 언마운트 - WebSocket 종료");
+      }
+      isListeningRef.current = false;
+      setIsListening(false);
+    };
+  }, []);
 
   let color = "black";
   if (isListening && selectedString && frequency) {
