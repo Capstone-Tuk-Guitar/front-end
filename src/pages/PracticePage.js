@@ -238,7 +238,7 @@ function PracticePage() {
             ref={recordBtnRef}
             onClick={isRecording ? stopRecording : startRecording}
             className={styles.controlButton}
-            disabled={isPlaying}
+            disabled={isPlaying && !isRecording}
           >
             {isRecording ? "⏹️ 녹음 정지" : "🎙️ 녹음 시작"}
           </button>

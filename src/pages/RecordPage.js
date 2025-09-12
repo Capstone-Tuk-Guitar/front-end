@@ -159,7 +159,7 @@ function RecordPage() {
           id="leftRecordPanel"
         >
           {Object.keys(grouped).length === 0 ? (
-            <p>연주 기록이 없습니다.</p>
+            <p>비교 기록이 없습니다.</p>
           ) : (
             Object.entries(grouped).map(([title, recs]) => (
               <div key={title} className={styles.recordGroup}>
@@ -191,17 +191,19 @@ function RecordPage() {
               {files.map(filename => (
                 <li key={filename} className={styles.recordItem}>
                   <span className={styles.fileName}>{filename}</span>
-                  <audio
-                    controls
-                    src={`http://localhost:8000/static/record-files/${filename}`}
-                  />
-                  <button
-                    className={styles.convertButton}
-                    onClick={() => handleConvert(filename)}
-                    disabled={!!loading[filename]}
-                  >
-                    {loading[filename] ? "변환중…" : "MIDI 변환"}
-                  </button>
+                  <div className={styles.controlsGroup}>
+                    <audio
+                      controls
+                      src={`http://localhost:8000/static/record-files/${filename}`}
+                    />
+                    <button
+                      className={styles.convertButton}
+                      onClick={() => handleConvert(filename)}
+                      disabled={!!loading[filename]}
+                    >
+                      {loading[filename] ? "변환중…" : "MIDI 변환"}
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
